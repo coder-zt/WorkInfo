@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/action_un_commit"
+        android:title="未上报清单"
+        android:icon="@null"/>
+    <item android:id="@+id/action_commit"
+        android:title="上报清单"
+        android:icon="@null"/>
+</menu>

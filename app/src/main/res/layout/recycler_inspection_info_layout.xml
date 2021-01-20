@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="item"
+            type="com.working.domain.InspectionList.DataBean.RecordsBean" />
+
+        <variable
+            name="itemView"
+            type="com.working.adapter.InspectionInfoAdapter.InformationView" />
+
+        <import type="android.text.Html"
+            alias="html"/>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="@{()->itemView.onItemClick(item)}"
+        android:overScrollMode="never"
+        android:background="@drawable/index_model_bg"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="6dp"
+        android:layout_marginBottom="6dp">
+
+        <TextView
+            android:id="@+id/textView28"
+            android:layout_width="32dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/gray_bg"
+            android:text="编号"
+            android:gravity="center"
+            android:textColor="@color/text_black_color"
+            android:textSize="10sp"
+            android:padding="2dp"
+            app:layout_constraintBottom_toTopOf="@+id/view6"
+            app:layout_constraintStart_toStartOf="@+id/view6"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginLeft="8dp"
+            android:textColor="@color/text_black_color"
+            android:text='@{"编号：" + String.valueOf(item.id), default="201607973"}'
+            android:textSize="10sp"
+            app:layout_constraintStart_toEndOf="@+id/textView28"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text='@{item.status == 0?"草稿":"已提交", default="已提交"}'
+            android:textColor='@{item.status == 0?@color/commit_text_color:@color/draft_text_color, default=@color/commit_text_color}'
+            android:textSize="14sp"
+            app:layout_constraintBottom_toTopOf="@+id/view6"
+            app:layout_constraintEnd_toEndOf="@+id/view6"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.368" />
+
+        <View
+            android:id="@+id/view6"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginTop="38dp"
+            android:layout_marginRight="12dp"
+            android:background="@color/divder_line_color"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text='@{item.title, default="001***道路巡检记录"}'
+            android:textColor="@color/text_black_color"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="@+id/view6"
+            app:layout_constraintTop_toBottomOf="@+id/view6" />
+
+        <TextView
+            android:id="@+id/textView34"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:lineHeight="20sp"
+            android:layout_marginTop="14dp"
+            android:gravity="center_vertical"
+            android:text='@{html.fromHtml(item.getMeasures())}'
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/view6"
+            app:layout_constraintStart_toStartOf="@+id/textView9"
+            app:layout_constraintTop_toBottomOf="@+id/textView9" />
+
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            app:layout_constraintEnd_toEndOf="@+id/view6"
+            app:layout_constraintStart_toStartOf="@+id/textView9"
+            app:layout_constraintTop_toBottomOf="@+id/textView34">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:lineHeight="20sp"
+                android:paddingRight="8dp"
+                android:gravity="center_vertical"
+                android:textSize="12sp"
+                android:text='@{html.fromHtml(item.getLeftInfo())}'
+                android:layout_weight="1"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:lineHeight="20sp"
+                android:gravity="center_vertical"
+                android:layout_weight="1"
+                android:textSize="12sp"
+                android:text='@{html.fromHtml(item.getRightInfo())}'/>
+        </LinearLayout>
+
+
+        <TextView
+            android:id="@+id/textView35"
+            android:layout_width="0dp"
+            android:lineHeight="20sp"
+            android:layout_marginTop="6dp"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:text='@{html.fromHtml(item.getExtensionShow())}'
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="@+id/view6"
+            app:layout_constraintStart_toStartOf="@+id/textView9"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
+
+        <View
+            android:id="@+id/view7"
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:background="@color/divder_line_color"
+            android:layout_marginBottom="38dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView35" />
+
+        <com.working.view.CircleImageView
+            android:id="@+id/circleImageView"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            app:imageUrl="@{item.picUrl}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/view7"
+            app:layout_constraintTop_toBottomOf="@+id/view7" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="12dp"
+            android:textSize="12sp"
+            android:textColor="@color/text_black_color"
+            android:text="@{item.userName , default=`某某`}"
+            app:layout_constraintBottom_toBottomOf="@+id/circleImageView"
+            app:layout_constraintStart_toEndOf="@+id/circleImageView"
+            app:layout_constraintTop_toTopOf="@+id/circleImageView" />
+
+        <TextView
+            android:id="@+id/textView33"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_color_gray"
+            android:text="@{item.userName + `:` + item.createTime , default=`某某: 2021-01-01`}"
+            android:textSize="12sp"
+            app:layout_constraintBottom_toBottomOf="@+id/circleImageView"
+            app:layout_constraintEnd_toEndOf="@+id/view7"
+            app:layout_constraintTop_toTopOf="@+id/circleImageView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

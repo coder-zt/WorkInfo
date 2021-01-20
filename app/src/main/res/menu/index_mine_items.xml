@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/mine_index"
+        android:title="@string/bnv_index"
+        android:icon="@drawable/ic_launcher_background" />
+    <item android:id="@+id/mine_stat"
+        android:title="@string/bnv_stat"
+        android:icon="@drawable/ic_launcher_background" />
+    <item android:id="@+id/mine_message"
+        android:title="@string/bnv_message"
+        android:icon="@drawable/ic_launcher_background" />
+    <item android:id="@+id/mine_mine"
+        android:title="@string/bnv_mine"
+        android:icon="@mipmap/icon_mine_normal" />
+</menu>

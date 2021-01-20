@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#3700B3</color>
+    <color name="colorAccent">#03DAC5</color>
+    <color name="white">#ffffff</color>
+    <color name="black">#000000</color>
+    <color name="gray">#BCB9B9</color>
+    <color name="oxford_gray">#7A7777</color>
+    <color name="commit_color">#42E61A</color>
+    <color name="draft_color">#FF3131</color>
+    <color name="checking_color">#BDBD09</color>
+    <color name="main_bg_color">#f7f7f7</color>
+    <color name="text_black_color">#333333</color>
+    <color name="app_blue">#3A97FF</color>
+    <color name="gray_bg_color">#ffe3e3e3</color>
+    <color name="text_color_gray">#999999</color>
+    <color name="commit_text_color">#3A97FF</color>
+    <color name="draft_text_color">#FF3A3A</color>
+    <color name="divder_line_color">#eeeeee</color>
+    <color name="gary_text_color">#999999</color>
+    <color name="input_bg_color">#fff5f5f5</color>
+</resources>

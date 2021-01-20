@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"
+            alias="view"/>
+        <variable
+            name="activity"
+            type="com.working.base.ZTBaseListActivity" />
+        <variable
+            name="isCommit"
+            type="Boolean" />
+        <variable
+            name="isCreate"
+            type="Boolean" />
+        <variable
+            name="isSearch"
+            type="Boolean" />
+
+        <variable
+            name="isApproval"
+            type="Boolean" />
+        <variable
+            name="title"
+            type="String" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="26dp">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="46dp"
+            android:gravity="center"
+            android:text="@{title}"
+            android:textColor="@color/text_black_color"
+            android:textSize="18sp"
+            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+<!---->
+<!--        <EditText-->
+<!--            android:id="@+id/et_search"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="36dp"-->
+<!--            android:layout_marginLeft="12dp"-->
+<!--            android:layout_marginRight="12dp"-->
+<!--            android:background="@drawable/search_et_bg"-->
+<!--            android:hint="请输入搜索内容"-->
+<!--            android:textSize="14sp"-->
+<!--            android:gravity="center"-->
+<!--            android:paddingLeft="12dp"-->
+<!--            android:visibility="@{isSearch?view.VISIBLE:view.GONE}"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/textView"-->
+<!--            app:layout_constraintEnd_toEndOf="@+id/textView"-->
+<!--            app:layout_constraintStart_toEndOf="@+id/imageView2"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="20dp"
+            android:layout_height="30dp"
+            android:padding="5dp"
+            android:layout_marginLeft="12dp"
+            android:onClick="@{()->activity.onBack()}"
+            android:src="@mipmap/back_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/textView"
+            app:layout_constraintStart_toStartOf="@+id/textView"
+            app:layout_constraintTop_toTopOf="parent" />
+
+<!--        <ImageView-->
+<!--            android:id="@+id/imageView4"-->
+<!--            android:layout_width="32dp"-->
+<!--            android:layout_height="32dp"-->
+<!--            android:layout_marginRight="24dp"-->
+<!--            android:visibility="@{isSearch?view.GONE:view.VISIBLE}"-->
+<!--            android:onClick="@{()->activity.onSearch()}"-->
+<!--            android:src="@mipmap/search_icon"-->
+<!--            app:layout_constraintBottom_toBottomOf="@+id/textView"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+        <LinearLayout
+            android:id="@+id/ll_search"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/white"
+            app:menu="@menu/purchase_navigation_items"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="开始时间："
+                android:textColor="@color/text_black_color"
+                android:gravity="center"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/startTime"
+                android:layout_width="0dp"
+                android:layout_height="24dp"
+                android:textColor="@color/text_color_gray"
+                android:layout_weight="1"
+                android:text="点击选择时间"
+                android:onClick='@{()->activity.onSelectTime(false)}'
+                android:gravity="center"
+                android:background="@drawable/input_et_bg"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="6dp"
+                android:textColor="@color/text_black_color"
+                android:text="~结束时间："
+                android:gravity="center"
+                android:textSize="12sp"/>
+
+            <TextView
+                android:id="@+id/end_time"
+                android:layout_width="0dp"
+                android:layout_height="24sp"
+                android:textSize="12sp"
+                android:layout_weight="1"
+                android:onClick='@{()->activity.onSelectTime(true)}'
+                android:gravity="center"
+                android:textColor="@color/text_color_gray"
+                android:text="点击选择时间"
+                android:background="@drawable/input_et_bg"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/bottomNavigationView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@color/white"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/ll_search"
+            app:menu="@menu/purchase_navigation_items">
+
+            <TextView
+                android:id="@+id/tv_un_commit"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@{isCommit?@drawable/indicator_normal_bg:@drawable/indicator_selected_bg}"
+                android:gravity="center"
+                android:onClick="@{()->activity.onSelectItem(0)}"
+                android:text="未上报清单"
+                android:textColor="@{isCommit?@color/gary_text_color:@color/commit_text_color}"
+                android:textSize="16sp"
+                android:visibility="@{isApproval?view.GONE:view.VISIBLE}" />
+
+            <TextView
+                android:id="@+id/tv_committed"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@{isCommit?@drawable/indicator_selected_bg:@drawable/indicator_normal_bg}"
+                android:gravity="center"
+                android:onClick="@{()->activity.onSelectItem(1)}"
+                android:text="上报清单"
+                android:textColor="@{isCommit?@color/commit_text_color:@color/gary_text_color}"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toTopOf="@+id/view2"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/bottomNavigationView" />
+
+        <LinearLayout
+            android:layout_width="240dp"
+            android:layout_height="42dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="12dp"
+            android:background="@drawable/btn_bg"
+            android:text="添加记录"
+            android:orientation="horizontal"
+            android:elevation="5dp"
+            android:gravity="center"
+            android:visibility="@{isCommit?view.GONE:(isCreate?view.VISIBLE:view.GONE)}"
+            android:onClick="@{()->activity.create()}"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <ImageView
+                android:layout_width="15dp"
+                android:layout_height="15dp"
+                android:src="@mipmap/add_btn_icon"
+                app:layout_constraintBottom_toBottomOf="@+id/button"
+                app:layout_constraintStart_toStartOf="@+id/button"
+                app:layout_constraintTop_toTopOf="@+id/button" />
+
+            <TextView
+                android:id="@+id/button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:text="添加清单"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:gravity="center"
+                android:layout_marginLeft="6dp"
+                android:layout_gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+        </LinearLayout>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <import type="android.view.View"
+                alias="View"/>
+        <variable
+            name="isPwd"
+            type="Boolean" />
+
+        <variable
+            name="userInfo"
+            type="String" />
+
+        <variable
+            name="password"
+            type="String" />
+        
+        <variable
+            name="clickEvent"
+            type="com.working.activity.LoginActivity.OnClickedListener" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white">
+
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="物料管理系统"
+            android:textColor="@color/text_black_color"
+            android:textSize="22sp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="140dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="40dp"
+            android:text="赶快登录属于你的账号吧"
+            android:layout_marginTop="14dp"
+            android:textColor="@color/text_color_gray"
+            android:textSize="14sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <EditText
+                android:id="@+id/loginInfo"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginLeft="12dp"
+                android:layout_marginRight="20dp"
+                android:layout_toRightOf="@+id/info_icon"
+                android:layout_marginTop="32dp"
+                android:background="@null"
+                android:hint="@{isPwd?`手机号/用户名/邮箱`:`请输入手机号`, default=`手机号/用户名/邮箱`}"
+                android:text="@={userInfo}"
+                android:textColorHint="@color/gary_text_color"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/info_icon"
+                android:layout_width="12dp"
+                android:layout_height="18dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="20dp"
+                android:src="@mipmap/phone_icon"
+                android:layout_alignBottom="@+id/loginInfo"
+                android:layout_alignTop="@+id/loginInfo"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_below="@+id/loginInfo"
+                android:background="@color/divder_line_color"
+                android:layout_alignLeft="@+id/info_icon"
+                android:layout_alignRight="@+id/loginInfo"/>
+
+            <EditText
+                android:id="@+id/psd"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_toRightOf="@+id/word_icon"
+                android:layout_below="@+id/loginInfo"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="12dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginRight="20dp"
+                android:background="@null"
+                android:hint="@{isPwd?`请输入密码`:`请输入验证码`, default=`请输入密码`}"
+                android:inputType="textPassword"
+                android:maxLength="16"
+                android:text="@={password}"
+                android:textSize="14sp" />
+
+            <ImageView
+                android:id="@+id/word_icon"
+                android:layout_width="12dp"
+                android:layout_height="18dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="20dp"
+                android:visibility="@{!isPwd?View.INVISIBLE:View.VISIBLE, default=`invisible`}"
+                android:src="@mipmap/password_icon"
+                android:layout_alignBottom="@+id/psd"
+                android:layout_alignTop="@+id/psd"/>
+
+
+            <ImageView
+                android:id="@+id/word_icon1"
+                android:layout_width="12dp"
+                android:layout_height="18dp"
+                android:layout_alignParentStart="true"
+                android:layout_marginLeft="20dp"
+
+                android:visibility="@{isPwd?View.INVISIBLE:View.VISIBLE, default=`invisible`}"
+                android:src="@mipmap/code_icon"
+                android:layout_alignBottom="@+id/psd"
+                android:layout_alignTop="@+id/psd"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0.5dp"
+                android:layout_below="@+id/psd"
+                android:background="@color/divder_line_color"
+                android:layout_alignLeft="@+id/word_icon"
+                android:layout_alignRight="@+id/psd"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_alignTop="@+id/psd"
+                android:layout_alignEnd="@+id/psd"
+                android:layout_alignBottom="@+id/psd"
+                android:textSize="14sp"
+                android:onClick="@{()->clickEvent.getCheckCode()}"
+                android:text="获取验证码"
+                android:gravity="center"
+                android:textColor="@color/app_blue"
+                android:visibility="@{isPwd?View.GONE:View.VISIBLE, default=`gone`}" />
+
+
+            <TextView
+                android:id="@+id/tv_forget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignEnd="@+id/psd"
+                android:text="忘记密码？"
+                android:visibility="@{!isPwd?View.GONE:View.VISIBLE, default=`gone`}"
+                android:layout_marginTop="16dp"
+                android:textColor="@color/text_color_gray"
+                android:layout_below="@+id/psd"/>
+            <Button
+                android:id="@+id/login_btn"
+                android:layout_width="match_parent"
+                android:layout_height="42dp"
+                android:textColor="@color/white"
+                android:layout_below="@+id/tv_forget"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="42dp"
+                android:layout_marginTop="54dp"
+                android:background="@drawable/btn_bg"
+                android:onClick="@{()->clickEvent.onLogin(userInfo, password,true)}"
+                android:text="登录"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="22dp"
+                android:layout_marginTop="20dp"
+                android:layout_below="@+id/login_btn"
+                android:layout_centerHorizontal="true"
+                android:gravity="center"
+                android:onClick="@{()->clickEvent.onSwitchMethod()}"
+                android:text="@{isPwd?`使用手机号快捷登录`:`使用密码快捷登录`, default=`使用手机号快捷登录`}"
+                android:textColor="@color/text_color_gray"
+                android:textSize="14sp" />
+
+        </RelativeLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

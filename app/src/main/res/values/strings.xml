@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">WorkInfo</string>
+    <string name="bnv_mine">我的</string>
+    <string name="bnv_message">消息</string>
+    <string name="bnv_stat">统计</string>
+    <string name="bnv_index">首页</string>
+    <string name="mine">我的</string>
+</resources>

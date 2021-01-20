@@ -45,9 +45,9 @@ public class InspectionPresenterImpl extends BasePresenterImpl implements IInspe
     }
 
     @Override
-    public void loadMoreData() {
+    public void loadMoreData(String startTime, String endTime) {
         page++;
-        AppModels.getInstance().getInspectionList(page, pageSize, new Handler.Callback() {
+        AppModels.getInstance().getInspectionList(page, pageSize, startTime, endTime, new Handler.Callback() {
             @Override
             public boolean handleMessage(@NonNull Message msg) {
                 if (msg.what != -1) {
@@ -76,7 +76,7 @@ public class InspectionPresenterImpl extends BasePresenterImpl implements IInspe
                     if (data != null) {
                         InspectionList.DataBean dataBean = data.getData();
                         List<InspectionList.DataBean.RecordsBean> recordsBeans = dataBean.getRecords();
-                        ((IInspectCallback)mCallback).onInspectInfoMoreLoaded(recordsBeans);
+                        ((IInspectCallback)mCallback).onInspectInfoLoaded(recordsBeans);
                         return false;
                     }
                 }

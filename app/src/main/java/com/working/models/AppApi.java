@@ -93,7 +93,7 @@ public interface AppApi {
 
     //提交采购数据
     @POST("blade-road/purchase/submit")
-    Call<ResponseBody> uploadPurchase( @Body RequestBody route);
+    Call<com.working.domain.Response> uploadPurchase( @Body RequestBody route);
 
     //审批采购数据数据
     @POST("blade-road/purchase/approval")

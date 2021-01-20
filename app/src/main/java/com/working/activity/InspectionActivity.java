@@ -57,7 +57,6 @@ public class InspectionActivity extends BaseActivity implements IInspectCallback
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_inspection);
         mBinding.setActivity(this);
         initView();
-        loadData();
         mPresenter.registerCallback(this);
     }
 
@@ -65,11 +64,10 @@ public class InspectionActivity extends BaseActivity implements IInspectCallback
         mRecyclerView = findViewById(R.id.recyclerView);
         mRefreshLayout = findViewById(R.id.refresh_layout);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new InspectionInfoAdapter(new BaseRecyclerAdapter.OnItemClickedListener() {
+        mAdapter = new InspectionInfoAdapter(new InspectionInfoAdapter.OnItemClickedListener() {
             @Override
-            public void onItemClick(Object data) {
-                InspectionList.DataBean.RecordsBean recordsBean = (InspectionList.DataBean.RecordsBean)data;
-                AppRouter.toAddInspectionActivity(InspectionActivity.this, recordsBean);
+            public void onItemClick(InspectionList.DataBean.RecordsBean data) {
+                AppRouter.toAddInspectionActivity(InspectionActivity.this, data);
             }
         });
         mRecyclerView.setAdapter(mAdapter);
@@ -77,7 +75,7 @@ public class InspectionActivity extends BaseActivity implements IInspectCallback
         mDataLoadUtilLayout = new DataLoadUtilLayout(this, mStatusView, new DataLoadUtilLayout.OnErrorOnTry() {
             @Override
             public void onTry() {
-                mPresenter.loadData();
+                loadData(mStartTime, mEndTime);
             }
         });
         mStatusData.observe(this, new Observer<StatusData>() {
@@ -92,25 +90,22 @@ public class InspectionActivity extends BaseActivity implements IInspectCallback
                 super.onRefresh(refreshLayout);
                 mRefreshLayout.setEnableLoadmore(true);
                 mDataLoadUtilLayout.setStatus(StatusData.LOADING);
-                mPresenter.loadData();
+                loadData(mStartTime, mEndTime);
             }
 
             @Override
             public void onLoadMore(TwinklingRefreshLayout refreshLayout) {
                 super.onLoadMore(refreshLayout);
-                mPresenter.loadMoreData();
+                mPresenter.loadMoreData(mStartTime, mEndTime);
             }
         });
     }
 
-    private void loadData() {
-        mStatusData.postValue(StatusData.LOADING);
-        mPresenter.loadData();
-    }
 
     @Override
     protected void onResume() {
         super.onResume();
+        loadData(mStartTime, mEndTime);
     }
 
     public void onSelectTime(boolean isEnd){
@@ -151,6 +146,7 @@ public class InspectionActivity extends BaseActivity implements IInspectCallback
     }
 
     private void loadData(String startTime, String endTime){
+        mStatusData.postValue(StatusData.LOADING);
         mPresenter.loadChooseData(startTime, endTime);
     }
 

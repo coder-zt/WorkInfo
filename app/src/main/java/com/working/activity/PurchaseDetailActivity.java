@@ -99,7 +99,7 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
             datum.setProductQuantity("0.0");
             datum.setPriceMarket(datum.getPrice());
             datum.setMaterialId(String.valueOf(dataBean.getId()));
-            datum.setPurchaseId(dataBean.getId());
+            datum.setPurchaseId(mDataBean.getId());
             mSelectedItem.add(datum.getMaterialName());
             mAdapter.addData(datum);
         }
@@ -185,6 +185,11 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
     private void uploadCommit(boolean isDraft) {
         if (mDataBean == null) {
             ToastUtil.showMessage("提交数据为空，请退出重试！");
+            return;
+        }
+        if (mDataBean.getStatus() == 1) {
+            ToastUtil.showMessage("数据不可重复提交！");
+            return;
         }
         mDataBean.setStatus(isDraft?0:1);
         //提交

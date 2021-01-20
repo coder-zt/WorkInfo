@@ -2,9 +2,13 @@ package com.working.adapter;
 
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.databinding.DataBindingUtil;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.working.R;
 import com.working.base.BaseItemView;
@@ -13,50 +17,81 @@ import com.working.databinding.RecyclerInspectionInfoLayoutBinding;
 import com.working.domain.InspectionList;
 import com.working.domain.RecordsBean;
 
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
  * 巡检记录的适配器
  */
-public class InspectionInfoAdapter extends BaseRecyclerAdapter<InspectionInfoAdapter.InformationView,
-        InspectionList.DataBean.RecordsBean, RecyclerInspectionInfoLayoutBinding> {
+public class InspectionInfoAdapter extends RecyclerView.Adapter<InspectionInfoAdapter.InformationView>{
+//        BaseRecyclerAdapter<InspectionInfoAdapter.InformationView,
+//        InspectionList.DataBean.RecordsBean, RecyclerInspectionInfoLayoutBinding> {
 
-
+    private List<InspectionList.DataBean.RecordsBean> mData = new ArrayList<>();
 
     private static final String TAG = "FunctionListAdapter";
+    private final OnItemClickedListener mCallback;
 
     public InspectionInfoAdapter(OnItemClickedListener listener) {
-        super(listener);
+        mCallback = listener;
     }
+
+
+    @NonNull
+    @Override
+    public InformationView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        View view = layoutInflater.inflate(R.layout.recycler_inspection_info_layout, parent, false);
+        RecyclerInspectionInfoLayoutBinding bind = DataBindingUtil.bind(view);
+        return new InformationView(view, bind);
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull InformationView holder, int position) {
+        holder.getBinding().setItemView(holder);
+        holder.getBinding().setItem(mData.get(position));
+    }
+
 
 
     @Override
-    protected InformationView createViewHolder(View view) {
-        return new InformationView(view);
+    public int getItemCount() {
+        return mData.size();
     }
 
-    @Override
-    protected int getItemLayoutId() {
-        return R.layout.recycler_inspection_info_layout;
+    public void addData(List<InspectionList.DataBean.RecordsBean> data) {
+        mData.addAll(data);
+        notifyDataSetChanged();
+    }
+
+    public void setData(List<InspectionList.DataBean.RecordsBean> data) {
+        mData.clear();
+        if (data != null) {
+            mData.addAll(data);
+        }
+        notifyDataSetChanged();
+    }
+
+    public class InformationView extends RecyclerView.ViewHolder {
+        RecyclerInspectionInfoLayoutBinding mBinding = null;
+
+        public InformationView(View view, RecyclerInspectionInfoLayoutBinding bind) {
+            super(view);
+            mBinding = bind;
+        }
+
+        public RecyclerInspectionInfoLayoutBinding getBinding() {
+            return mBinding;
+        }
+
+        public void onItemClick(InspectionList.DataBean.RecordsBean data){
+            mCallback.onItemClick(data);
+        }
     }
 
 
-
-    public class InformationView extends BaseItemView<InspectionList.DataBean.RecordsBean> {
-
-        public InformationView(@NonNull View itemView) {
-            super(itemView);
-        }
-
-        @Override
-        public void setData(InspectionList.DataBean.RecordsBean item, int position) {
-            Log.d(TAG, "setData: " + position);
-            getDataBinding().setItem(item);
-            getDataBinding().setItemView(this);
-        }
-
-        public void onItemClick(InspectionList.DataBean.RecordsBean item){
-            mCallback.onItemClick(item);
-        }
+    public interface OnItemClickedListener{
+        void onItemClick(InspectionList.DataBean.RecordsBean data);
     }
 }

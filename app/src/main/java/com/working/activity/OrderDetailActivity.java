@@ -183,6 +183,14 @@ public class OrderDetailActivity extends BaseCommitActivity<OrderDetail.DataBean
         }
         mCommitData.setStatus(isDraft?0:1);
         Log.d(TAG, "commit: " + new Gson().toJson(mCommitData));
+        if (mCommitData.getOrderItemList() != null) {
+            if (mCommitData.getOrderItemList().size() == 0) {
+                mCommitData.getOrderItemList().add(new OrderDetail.DataBean.OrderItemListBean());
+            }
+        }else{
+            mCommitData.setOrderItemList(new ArrayList<>());
+            mCommitData.getOrderItemList().add(new OrderDetail.DataBean.OrderItemListBean());
+        }
         commitData(mCommitData);
     }
 

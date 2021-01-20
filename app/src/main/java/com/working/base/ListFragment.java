@@ -134,6 +134,7 @@ public abstract class ListFragment<T>
     public void search(String startTime, String endTime){
         mStartTime = startTime;
         mEndTime = endTime;
+        mDataLoadUtilLayout.setStatus(StatusData.LOADING);
         mPresenter.loadListData(mIsCommitted, mStartTime, mEndTime);
     }
 }

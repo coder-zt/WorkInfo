@@ -10,7 +10,7 @@ public interface IInspectionPresenter extends IBasePresenter {
 
     void loadData();
 
-    void loadMoreData();
+    void loadMoreData(String startTime, String endTime);
 
     void loadChooseData(String startTime, String endTime);
 }

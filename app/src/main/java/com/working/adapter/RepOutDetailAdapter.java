@@ -50,9 +50,6 @@ public class RepOutDetailAdapter extends RecyclerView.Adapter {
                 RecyclerRepoutDetailLayoutBinding binding = DataBindingUtil.inflate(inflater,
                         R.layout.recycler_repout_detail_layout, parent, false);
                 return new MaterialDataView(binding.getRoot(), binding);
-            case TYPE_ADD://添加
-                View inflate = inflater.inflate(R.layout.recycler_addbtn_layout, parent, false);
-                return new AddBtnView(inflate);
             case TYPE_PIC://图片
                 View picView = inflater.inflate(R.layout.recycler_image_layout, parent, false);
                 return new ImageCollectView(picView);
@@ -81,7 +78,7 @@ public class RepOutDetailAdapter extends RecyclerView.Adapter {
 
     @Override
     public int getItemCount() {
-        return mData.size() + (mIsCommitted?1:2);
+        return mData.size() + 1;
     }
 
     @Override
@@ -89,8 +86,6 @@ public class RepOutDetailAdapter extends RecyclerView.Adapter {
         int size = mData.size();
         if(position < size){//物料数据
             return TYPE_DATA;
-        }else if(position == size){//添加物料
-            return mIsCommitted?TYPE_PIC:TYPE_ADD;
         }else{//图片集合
             return TYPE_PIC;
         }
@@ -176,24 +171,6 @@ public class RepOutDetailAdapter extends RecyclerView.Adapter {
         }
     }
 
-    /**
-     * 增加物料
-     */
-    public class AddBtnView extends RecyclerView.ViewHolder {
-
-        public AddBtnView(@NonNull View itemView) {
-            super(itemView);
-            TextView tvAddBtn = itemView.findViewById(R.id.tv_add_btn);
-            tvAddBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mCallback != null) {
-                        mCallback.onAddMaterialClicked();
-                    }
-                }
-            });
-        }
-    }
 
     /**
      * 增加物料

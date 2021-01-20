@@ -481,10 +481,10 @@ public class AppModels {
         final String dataJson = new Gson().toJson(commitBean);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json;charset=UTF-8"), dataJson);
         Log.d(TAG, "updateInspection: " + dataJson);
-        Call<ResponseBody> inspectionListCall = appApi.uploadPurchase(body);
-        inspectionListCall.enqueue(new Callback<ResponseBody>() {
+        Call<com.working.domain.Response> inspectionListCall = appApi.uploadPurchase(body);
+        inspectionListCall.enqueue(new Callback<com.working.domain.Response>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<com.working.domain.Response> call, Response<com.working.domain.Response> response) {
                 if (response.code()!=200) {
                     printErrorLog(response);
                     requestFail("上传失败, data:" + dataJson, callback);
@@ -494,7 +494,7 @@ public class AppModels {
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<com.working.domain.Response> call, Throwable t) {
                 requestFail("上传失败, data:" + dataJson, callback);
             }
         });
@@ -827,7 +827,7 @@ public class AppModels {
     }
 
     /**
-     * 提交采购清单
+     * 提交审批清单
      * @param callback
      */
     public void approvalOut(ApprovalOutBean approvalBean, final Handler.Callback callback) {

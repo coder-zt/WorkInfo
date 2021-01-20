@@ -29,8 +29,8 @@ public class UpLoadPurchasePresenterImpl extends BasePresenterImpl implements IC
                 if (msg.what != -1) {
                     ((ICommitCallback)mCallback).onCommitFinished();
                 }else{
-                    String info = (String)msg.obj;
-                    ((ICommitCallback)mCallback).onCommitFail(info);
+                    com.working.domain.Response info = (com.working.domain.Response)msg.obj;
+                    ((ICommitCallback)mCallback).onCommitFail(info.getMsg());
                 }
                 return true;
             }

@@ -90,6 +90,7 @@ public abstract class BaseCommitActivity<T> extends BaseActivity
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPresenter = createPresenter();
+        mWaitingDialog = new ProgressDialog(this);
         mPresenter.registerCallback(this);
         mFilePresenter = new UploadFilePresenterImpl();
         mFilePresenter.registerCallback(this);
@@ -137,7 +138,8 @@ public abstract class BaseCommitActivity<T> extends BaseActivity
         if (requestCode == 111 && resultCode == RESULT_OK) {
             //返回对象集合：如果你需要了解图片的宽、高、大小、用户是否选中原图选项等信息，可以用这个
             ArrayList<Photo> resultPhotos = data.getParcelableArrayListExtra(EasyPhotos.RESULT_PHOTOS);
-            mFileCount = resultPhotos.size();
+            upDataUploadData(resultPhotos.size());
+            Log.d(TAG, "onActivityResult: mFileCount == " + mFileCount);
             for (Photo resultPhoto : resultPhotos) {
                 uploadFile(resultPhoto.path, true);
             }
@@ -145,11 +147,18 @@ public abstract class BaseCommitActivity<T> extends BaseActivity
         }
         List<String> resultData = SmartMediaPicker.getResultData(this, requestCode, resultCode, data);
         if (resultData != null && resultData.size() > 0) {
-            mFileCount =  resultData.size();
+            upDataUploadData(resultData.size());
+            Log.d(TAG, "onActivityResult: mFileCount == " + mFileCount);
             for (String resultDatum : resultData) {
                 uploadFile(resultDatum,false);
             }
         }
+    }
+
+    private void upDataUploadData(int size) {
+        mFileCount = size;
+        mFileSuccess = 0;
+        mFileFail = 0;
     }
 
     /**
@@ -189,7 +198,7 @@ public abstract class BaseCommitActivity<T> extends BaseActivity
                     public void onSuccess(File file) {
                         dismissWaitingDialog();
                         mFilePresenter.uploadFile(file.getAbsolutePath());
-                        if (mWaitingDialog.isShowing()) {
+                        if (!mWaitingDialog.isShowing()) {
                             showWaitingDialog("上传图片中");
                         }
                     }
@@ -324,7 +333,9 @@ public abstract class BaseCommitActivity<T> extends BaseActivity
     }
 
     private void showUploadFileResult(){
+        Log.d(TAG, "onActivityResult: result == " +"共上传文件" + mFileCount + "个，其中成功"+ mFileSuccess + "个，失败" + mFileFail + "个");
         if(mFileCount == mFileFail + mFileSuccess){
+            dismissWaitingDialog();
             String msg = "共上传文件" + mFileCount + "个，其中成功"+ mFileSuccess + "个，失败" + mFileFail + "个";
             showResultDialog( msg,true);
         }
@@ -356,7 +367,6 @@ public abstract class BaseCommitActivity<T> extends BaseActivity
      * show等待Dialog
      */
     private void showWaitingDialog(String title) {
-        mWaitingDialog = new ProgressDialog(this);
         mWaitingDialog.setTitle(title);
         mWaitingDialog.setMessage("等待中...");
         mWaitingDialog.setIndeterminate(true);

@@ -13,6 +13,7 @@ import com.working.adapter.RepOutDetailAdapter;
 import com.working.base.BaseCommitActivity;
 import com.working.databinding.ActivityRepoutDetailBinding;
 import com.working.domain.MaterialListData;
+import com.working.domain.RepInInfoData;
 import com.working.domain.RepOutInfoBean;
 import com.working.interfaces.IDetailCallback;
 import com.working.presenter.ICommitPresenter;
@@ -111,6 +112,14 @@ public class RepOutInfoActivity extends BaseCommitActivity<RepOutInfoBean.DataBe
             return;
         }
         mDataBean.setStatus(isCommit?0:1);
+        if (mDataBean.getOutStockItemList() != null) {
+            if (mDataBean.getOutStockItemList().size() ==0) {
+                mDataBean.getOutStockItemList().add(new RepOutInfoBean.DataBean.OutStockItemListBean());
+            }
+        }else{
+            mDataBean.setOutStockItemList(new ArrayList<>());
+            mDataBean.getOutStockItemList().add(new RepOutInfoBean.DataBean.OutStockItemListBean());
+        }
         commitData(mDataBean);
     }
 

@@ -126,6 +126,14 @@ public class RepInInfoActivity extends BaseCommitActivity<RepInInfoData.DataBean
             return;
         }
         mDataBean.setStatus(isCommit?1:0);
+        if (mDataBean.getInStockItemList() != null) {
+            if (mDataBean.getInStockItemList().size() ==0) {
+                mDataBean.getInStockItemList().add(new RepInInfoData.DataBean.InStockItemListBean());
+            }
+        }else{
+            mDataBean.setInStockItemList(new ArrayList<>());
+            mDataBean.getInStockItemList().add(new RepInInfoData.DataBean.InStockItemListBean());
+        }
         commitData(mDataBean);
     }
 

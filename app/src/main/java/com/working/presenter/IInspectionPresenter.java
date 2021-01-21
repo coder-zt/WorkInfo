@@ -8,8 +8,6 @@ import com.working.interfaces.IInspectCallback;
  */
 public interface IInspectionPresenter extends IBasePresenter {
 
-    void loadData();
-
     void loadMoreData(String startTime, String endTime);
 
     void loadChooseData(String startTime, String endTime);

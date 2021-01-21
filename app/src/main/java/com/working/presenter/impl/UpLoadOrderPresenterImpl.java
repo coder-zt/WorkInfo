@@ -23,9 +23,12 @@ public class UpLoadOrderPresenterImpl extends BasePresenterImpl implements IComm
      */
     @Override
     public void uploadData(OrderDetail.DataBean information) {
-        AppModels.getInstance().uploadRepertoryIn(information, new Handler.Callback() {
+        AppModels.getInstance().uploadOrder(information, new Handler.Callback() {
             @Override
             public boolean handleMessage(@NonNull Message msg) {
+                if(mCallback == null){
+                    return true;
+                }
                 if (msg.what != -1) {
                     ((ICommitCallback)mCallback).onCommitFinished();
                 }else{

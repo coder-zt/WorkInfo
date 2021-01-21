@@ -63,7 +63,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textView">
 
-            <com.working.view.SlideRecyclerView
+            <com.yanzhenjie.recyclerview.SwipeRecyclerView
                 android:id="@+id/recycler_view"
                 app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                 android:layout_width="match_parent"

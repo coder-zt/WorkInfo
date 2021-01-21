@@ -29,7 +29,6 @@ import java.util.List;
 
 public class RepInDetailAdapter extends RecyclerView.Adapter {
     private List<RepInInfoData.DataBean.InStockItemListBean> mData = new ArrayList<>();
-    private boolean committed;
     private final int TYPE_DATA = 0;
     private final int TYPE_ADD = 1;
     private final int TYPE_PIC = 2;
@@ -64,7 +63,6 @@ public class RepInDetailAdapter extends RecyclerView.Adapter {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof MaterialDataView){
             ((MaterialDataView) holder).getBinding().setData(mData.get(position));
-            ((MaterialDataView) holder).getBinding().counterView.setNum(Float.parseFloat(mData.get(position).getProductQuantity()));
             ((MaterialDataView) holder).getBinding().counterView.setNumChangeListener(new CounterView.OnNumberChangedListener() {
                 @Override
                 public void onNumChanged(float num) {
@@ -75,6 +73,8 @@ public class RepInDetailAdapter extends RecyclerView.Adapter {
                     }
                 }
             });
+            ((MaterialDataView) holder).getBinding().counterView.setCanEdit(!mIsCommitted);
+            ((MaterialDataView) holder).getBinding().counterView.setNum(Float.parseFloat(mData.get(position).getProductQuantity()));
         }
     }
 
@@ -112,6 +112,9 @@ public class RepInDetailAdapter extends RecyclerView.Adapter {
         if (data != null) {
             mData.addAll(data);
         }
+        if (mCallback != null) {
+            mCallback.onDataCountChange(0, mData.size());
+        }
         notifyDataSetChanged();
     }
 
@@ -122,8 +125,11 @@ public class RepInDetailAdapter extends RecyclerView.Adapter {
     public void addData(RepInInfoData.DataBean.InStockItemListBean data){
         if (data != null) {
             mData.add(data);
+            if (mCallback != null) {
+                mCallback.onDataCountChange(mData.size()-1, mData.size());
+            }
+            notifyDataSetChanged();
         }
-        notifyDataSetChanged();
     }
 
     /**
@@ -158,6 +164,14 @@ public class RepInDetailAdapter extends RecyclerView.Adapter {
         }
     }
 
+    public void deleteData(int adapterPosition) {
+        mData.remove(adapterPosition);
+        notifyItemRemoved(adapterPosition);
+        if (mCallback != null) {
+            mCallback.onDataContainerChanged(mData, mPicAdapter.getImageCollect());
+        }
+    }
+
     /**
      * 物料
      */
@@ -170,25 +184,6 @@ public class RepInDetailAdapter extends RecyclerView.Adapter {
 
         public RecyclerRepinDetailLayoutBinding getBinding() {
             return mBinding;
-        }
-    }
-
-    /**
-     * 增加物料
-     */
-    public class AddBtnView extends RecyclerView.ViewHolder {
-
-        public AddBtnView(@NonNull View itemView) {
-            super(itemView);
-            TextView tvAddBtn = itemView.findViewById(R.id.tv_add_btn);
-            tvAddBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mCallback != null) {
-                        mCallback.onAddMaterialClicked();
-                    }
-                }
-            });
         }
     }
 
@@ -209,8 +204,8 @@ public class RepInDetailAdapter extends RecyclerView.Adapter {
 
     public interface OnDataContainerListener{
 
-        void onAddMaterialClicked();
-
         void onDataContainerChanged(List<RepInInfoData.DataBean.InStockItemListBean> data, String urls) ;
+
+        void onDataCountChange(int oldSize, int newSize) ;
     }
 }

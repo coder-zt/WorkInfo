@@ -1,8 +1,11 @@
 package com.working.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -24,7 +27,13 @@ import com.working.setting.StatusData;
 import com.working.utils.AppRouter;
 import com.working.utils.DataBeanMapCache;
 import com.working.utils.ToastUtil;
+import com.working.utils.UIHelper;
 import com.working.view.DataLoadUtilLayout;
+import com.yanzhenjie.recyclerview.OnItemMenuClickListener;
+import com.yanzhenjie.recyclerview.SwipeMenu;
+import com.yanzhenjie.recyclerview.SwipeMenuBridge;
+import com.yanzhenjie.recyclerview.SwipeMenuCreator;
+import com.yanzhenjie.recyclerview.SwipeMenuItem;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -52,8 +61,6 @@ public class OrderDetailActivity extends BaseCommitActivity<OrderDetail.DataBean
         super.onCreate(savedInstanceState);
         mDataBinding = DataBindingUtil.setContentView(this, R.layout.activity_order_detail);
         mDataBinding.setActivity(this);
-        mDataBinding.setAccount(0.0f);
-        mDataBinding.setTitle("购买清单详情(草稿)");
         mIDetailPresenter.registerCallback(this);
         initView();
         initData();
@@ -75,8 +82,14 @@ public class OrderDetailActivity extends BaseCommitActivity<OrderDetail.DataBean
                 mCommitData.setPicUrl(urls);
                 countAccount();
             }
+
+            @Override
+            public void onDataCountChange(int oldSize, int newSize) {
+                Log.d(TAG, "onDataCountChange: " + oldSize + "===" + newSize);
+                mDataBinding.recyclerView.setSwipeItemMenuEnabled(oldSize, true);
+                mDataBinding.recyclerView.setSwipeItemMenuEnabled(newSize, false);
+            }
         }, mImageListener);
-        mDataBinding.recyclerView.setAdapter(mAdapter);
         mLoadUtilLayout = new DataLoadUtilLayout(this, mDataBinding.statusLayout, () -> {
             mIDetailPresenter.getDetailData(mData);
         });
@@ -94,7 +107,10 @@ public class OrderDetailActivity extends BaseCommitActivity<OrderDetail.DataBean
             mIDetailPresenter.getDetailData(mData);
             mLoadUtilLayout.setStatus(StatusData.LOADING);
         }else{
+            mDataBinding.setAccount(0.0f);
+            mDataBinding.setTitle("购买清单详情(草稿)");
             mAdapter.setPicUrls("");
+            createSlideMenu();
         }
     }
 
@@ -203,17 +219,47 @@ public class OrderDetailActivity extends BaseCommitActivity<OrderDetail.DataBean
     public void onDetailDataLoaded(OrderDetail.DataBean data) {
         mCommitData = data;
         mLoadUtilLayout.setStatus(StatusData.LOADED);
-        mAdapter.setData(data.getOrderItemList());
         mAdapter.setCommitted(data.getStatus() == 1);
         if (data.getStatus() == 1) {
             mDataBinding.setCommit(true);
             mDataBinding.setTitle("购买清单详情(已提交)");
+            mDataBinding.recyclerView.setAdapter(mAdapter);
         }else{
             mDataBinding.setTitle("购买清单详情(草稿)");
+            createSlideMenu();
             mDataBinding.setCommit(false);
         }
         mAdapter.setPicUrls(data.getPicUrl());
+        mAdapter.setData(data.getOrderItemList());
         countAccount();
+    }
+
+    private void createSlideMenu() {
+        View view = new View(this);
+        view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, UIHelper.dp2px(100)));
+        mDataBinding.recyclerView.addFooterView(view);
+        mDataBinding.recyclerView.setSwipeItemMenuEnabled(true);
+        mDataBinding.recyclerView.setSwipeMenuCreator(new SwipeMenuCreator() {
+            @Override
+            public void onCreateMenu(SwipeMenu leftMenu, SwipeMenu rightMenu, int position) {
+                SwipeMenuItem right = new SwipeMenuItem(getApplicationContext());
+                right.setBackground(R.drawable.delete_model_bg);
+                right.setText("删除");
+                right.setTextSize(20);
+                right.setTextColor(Color.WHITE);
+                right.setHeight(UIHelper.dp2px(100));
+                right.setWidth(UIHelper.dp2px(100));
+                rightMenu.addMenuItem(right);
+            }
+        });
+        mDataBinding.recyclerView.setOnItemMenuClickListener(new OnItemMenuClickListener() {
+            @Override
+            public void onItemClick(SwipeMenuBridge menuBridge, int adapterPosition) {
+                mAdapter.deleteData(adapterPosition);
+            }
+        });
+        mDataBinding.recyclerView.setSwipeItemMenuEnabled(0, false);
+        mDataBinding.recyclerView.setAdapter(mAdapter);
     }
 
     @Override

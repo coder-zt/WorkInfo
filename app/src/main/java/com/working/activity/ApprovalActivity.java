@@ -15,16 +15,11 @@ import com.working.adapter.IndexPagerAdapter;
 import com.working.base.BaseCommitActivity;
 import com.working.databinding.ActivityPurcahseApprovealLayoutBinding;
 import com.working.domain.ApprovalBean;
-import com.working.domain.Purchase;
 import com.working.domain.PurchaseDetail;
 import com.working.fragment.InspectionFragment;
 import com.working.fragment.PurchaseFragment;
-import com.working.interfaces.IDetailCallback;
 import com.working.presenter.ICommitPresenter;
-import com.working.presenter.IDetailPresenter;
 import com.working.presenter.impl.ApprovalPresenterImpl;
-import com.working.presenter.impl.DetailPurchasePresenterImpl;
-import com.working.setting.StatusData;
 import com.working.utils.ToastUtil;
 import com.working.utils.UserDataMan;
 

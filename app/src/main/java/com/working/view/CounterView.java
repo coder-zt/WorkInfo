@@ -25,6 +25,7 @@ public class CounterView extends LinearLayout {
     private float oldNum;
     private EditText mEtInput;
     private OnNumberChangedListener mCallback;
+    private boolean disableEdit;
 
     public CounterView(Context context) {
         this(context, null);
@@ -45,6 +46,9 @@ public class CounterView extends LinearLayout {
         leftBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (disableEdit) {
+                    return;
+                }
                 if(num > minValue){
                     num--;
                 }else{
@@ -57,6 +61,9 @@ public class CounterView extends LinearLayout {
         rightBtn.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (disableEdit) {
+                    return;
+                }
                 if(num < maxValue){
                     num++;
                 }else{
@@ -122,6 +129,11 @@ public class CounterView extends LinearLayout {
     }
 
     public void setNum(float num){
+        if(num < minValue){
+            num = minValue;
+        }else if( num > maxValue){
+            num = maxValue;
+        }
         this.num = num;
         showValue();
     }
@@ -139,8 +151,19 @@ public class CounterView extends LinearLayout {
     }
 
     public void setScopeValue(float min, float max){
-        minValue = min;
-        maxValue = max;
+        if(min == max&&max == 0.0F){
+            minValue = 0.0F;
+            maxValue = 9999.0F;
+        }else{
+            minValue = min;
+            maxValue = max;
+        }
+
+    }
+
+    public void setCanEdit(boolean canEdit) {
+        disableEdit = !canEdit;
+        mEtInput.setFocusable(canEdit);
     }
 
     public interface OnNumberChangedListener{

@@ -52,14 +52,7 @@ public class InspectionInfoAdapter extends RecyclerView.Adapter<InspectionInfoAd
     public void onBindViewHolder(@NonNull InformationView holder, int position) {
         holder.getBinding().setItemView(holder);
         holder.getBinding().setItem(mData.get(position));
-        if (position == mData.size()-1){
-            holder.bottomView.setVisibility(View.VISIBLE);
-        }else {
-            holder.bottomView.setVisibility(View.GONE);
-        }
     }
-
-
 
     @Override
     public int getItemCount() {
@@ -82,11 +75,9 @@ public class InspectionInfoAdapter extends RecyclerView.Adapter<InspectionInfoAd
     public class InformationView extends RecyclerView.ViewHolder {
         RecyclerInspectionInfoLayoutBinding mBinding = null;
 
-        ImageView bottomView;
         public InformationView(View view, RecyclerInspectionInfoLayoutBinding bind) {
             super(view);
             mBinding = bind;
-            bottomView = view.findViewById(R.id.bottom_view);
         }
 
         public RecyclerInspectionInfoLayoutBinding getBinding() {

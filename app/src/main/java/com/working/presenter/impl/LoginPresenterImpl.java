@@ -24,17 +24,16 @@ public class LoginPresenterImpl extends BasePresenterImpl implements ILoginPrese
         AppModels.getInstance().getUserAuth(userName, passWord, new AppModels.OnUserAuthListener() {
             @Override
             public void onUserAuthLoaded(LoginInfo loginInfo) {
-                Log.d(TAG, "onUserAuthLoaded: " + "加载成功");
                 if (mCallback != null) {
-                    Log.d(TAG, "onUserAuthLoaded: " + "回传view");
-                    RetrofitManager.getRetrofitManager().resetting();
                     ((IUserCallback)mCallback).onUserAuthLoaded(loginInfo);
                 }
             }
 
             @Override
             public void onLoadedFail(String msg) {
-                ((IUserCallback)mCallback).onLoadedFail();
+                if(mCallback != null){
+                    ((IUserCallback)mCallback).onLoadedFail();
+                }
                 Log.d(TAG, "onLoadedFail: " + msg);
             }
         });
@@ -46,9 +45,7 @@ public class LoginPresenterImpl extends BasePresenterImpl implements ILoginPrese
         AppModels.getInstance().refreshUserAuth(token, new AppModels.OnUserAuthListener() {
             @Override
             public void onUserAuthLoaded(LoginInfo loginInfo) {
-                Log.d(TAG, "onUserAuthLoaded: " + "加载成功");
                 if (mCallback != null) {
-                    Log.d(TAG, "onUserAuthLoaded: " + "回传view");
                     ((IUserCallback)mCallback).onUserAuthLoaded(loginInfo);
                 }
             }
@@ -66,10 +63,8 @@ public class LoginPresenterImpl extends BasePresenterImpl implements ILoginPrese
         AppModels.getInstance().getUserInfo(id, new AppModels.OnUserInfoLoadListener() {
             @Override
             public void onUserInfoLoaded(UserInfo userInfo) {
-                if (userInfo != null) {
-                    if (userInfo.getCode() == 200) {
-                        ((IUserCallback)mCallback).onUserInfoLoaded(userInfo);
-                    }
+                if (userInfo != null && mCallback!= null) {
+                    ((IUserCallback)mCallback).onUserInfoLoaded(userInfo);
                 }
             }
 

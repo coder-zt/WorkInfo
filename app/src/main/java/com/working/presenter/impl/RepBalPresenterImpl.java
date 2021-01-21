@@ -1,18 +1,23 @@
 package com.working.presenter.impl;
 
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 
 import com.working.base.BasePresenterImpl;
 import com.working.domain.RepBalData;
-import com.working.domain.RepBalInfoData;
-import com.working.domain.Response;
+import com.working.domain.ClientResponse;
+import com.working.domain.RepOut;
 import com.working.interfaces.ICommitCallback;
 import com.working.interfaces.ZTIListCallback;
 import com.working.interfaces.ZTIListPresenter;
 import com.working.models.AppModels;
+
+import java.util.Comparator;
+import java.util.List;
 
 public class RepBalPresenterImpl extends BasePresenterImpl implements ZTIListPresenter {
 
@@ -20,17 +25,20 @@ public class RepBalPresenterImpl extends BasePresenterImpl implements ZTIListPre
     public void loadListData(final boolean isCommit, String startTime, String endTime) {
         AppModels.getInstance().getRepBalList(getPage(isCommit, false), pageSize,
                 startTime, endTime, isCommit ? 1 : 0, new Handler.Callback() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public boolean handleMessage(@NonNull Message msg) {
                         if(msg.obj instanceof RepBalData) {
                             RepBalData data = (RepBalData) msg.obj;
-                            if (data != null && data.getCode() == 200) {
+                            if (mCallback != null) {
                                 ((ZTIListCallback<RepBalData.DataBean.RecordsBean>) mCallback)
-                                        .onListLoaded(data.getData().getRecords(), isCommit);
+                                        .onListLoaded(reversData(data.getData().getRecords()), isCommit);
                                 return true;
                             }
                         }
-                        ((ZTIListCallback<RepBalData>)mCallback).onListLoadedFail(isCommit);
+                        if (mCallback != null) {
+                            ((ZTIListCallback<RepBalData>) mCallback).onListLoadedFail(isCommit);
+                        }
                         return true;
                     }
                 });
@@ -40,58 +48,52 @@ public class RepBalPresenterImpl extends BasePresenterImpl implements ZTIListPre
     public void loadListDataMore(final boolean isCommit, String startTime, String endTime) {
         AppModels.getInstance().getRepBalList(getPage(isCommit, true), pageSize,
                 startTime, endTime, isCommit ? 1 : 0, new Handler.Callback() {
+                    @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public boolean handleMessage(@NonNull Message msg) {
                         if(msg.obj instanceof RepBalData){
                             RepBalData data = (RepBalData)msg.obj;
-                            if (data.getCode() == 200) {
+                            if (mCallback != null) {
                                 ((ZTIListCallback<RepBalData.DataBean.RecordsBean>)mCallback)
-                                        .onListLoadedMore(data.getData().getRecords(), isCommit);
+                                        .onListLoadedMore(reversData(data.getData().getRecords()), isCommit);
                                 return true;
                             }
                         }
-                        ((ZTIListCallback<RepBalData.DataBean.RecordsBean>)mCallback).onListLoadedMoreFail(isCommit);
+                        if (mCallback != null) {
+                            ((ZTIListCallback<RepBalData.DataBean.RecordsBean>) mCallback).onListLoadedMoreFail(isCommit);
+                        }
                         return true;
                     }
                 });
     }
 
-//    @Override
-//    public void loadDetailInfo(final String id) {
-//        AppModels.getInstance().getRepBalInfo(id, new Handler.Callback() {
-//            @Override
-//            public boolean handleMessage(@NonNull Message msg) {
-//                if(msg.obj instanceof  RepBalInfoData){
-//                    RepBalInfoData data = (RepBalInfoData)msg.obj;
-//                    if (data.getCode() == 200) {
-//                        ((ZTIListCallback<RepBalData.DataBean.RecordsBean,
-//                                RepBalInfoData.DataBean>)mCallback)
-//                                .onDetailDataLoaded(id, data.getData());
-//                    }
-//                } else{
-//                    ((ZTIListCallback<RepBalData,
-//                            RepBalInfoData.DataBean>)mCallback).onDetailDataLoadedFail();
-//                }
-//                return true;
-//            }
-//        });
-//    }
 
     public void uploadRepBal(RepBalData.DataBean.RecordsBean information){
         AppModels.getInstance().uploadRepBal(information, new Handler.Callback() {
             @Override
             public boolean handleMessage(@NonNull Message msg) {
-                if(msg.obj instanceof Response){
-                    Response response = (Response)msg.obj;
-                    if (response.getCode() == 200) {
+                if (mCallback != null) {
+                    if (msg.what != -1) {
                         ((ICommitCallback)mCallback).onCommitFinished();
                     }else{
-                        ((ICommitCallback)mCallback).onCommitFail(response.getMsg());
+                        ((ICommitCallback)mCallback).onCommitFail((String)msg.obj);
                     }
                 }
-
                 return true;
             }
         });
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    private List<RepBalData.DataBean.RecordsBean> reversData(List<RepBalData.DataBean.RecordsBean> records) {
+        records.sort(new Comparator<RepBalData.DataBean.RecordsBean>() {
+            @Override
+            public int compare(RepBalData.DataBean.RecordsBean o1, RepBalData.DataBean.RecordsBean o2) {
+                String updateTime1 = o1.getUpdateTime();
+                String updateTime2 = o2.getUpdateTime();
+                return updateTime1.compareTo(updateTime2);
+            }
+        });
+        return records;
     }
 }

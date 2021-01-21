@@ -8,7 +8,10 @@
         <variable
             name="item"
             type="com.working.domain.PurchaseDetail.DataBean.PurchaseItemListBean" />
-        
+        <variable
+            name="isCommit"
+            type="Boolean" />
+
         <variable
             name="ClickItem"
             type="com.working.adapter.PurchaseDetailAdapter.InformationView" />
@@ -74,6 +77,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginBottom="20dp"
                 android:gravity="center"
+                android:focusable="@{isCommit?false:true}"
                 android:inputType="numberDecimal"
                 android:text='@{item.price,default=""}'
                 android:textColor="#FF2222"
@@ -112,17 +116,6 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </FrameLayout>
-
-    <TextView
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:textSize="20sp"
-        android:text="删除"
-        android:layout_gravity="center_vertical"
-        android:gravity="center"
-        android:textColor="@color/white"
-        android:onClick="@{()->ClickItem.onDeleteClicked(item)}"
-        android:background="@drawable/delete_model_bg"/>
 
 </LinearLayout>
 

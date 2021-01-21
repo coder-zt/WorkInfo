@@ -19,11 +19,13 @@ public class MaterialListPresenterImpl extends BasePresenterImpl implements IMat
             public boolean handleMessage(@NonNull Message msg) {
                 if (msg.obj instanceof MaterialList) {
                     MaterialList data = (MaterialList)msg.obj;
-                    if (data.getCode() == 200) {
+                    if (mCallback != null) {
                         ((IMaterialListCallback)mCallback).onMaterialListLoaded(data.getData());
                     }
                 }else{
-                    ((IMaterialListCallback)mCallback).onLoadFail("加载物料列表失败");
+                    if (mCallback != null) {
+                        ((IMaterialListCallback) mCallback).onLoadFail("加载物料列表失败");
+                    }
                 }
                 return true;
             }

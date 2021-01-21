@@ -24,12 +24,14 @@ public class RepInDetailPresenterImpl extends BasePresenterImpl implements IDeta
             public boolean handleMessage(@NonNull Message msg) {
                 if (msg.obj instanceof RepInInfoData) {
                     RepInInfoData data = (RepInInfoData) msg.obj;
-                    if (data != null && data.getCode() == 200) {
+                    if (mCallback != null) {
                         ((IDetailCallback<RepInInfoData.DataBean>) mCallback)
                                 .onDetailDataLoaded(data.getData());
                     }
                 } else {
-                    ((IDetailCallback<RepInInfoData.DataBean>) mCallback).onDetailDataLoadedFail();
+                    if (mCallback != null) {
+                        ((IDetailCallback<RepInInfoData.DataBean>) mCallback).onDetailDataLoadedFail();
+                    }
                 }
                 return true;
             }

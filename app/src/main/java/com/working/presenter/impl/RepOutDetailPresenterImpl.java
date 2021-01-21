@@ -19,12 +19,14 @@ public class RepOutDetailPresenterImpl extends BasePresenterImpl implements IDet
                 public boolean handleMessage(@NonNull Message msg) {
                     if (msg.obj instanceof RepOutInfoBean) {
                         RepOutInfoBean data = (RepOutInfoBean) msg.obj;
-                        if (data != null && data.getCode() == 200) {
+                        if (mCallback != null) {
                             ((IDetailCallback<RepOutInfoBean.DataBean>) mCallback)
                                     .onDetailDataLoaded(data.getData());
                         }
                     } else {
-                        ((IDetailCallback<RepOutInfoBean.DataBean>) mCallback).onDetailDataLoadedFail();
+                        if (mCallback != null) {
+                            ((IDetailCallback<RepOutInfoBean.DataBean>) mCallback).onDetailDataLoadedFail();
+                        }
                     }
                     return true;
                 }

@@ -26,6 +26,9 @@ public class UpLoadRepOutPresenterImpl extends BasePresenterImpl implements ICom
         AppModels.getInstance().uploadRepOut(information, new Handler.Callback() {
             @Override
             public boolean handleMessage(@NonNull Message msg) {
+                if (mCallback == null) {
+                    return true;
+                }
                 if (msg.what != -1) {
                     ((ICommitCallback)mCallback).onCommitFinished();
                 }else{

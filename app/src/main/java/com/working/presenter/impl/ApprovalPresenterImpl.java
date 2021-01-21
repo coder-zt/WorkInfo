@@ -22,7 +22,9 @@ public class ApprovalPresenterImpl extends BasePresenterImpl implements IApprova
                     ((ICommitCallback) mCallback).onCommitFinished();
                 } else {
                     String info = (String) msg.obj;
-                    ((ICommitCallback) mCallback).onCommitFail(info);
+                    if (mCallback != null) {
+                        ((ICommitCallback) mCallback).onCommitFail(info);
+                    }
                 }
                 return true;
             }
@@ -34,11 +36,15 @@ public class ApprovalPresenterImpl extends BasePresenterImpl implements IApprova
         AppModels.getInstance().approvalOut(approvalData, new Handler.Callback() {
             @Override
             public boolean handleMessage(@NonNull Message msg) {
-                if (msg.what != -1) {
-                    ((ICommitCallback) mCallback).onCommitFinished();
+                if (msg.what != -1 ) {
+                    if(mCallback != null){
+                        ((ICommitCallback) mCallback).onCommitFinished();
+                    }
                 } else {
                     String info = (String) msg.obj;
-                    ((ICommitCallback) mCallback).onCommitFail(info);
+                    if(mCallback != null) {
+                        ((ICommitCallback) mCallback).onCommitFail(info);
+                    }
                 }
                 return true;
             }
@@ -51,10 +57,14 @@ public class ApprovalPresenterImpl extends BasePresenterImpl implements IApprova
             @Override
             public boolean handleMessage(@NonNull Message msg) {
                 if (msg.what != -1) {
-                    ((ICommitCallback) mCallback).onCommitFinished();
+                    if(mCallback != null){
+                        ((ICommitCallback) mCallback).onCommitFinished();
+                    }
                 } else {
                     String info = (String) msg.obj;
-                    ((ICommitCallback) mCallback).onCommitFail(info);
+                    if(mCallback != null) {
+                        ((ICommitCallback) mCallback).onCommitFail(info);
+                    }
                 }
                 return true;
             }

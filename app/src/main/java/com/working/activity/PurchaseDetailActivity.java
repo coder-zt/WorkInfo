@@ -1,8 +1,12 @@
 package com.working.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -15,7 +19,6 @@ import com.working.databinding.ActivityPurcahseDetailBinding;
 import com.working.domain.ApprovalBean;
 import com.working.domain.MaterialListData;
 import com.working.domain.PurchaseDetail;
-import com.working.domain.RepOutInfoBean;
 import com.working.interfaces.IDetailCallback;
 import com.working.interfaces.IPurchaseOrderData;
 import com.working.presenter.ICommitPresenter;
@@ -27,7 +30,13 @@ import com.working.setting.StatusData;
 import com.working.utils.AppRouter;
 import com.working.utils.FileUtils;
 import com.working.utils.ToastUtil;
+import com.working.utils.UIHelper;
 import com.working.view.DataLoadUtilLayout;
+import com.yanzhenjie.recyclerview.OnItemMenuClickListener;
+import com.yanzhenjie.recyclerview.SwipeMenu;
+import com.yanzhenjie.recyclerview.SwipeMenuBridge;
+import com.yanzhenjie.recyclerview.SwipeMenuCreator;
+import com.yanzhenjie.recyclerview.SwipeMenuItem;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -132,7 +141,6 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
                 countAccount();
             }
         });
-        mBinding.recyclerView.setAdapter(mAdapter);
         mLoadUtilLayout = new DataLoadUtilLayout(this, mBinding.statusLayout, () -> {
             mDetailPresenter.getDetailData(mId);
         });
@@ -145,6 +153,8 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
     private void countAccount() {
         //计算总价
         BigDecimal sum = new BigDecimal("0.0");
+        int i = 1;
+        Log.d(TAG, "countAccount: ==============================================================");
         for (PurchaseDetail.DataBean.PurchaseItemListBean datum: mDataBean.getPurchaseItemList()) {
             String priceStr = datum.getPrice();
             if (priceStr.length() == 0) {
@@ -156,7 +166,10 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
             BigDecimal multiply = bigCount.multiply(bigPrice);
             BigDecimal add = sum.add(multiply);
             sum = add;
+            Log.d(TAG, "countAccount: " + i + "=====" + multiply.floatValue()+  "====" + add.floatValue());
+            i++;
         }
+        Log.d(TAG, "countAccount: ==============================================================");
         mBinding.setAccount(sum.floatValue());
     }
 
@@ -202,6 +215,16 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
         List<PurchaseDetail.DataBean.PurchaseItemListBean> purchaseItemList = data.getPurchaseItemList();
         for (PurchaseDetail.DataBean.PurchaseItemListBean purchaseItemListBean : purchaseItemList) {
             mSelectedItem.add(purchaseItemListBean.getMaterialName());
+            float max = Float.parseFloat(purchaseItemListBean.getMax());
+            float min = Float.parseFloat(purchaseItemListBean.getMin());
+            float productQuantity = Float.parseFloat(purchaseItemListBean.getProductQuantity());
+            if(productQuantity > Math.max(max, min)){
+                productQuantity = Math.max(max, min);
+            }
+            if(productQuantity < Math.min(max, min)){
+                productQuantity = Math.min(max, min);
+            }
+            purchaseItemListBean.setProductQuantity(String.valueOf(productQuantity));
         }
         mDataBean = data;
         countAccount();
@@ -213,17 +236,54 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
                 mBinding.setCommit(true);
                 if (data.getApprovalStatus() == 3) {
                     mBinding.setTitle("采购清单详情(未通过)");
+                    createSlideMenu();
                 } else if (data.getApprovalStatus() == 2) {
                     mBinding.setTitle("采购清单详情(通过)");
                     setCreateData(data);
+                    setRecyclerAdapter();
                 } else {
                     mBinding.setTitle("采购清单详情(审核中)");
+                    setRecyclerAdapter();
                 }
             } else {
                 mBinding.setCommit(false);
                 mBinding.setTitle("采购清单详情(未上报)");
+                createSlideMenu();
             }
         }
+    }
+
+    private void setRecyclerAdapter() {
+        mBinding.recyclerView.setAdapter(mAdapter);
+    }
+
+
+    private void createSlideMenu() {
+        View view = new View(this);
+        view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,UIHelper.dp2px(100)));
+        mBinding.recyclerView.addFooterView(view);
+        mBinding.recyclerView.setSwipeItemMenuEnabled(true);
+        mBinding.recyclerView.setSwipeMenuCreator(new SwipeMenuCreator() {
+            @Override
+            public void onCreateMenu(SwipeMenu leftMenu, SwipeMenu rightMenu, int position) {
+                SwipeMenuItem right = new SwipeMenuItem(getApplicationContext());
+                right.setBackground(R.drawable.delete_model_bg);
+                right.setText("删除");
+                right.setTextSize(20);
+                right.setTextColor(Color.WHITE);
+                right.setHeight(UIHelper.dp2px(100));
+                right.setWidth(UIHelper.dp2px(100));
+                rightMenu.addMenuItem(right);
+            }
+        });
+        mBinding.recyclerView.setOnItemMenuClickListener(new OnItemMenuClickListener() {
+            @Override
+            public void onItemClick(SwipeMenuBridge menuBridge, int adapterPosition) {
+                mAdapter.deleteData(adapterPosition);
+            }
+        });
+
+        mBinding.recyclerView.setAdapter(mAdapter);
     }
 
     private void setCreateData(PurchaseDetail.DataBean data) {

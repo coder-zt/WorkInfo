@@ -1,8 +1,10 @@
 package com.working.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -13,7 +15,6 @@ import com.working.adapter.RepOutDetailAdapter;
 import com.working.base.BaseCommitActivity;
 import com.working.databinding.ActivityRepoutDetailBinding;
 import com.working.domain.MaterialListData;
-import com.working.domain.RepInInfoData;
 import com.working.domain.RepOutInfoBean;
 import com.working.interfaces.IDetailCallback;
 import com.working.presenter.ICommitPresenter;
@@ -24,8 +25,14 @@ import com.working.setting.StatusData;
 import com.working.utils.AppRouter;
 import com.working.utils.FileUtils;
 import com.working.utils.ToastUtil;
+import com.working.utils.UIHelper;
 import com.working.utils.UserDataMan;
 import com.working.view.DataLoadUtilLayout;
+import com.yanzhenjie.recyclerview.OnItemMenuClickListener;
+import com.yanzhenjie.recyclerview.SwipeMenu;
+import com.yanzhenjie.recyclerview.SwipeMenuBridge;
+import com.yanzhenjie.recyclerview.SwipeMenuCreator;
+import com.yanzhenjie.recyclerview.SwipeMenuItem;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -37,7 +44,7 @@ public class RepOutInfoActivity extends BaseCommitActivity<RepOutInfoBean.DataBe
     private RepOutDetailAdapter mAdapter;
     private List<String> mSelectedStr = new ArrayList<>();
     private final int REQUEST_CODE = 111;
-    private ActivityRepoutDetailBinding mBing;
+    private ActivityRepoutDetailBinding mDataBinding;
     private IDetailPresenter mPresenter = new RepOutDetailPresenterImpl();
     private String mIdData;
     private DataLoadUtilLayout mLoadUtilLayout;
@@ -45,8 +52,8 @@ public class RepOutInfoActivity extends BaseCommitActivity<RepOutInfoBean.DataBe
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mBing = DataBindingUtil.setContentView(this, R.layout.activity_repout_detail);
-        mBing.setActivity(this);
+        mDataBinding = DataBindingUtil.setContentView(this, R.layout.activity_repout_detail);
+        mDataBinding.setActivity(this);
         mPresenter.registerCallback(this);
         initView();
         initData();
@@ -54,19 +61,20 @@ public class RepOutInfoActivity extends BaseCommitActivity<RepOutInfoBean.DataBe
 
     private void initView() {
         mAdapter = new RepOutDetailAdapter(new RepOutDetailAdapter.OnDataContainerListener() {
-            @Override
-            public void onAddMaterialClicked() {
-                AppRouter.toAddMaterialActivity(RepOutInfoActivity.this, mSelectedStr, REQUEST_CODE);
-            }
 
             @Override
             public void onDataContainerChanged(List<RepOutInfoBean.DataBean.OutStockItemListBean> data, String urls) {
                 mDataBean.setOutStockItemList(data);
                 accountCount();
             }
+
+            @Override
+            public void onDataCountChange(int oldSize, int newSize) {
+                mDataBinding.recyclerView.setSwipeItemMenuEnabled(oldSize, true);
+                mDataBinding.recyclerView.setSwipeItemMenuEnabled(newSize, false);
+            }
         }, mImageListener);
-        mBing.recyclerView.setAdapter(mAdapter);
-        mLoadUtilLayout = new DataLoadUtilLayout(this, mBing.statusLayout, () -> {
+        mLoadUtilLayout = new DataLoadUtilLayout(this, mDataBinding.statusLayout, () -> {
             mPresenter.getDetailData(mIdData);
         });
     }
@@ -91,7 +99,7 @@ public class RepOutInfoActivity extends BaseCommitActivity<RepOutInfoBean.DataBe
             BigDecimal add = sum.add(multiply);
             sum = add;
         }
-        mBing.setAccount(sum.floatValue());
+        mDataBinding.setAccount(sum.floatValue());
     }
 
     private void initData() {
@@ -101,13 +109,24 @@ public class RepOutInfoActivity extends BaseCommitActivity<RepOutInfoBean.DataBe
             mLoadUtilLayout.setStatus(StatusData.LOADING);
         }else{
             mDataBean = new RepOutInfoBean.DataBean();
-            mBing.setTitle("出库清单详情(草稿)");
+            mDataBinding.setTitle("出库清单详情(草稿)");
             mAdapter.setPicUrls("");
+            mDataBinding.setAccount(0.0f);
+            mDataBinding.setCommit(!UserDataMan.getInstance().checkMaterialGrant());
+            if (UserDataMan.getInstance().checkMaterialGrant()) {
+                createSlideMenu();
+            }else{
+                mDataBinding.recyclerView.setAdapter(mAdapter);
+            }
         }
     }
 
     public void submitData(boolean isCommit){
         if (!UserDataMan.getInstance().checkMaterialGrant()) {
+            ToastUtil.showMessage("权限不足，无法操作");
+            return;
+        }
+        if (mDataBean.getStatus() == 1) {
             ToastUtil.showMessage("权限不足，无法操作");
             return;
         }
@@ -162,7 +181,8 @@ public class RepOutInfoActivity extends BaseCommitActivity<RepOutInfoBean.DataBe
             FileUtils.copyValue(datum, dataBean);
             datum.setPrice(String.valueOf(dataBean.getCommonPrice()));
             datum.setProductQuantity("0.0");
-            datum.setMaterialId(String.valueOf(dataBean.getId()));
+            datum.setMaterialId(dataBean.getId());
+            datum.setOutStockId(mDataBean.getId());
             mSelectedStr.add(datum.getMaterialName());
             mAdapter.addData(datum);
         }
@@ -176,6 +196,34 @@ public class RepOutInfoActivity extends BaseCommitActivity<RepOutInfoBean.DataBe
         mPresenter.unregisterCallback();
     }
 
+    private void createSlideMenu() {
+        View view = new View(this);
+        view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, UIHelper.dp2px(100)));
+        mDataBinding.recyclerView.addFooterView(view);
+        mDataBinding.recyclerView.setSwipeItemMenuEnabled(true);
+        mDataBinding.recyclerView.setSwipeMenuCreator(new SwipeMenuCreator() {
+            @Override
+            public void onCreateMenu(SwipeMenu leftMenu, SwipeMenu rightMenu, int position) {
+                SwipeMenuItem right = new SwipeMenuItem(getApplicationContext());
+                right.setBackground(R.drawable.delete_model_bg);
+                right.setText("删除");
+                right.setTextSize(20);
+                right.setTextColor(Color.WHITE);
+                right.setHeight(UIHelper.dp2px(100));
+                right.setWidth(UIHelper.dp2px(100));
+                rightMenu.addMenuItem(right);
+            }
+        });
+        mDataBinding.recyclerView.setOnItemMenuClickListener(new OnItemMenuClickListener() {
+            @Override
+            public void onItemClick(SwipeMenuBridge menuBridge, int adapterPosition) {
+                mAdapter.deleteData(adapterPosition);
+            }
+        });
+        mDataBinding.recyclerView.setSwipeItemMenuEnabled(0, false);
+        mDataBinding.recyclerView.setAdapter(mAdapter);
+    }
+
     @Override
     protected void addImageUrl(String link) {
         mAdapter.addPicUrl(link);
@@ -186,13 +234,20 @@ public class RepOutInfoActivity extends BaseCommitActivity<RepOutInfoBean.DataBe
         mDataBean = data;
         mLoadUtilLayout.setStatus(StatusData.LOADED);
         mAdapter.setData(data.getOutStockItemList());
-        mAdapter.setCommitted(data.getStatus() == 1);
+        boolean grant = UserDataMan.getInstance().checkMaterialGrant();
+        mAdapter.setCommitted(data.getStatus() == 1 || !grant);
         if (data.getStatus() == 1) {
-            mBing.setTitle("出库清单详情(已提交)");
-            mBing.setCommit(true);
+            mDataBinding.setTitle("出库清单详情(已提交)");
+            mDataBinding.setCommit(true);
+            mDataBinding.recyclerView.setAdapter(mAdapter);
         }else{
-            mBing.setTitle("出库清单详情(草稿)");
-            mBing.setCommit(false);
+            mDataBinding.setTitle("出库清单详情(草稿)");
+            mDataBinding.setCommit(!UserDataMan.getInstance().checkMaterialGrant());
+            if (UserDataMan.getInstance().checkMaterialGrant()) {
+                createSlideMenu();
+            }else{
+                mDataBinding.recyclerView.setAdapter(mAdapter);
+            }
         }
         mAdapter.setPicUrls(data.getPicUrl());
         accountCount();

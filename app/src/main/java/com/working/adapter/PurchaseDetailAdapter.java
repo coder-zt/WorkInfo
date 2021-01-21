@@ -49,67 +49,77 @@ public class PurchaseDetailAdapter extends RecyclerView.Adapter<PurchaseDetailAd
         return new InformationView(binding.getRoot(), binding);
     }
 
+
     @Override
-    public void onBindViewHolder(@NonNull PurchaseDetailAdapter.InformationView holder, int position) {
+    public void onBindViewHolder(@NonNull PurchaseDetailAdapter.InformationView holder, final int position) {
        if(position < mData.size()){
+           holder.mBinding.editText.removeTextChangedListener(holder.getTextWatcher());
+           holder.setTextWatcher(new TextWatcher() {
+               @Override
+               public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+               }
+
+               @Override
+               public void onTextChanged(CharSequence s, int start, int before, int count) {
+                   mData.get(position).setPrice(s.toString());
+                   if (mCallback != null) {
+                       mCallback.onMaterialNumChanged(mData);
+                   }
+                   String marketPrice = mData.get(position).getPriceMarket();
+                   if(s.length()> 0 &&  marketPrice != null){
+                       float price = Float.parseFloat(s.toString());
+                       float market = Float.parseFloat(marketPrice);
+                       if(price == market){
+                           holder.mBinding.tvShow.setVisibility(View.GONE);
+                       }else if(price < market){
+                           holder.mBinding.tvShow.setVisibility(View.VISIBLE);
+                           holder.mBinding.tvShow.setText("低于于市场价");
+                       }else{
+                           holder.mBinding.tvShow.setVisibility(View.VISIBLE);
+                           holder.mBinding.tvShow.setText("高于市场价");
+                       }
+                   }
+               }
+
+               @Override
+               public void afterTextChanged(Editable s) {
+
+               }
+           });
+            holder.mBinding.editText.addTextChangedListener(holder.getTextWatcher());
             holder.mBinding.setItem(mData.get(position));
+            holder.mBinding.setIsCommit(committed);
+            holder.getBinding().counterView.setCanEdit(!committed);
             holder.mBinding.setClickItem(holder);
+           holder.mBinding.counterView.setNumChangeListener(new CounterView.OnNumberChangedListener() {
+               @Override
+               public void onNumChanged(float num) {
+                   if (mCallback != null) {
+                       mData.get(position).setProductQuantity(String.valueOf(num));
+                       mCallback.onMaterialNumChanged(mData);
+                   }
+               }
+           });
+           if(mData.get(position).getMin() != null &&mData.get(position).getMax() != null  ){
+               float minValue = Float.parseFloat(mData.get(position).getMin());
+               float maxValue = Float.parseFloat(mData.get(position).getMax());
+               if(minValue > maxValue) {
+                   float temp = minValue;
+                   minValue = maxValue;
+                   maxValue = temp;
+               }
+               holder.mBinding.counterView.setScopeValue(minValue, maxValue);
+           }else{
+               holder.mBinding.counterView.setScopeValue(0.0F,0.0F);
+           }
             holder.mBinding.counterView.setNum(Float.parseFloat(mData.get(position).getProductQuantity()));
-            if(mData.get(position).getMin() != null &&mData.get(position).getMax() != null  ){
-                float minValue = Float.parseFloat(mData.get(position).getMin());
-                float maxValue = Float.parseFloat(mData.get(position).getMax());
-                if(minValue > maxValue) {
-                    float temp = minValue;
-                    minValue = maxValue;
-                    maxValue = temp;
-                }
-                holder.mBinding.counterView.setScopeValue(minValue, maxValue);
-            }
-            holder.mBinding.counterView.setNumChangeListener(new CounterView.OnNumberChangedListener() {
-                @Override
-                public void onNumChanged(float num) {
-                    if (mCallback != null) {
-                        mData.get(position).setProductQuantity(String.valueOf(num));
-                        mCallback.onMaterialNumChanged(mData);
-                    }
-                }
-            });
-            holder.mBinding.editText.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    mData.get(position).setPrice(s.toString());
-                    mCallback.onMaterialNumChanged(mData);
-                    String marketPrice = mData.get(position).getPriceMarket();
-                    if(s.length()> 0 &&  marketPrice != null){
-                        float price = Float.parseFloat(s.toString());
-                        float market = Float.parseFloat(marketPrice);
-                        if(price == market){
-                            holder.mBinding.tvShow.setVisibility(View.GONE);
-                        }else if(price < market){
-                            holder.mBinding.tvShow.setVisibility(View.VISIBLE);
-                            holder.mBinding.tvShow.setText("低于于市场价");
-                        }else{
-                            holder.mBinding.tvShow.setVisibility(View.VISIBLE);
-                            holder.mBinding.tvShow.setText("高于市场价");
-                        }
-                    }
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                }
-            });
         }
     }
 
     @Override
     public int getItemCount() {
+        Log.d(TAG, "getItemCount: mData.size ---> " + mData.size());
         return mData.size();
     }
 
@@ -119,6 +129,14 @@ public class PurchaseDetailAdapter extends RecyclerView.Adapter<PurchaseDetailAd
             mData.addAll(data);
         }
         notifyDataSetChanged();
+    }
+
+    public void deleteData(int index){
+        mData.remove(index);
+        notifyItemRemoved(index);
+        if (mCallback != null) {
+            mCallback.onMaterialNumChanged(mData);
+        }
     }
 
     public void addData(PurchaseDetail.DataBean.PurchaseItemListBean data) {
@@ -136,18 +154,25 @@ public class PurchaseDetailAdapter extends RecyclerView.Adapter<PurchaseDetailAd
     public class InformationView extends RecyclerView.ViewHolder {
 
         private RecyclerPurchaseDetailLayoutBinding mBinding;
+        private TextWatcher mTextWatcher;
+
         public InformationView(@NonNull View itemView, RecyclerPurchaseDetailLayoutBinding binding){
             super(itemView);
             mBinding = binding;
         }
 
-        public void onDeleteClicked(PurchaseDetail.DataBean.PurchaseItemListBean item){
-            mData.remove(item);
-            notifyDataSetChanged();
-        }
+
 
         public RecyclerPurchaseDetailLayoutBinding getBinding() {
             return mBinding;
+        }
+
+        public TextWatcher getTextWatcher() {
+            return mTextWatcher;
+        }
+
+        public void setTextWatcher(TextWatcher textWatcher) {
+            mTextWatcher = textWatcher;
         }
     }
 

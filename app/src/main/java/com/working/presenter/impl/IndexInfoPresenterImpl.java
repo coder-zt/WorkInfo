@@ -33,16 +33,22 @@ public class IndexInfoPresenterImpl extends BasePresenterImpl implements IIndexI
                     notice = (IndexNotice) msg.obj;
                 }
                 if (msg.what == -1 || notice == null || notice.getData() == null) {
-                    ((IIndexInfoCallback)mCallback).onLoadFail("首页公告数据加载失败");
-                    return false;
+                    if(mCallback != null){
+                        ((IIndexInfoCallback)mCallback).onLoadMoreFail("首页公告数据加载更多失败");
+                    }
+                    return true;
                 }
                 List<IndexNotice.DataBean.RecordsBean> records = notice.getData().getRecords();
                 if (records == null) {
-                    ((IIndexInfoCallback)mCallback).onLoadFail("首页公告数据加载失败");
-                    return false;
+                    if(mCallback != null){
+                        ((IIndexInfoCallback)mCallback).onLoadMoreFail("首页公告数据加载更多失败");
+                    }
+                    return true;
                 }
-                ((IIndexInfoCallback)mCallback).onIndexNoticeLoaded(records);
-                return false;
+                if(mCallback != null){
+                    ((IIndexInfoCallback)mCallback).onIndexNoticeLoaded(records);
+                }
+                return true;
             }
         });
     }
@@ -55,19 +61,25 @@ public class IndexInfoPresenterImpl extends BasePresenterImpl implements IIndexI
             public boolean handleMessage(@NonNull Message msg) {
                 IndexNotice notice = (IndexNotice) msg.obj;
                 if (msg.what == -1 || notice == null || notice.getData() == null) {
-                    ((IIndexInfoCallback)mCallback).onLoadMoreFail("首页公告数据加载更多失败");
+                    if(mCallback != null){
+                        ((IIndexInfoCallback)mCallback).onLoadMoreFail("首页公告数据加载更多失败");
+                    }
                     page--;
-                    return false;
+                    return true;
                 }
 
                 List<IndexNotice.DataBean.RecordsBean> records = notice.getData().getRecords();
                 if (records == null) {
-                    ((IIndexInfoCallback)mCallback).onLoadMoreFail("首页公告数据加载更多失败");
+                    if(mCallback != null){
+                        ((IIndexInfoCallback)mCallback).onLoadMoreFail("首页公告数据加载更多失败");
+                    }
                     page--;
-                    return false;
+                    return true;
                 }
-                ((IIndexInfoCallback)mCallback).onIndexNoticeLoadedMore(records);
-                return false;
+                if(mCallback != null){
+                    ((IIndexInfoCallback)mCallback).onIndexNoticeLoadedMore(records);
+                }
+                return true;
             }
         });
     }

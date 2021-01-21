@@ -5,7 +5,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-public class Response {
+public class ClientResponse {
 
     /**
      * code : 400

@@ -184,7 +184,7 @@ public class AddInspectionActivity extends BaseCommitActivity<InspectionFormData
             }else if(TextUtils.equals(filedInfo.getAlias(),"性质")){
                 mInformation.setNature(filedInfo.getValue());
             //缺损位置-具体桩号->用户输入
-            }else if(TextUtils.equals(filedInfo.getAlias(),"缺损位置-具体桩号")){
+            }else if(TextUtils.equals(filedInfo.getAlias(),"缺损位置")){
                 mInformation.setPileNo(filedInfo.getValue() );
             //标度->用户输入
             }else if(TextUtils.equals(filedInfo.getAlias(),"标度")){

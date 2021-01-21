@@ -303,14 +303,14 @@ public abstract class BaseCommitActivity<T> extends BaseActivity
     @Override
     public void onCommitFinished() {
         dismissWaitingDialog();
-        showResultDialog("提交数据成功！", true);
+        showResultDialog("提交数据成功！", true, false);
     }
 
     @Override
     public void onCommitFail(String msg) {
         dismissWaitingDialog();
         onCommitFail();
-        showResultDialog(msg, false);
+        showResultDialog(msg, false, false);
     }
 
     protected abstract void onCommitFail();
@@ -337,14 +337,14 @@ public abstract class BaseCommitActivity<T> extends BaseActivity
         if(mFileCount == mFileFail + mFileSuccess){
             dismissWaitingDialog();
             String msg = "共上传文件" + mFileCount + "个，其中成功"+ mFileSuccess + "个，失败" + mFileFail + "个";
-            showResultDialog( msg,true);
+            showResultDialog( msg,true, true);
         }
     }
 
 
     //===========================dialog相关操作============================================
 
-    private void showResultDialog(String msg, final boolean success){
+    private void showResultDialog(String msg, final boolean success, final boolean isFile){
             final CommonDialog dialog = new CommonDialog(this);
             dialog.setMessage(msg)
                     .setImageResId(success?R.mipmap.success_icon:R.mipmap.fail_icon)
@@ -353,11 +353,17 @@ public abstract class BaseCommitActivity<T> extends BaseActivity
                 @Override
                 public void onPositiveClick() {
                     dialog.dismiss();
+                    if(success && !isFile){
+                        finish();
+                    }
                 }
 
                 @Override
                 public void onNegtiveClick() {
                     dialog.dismiss();
+                    if(success && !isFile){
+                        finish();
+                    }
                 }
             }).show();
         }

@@ -214,4 +214,8 @@ public class SlideRecyclerView extends RecyclerView {
             mFlingView.scrollTo(0, 0);
         }
     }
+
+    public void setSlide(boolean slide) {
+        mIsSlide = slide;
+    }
 }

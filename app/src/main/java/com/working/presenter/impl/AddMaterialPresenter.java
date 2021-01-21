@@ -25,15 +25,22 @@ public class AddMaterialPresenter extends BasePresenterImpl implements IAddMater
                     data = (MaterialListData) msg.obj;
                 }
                 if (msg.what == -1 || data == null || data.getData() == null) {
-                    ((IAddMaterialCallback)mCallback).onLoadFail("新增物料数据加载失败");
+                    if (mCallback != null) {
+                        ((IAddMaterialCallback)mCallback).onLoadFail("新增物料数据加载失败");
+                    }
                     return true;
                 }
                 List<MaterialListData.DataBean> records = data.getData();
                 if (records == null) {
-                    ((IAddMaterialCallback)mCallback).onLoadFail("新增物料数据加载失败");
+                    if (mCallback != null) {
+                        ((IAddMaterialCallback) mCallback).onLoadFail("新增物料数据加载失败");
+
+                    }
                     return true;
                 }
-                ((IAddMaterialCallback)mCallback).onMaterialListLoaded(records);
+                if (mCallback != null) {
+                    ((IAddMaterialCallback) mCallback).onMaterialListLoaded(records);
+                }
                 return true;
             }
         });

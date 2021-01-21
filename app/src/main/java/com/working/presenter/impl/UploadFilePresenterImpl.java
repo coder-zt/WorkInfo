@@ -24,7 +24,6 @@ public class UploadFilePresenterImpl extends BasePresenterImpl implements IUploa
                 if (msg.obj instanceof PostedFileBean) {
                     PostedFileBean bean = (PostedFileBean) msg.obj;
                     if (bean != null && bean.getCode() == 200) {
-                        Log.d(TAG, "handleMessage: " + new Gson().toJson(bean));
                         if (mCallback != null) {
                             ((IUploadFileCallback) mCallback).onUploadFileFinished(bean);
                         }
@@ -32,7 +31,7 @@ public class UploadFilePresenterImpl extends BasePresenterImpl implements IUploa
                     }
                 }
                 if (mCallback != null) {
-                    ((IUploadFileCallback)mCallback).onUploadFileFail("图片上传失败");
+                    ((IUploadFileCallback)mCallback).onUploadFileFail((String)msg.obj);
                 }
                 return true;
             }

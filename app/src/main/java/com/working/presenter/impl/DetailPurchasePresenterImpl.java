@@ -23,12 +23,15 @@ public class DetailPurchasePresenterImpl extends BasePresenterImpl implements ID
             public boolean handleMessage(@NonNull Message msg) {
                 if(msg.obj instanceof PurchaseDetail){
                     PurchaseDetail data = (PurchaseDetail)msg.obj;
-                    if (data != null && data.getCode() == 200) {
+                    if (mCallback != null) {
                         ((IDetailCallback<PurchaseDetail.DataBean>)mCallback)
                                 .onDetailDataLoaded(data.getData());
                     }
                 }else{
-                    ((IDetailCallback<PurchaseDetail.DataBean>)mCallback).onDetailDataLoadedFail();
+                    if (mCallback != null) {
+                        ((IDetailCallback<PurchaseDetail.DataBean>) mCallback)
+                                .onDetailDataLoadedFail();
+                    }
                 }
                 return true;
             }

@@ -26,6 +26,9 @@ public class UpLoadRepInPresenterImpl extends BasePresenterImpl implements IComm
         AppModels.getInstance().uploadRepertoryIn(information, new Handler.Callback() {
             @Override
             public boolean handleMessage(@NonNull Message msg) {
+                if(mCallback == null){
+                    return true;
+                }
                 if (msg.what != -1) {
                     ((ICommitCallback)mCallback).onCommitFinished();
                 }else{

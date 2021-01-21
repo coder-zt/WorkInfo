@@ -167,7 +167,8 @@
             android:layout_height="wrap_content"
             android:visibility='@{data.status==1?view.GONE:view.VISIBLE}'
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="@+id/view7"
+            app:layout_constraintTop_toBottomOf="@+id/view7" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

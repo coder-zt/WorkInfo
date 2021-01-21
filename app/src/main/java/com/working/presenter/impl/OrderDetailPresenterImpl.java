@@ -23,12 +23,14 @@ public class OrderDetailPresenterImpl extends BasePresenterImpl implements IDeta
             public boolean handleMessage(@NonNull Message msg) {
                 if (msg.obj instanceof OrderDetail) {
                     OrderDetail data = (OrderDetail) msg.obj;
-                    if (data != null && data.getCode() == 200) {
+                    if (data != null && mCallback != null) {
                         ((IDetailCallback<OrderDetail.DataBean>) mCallback)
                                 .onDetailDataLoaded(data.getData());
                     }
                 } else {
-                    ((IDetailCallback<OrderDetail.DataBean>) mCallback).onDetailDataLoadedFail();
+                    if (mCallback != null) {
+                        ((IDetailCallback<OrderDetail.DataBean>) mCallback).onDetailDataLoadedFail();
+                    }
                 }
                 return true;
             }

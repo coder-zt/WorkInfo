@@ -1,13 +1,11 @@
 package com.working.fragment;
 
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 
 import com.working.R;
 import com.working.activity.ApprovalActivity;
 import com.working.adapter.PurchaseApprovalAdapter;
-import com.working.base.BaseDataAdapter;
 import com.working.base.BaseFragment;
 import com.working.databinding.FragmentPurchaseBinding;
 import com.working.domain.PurchaseDetail;

@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi;
 import com.google.gson.Gson;
 import com.working.domain.ApprovalBean;
 import com.working.domain.ApprovalOutBean;
+import com.working.domain.ClientResponse;
 import com.working.domain.IndexNotice;
 import com.working.domain.InspectionDetail;
 import com.working.domain.InspectionFormData;
@@ -36,6 +37,8 @@ import com.working.utils.RetrofitManager;
 import com.working.utils.UserDataMan;
 
 import org.greenrobot.eventbus.EventBus;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -101,6 +104,7 @@ public class AppModels {
                     @Override
                     public void onUserAuthLoaded(LoginInfo loginInfo) {
                         Log.d(TAG, "onUserAuthLoaded: " + "初始化用户信息！");
+                        RetrofitManager.getRetrofitManager().resetting();
                         UserDataMan.getInstance().init(loginInfo, true);
                     }
 
@@ -138,6 +142,7 @@ public class AppModels {
             @Override
             public void onResponse(Call<LoginInfo> call, Response<LoginInfo> response) {
                 printErrorLog(response);
+                RetrofitManager.getRetrofitManager().resetting();
                 listener.onUserAuthLoaded(response.body());
             }
 
@@ -227,7 +232,7 @@ public class AppModels {
             public void onResponse(Call<PostedFileBean> call, Response<PostedFileBean> response) {
                 if (response.code()!=200) {
                     printErrorLog(response);
-                    requestFail("上传文件失败！", callback);
+                    requestFail(response.body().getMsg(), callback);
                     return;
                 }
                 requestSuccess(response.body(), callback);
@@ -335,21 +340,16 @@ public class AppModels {
         final String dataJson = new Gson().toJson(information);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json;charset=UTF-8"), dataJson);
         Log.d(TAG, "updateInspection: " + dataJson);
-        Call<ResponseBody> inspectionListCall = appApi.uploadInspection(body);
-        inspectionListCall.enqueue(new Callback<ResponseBody>() {
+        Call<ClientResponse> inspectionListCall = appApi.uploadInspection(body);
+        inspectionListCall.enqueue(new Callback<ClientResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.code()!=200) {
-                    printErrorLog(response);
-                    requestFail("上传失败, data:" + dataJson, callback);
-                    return;
-                }
-                requestSuccess(response.body(), callback);
+            public void onResponse(Call<ClientResponse> call, Response<ClientResponse> response) {
+                handleClientResponse(response, callback);
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                requestFail("上传失败, data:" + dataJson, callback);
+            public void onFailure(Call<ClientResponse> call, Throwable t) {
+                requestFail("网络错误！", callback);
             }
         });
     }
@@ -473,7 +473,7 @@ public class AppModels {
     }
 
     /**
-     * 提交采购清单
+     * 提交采购清单(数据响应)
      * @param callback
      */
     public void uploadPurchase(PurchaseDetail.DataBean commitBean, final Handler.Callback callback) {
@@ -481,55 +481,45 @@ public class AppModels {
         final String dataJson = new Gson().toJson(commitBean);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json;charset=UTF-8"), dataJson);
         Log.d(TAG, "updateInspection: " + dataJson);
-        Call<com.working.domain.Response> inspectionListCall = appApi.uploadPurchase(body);
-        inspectionListCall.enqueue(new Callback<com.working.domain.Response>() {
+        Call<ClientResponse> inspectionListCall = appApi.uploadPurchase(body);
+        inspectionListCall.enqueue(new Callback<ClientResponse>() {
             @Override
-            public void onResponse(Call<com.working.domain.Response> call, Response<com.working.domain.Response> response) {
-                if (response.code()!=200) {
-                    printErrorLog(response);
-                    requestFail("上传失败, data:" + dataJson, callback);
-                    return;
-                }
-                requestSuccess(response.body(), callback);
+            public void onResponse(Call<ClientResponse> call, Response<ClientResponse> response) {
+                handleClientResponse(response, callback);
             }
 
             @Override
-            public void onFailure(Call<com.working.domain.Response> call, Throwable t) {
-                requestFail("上传失败, data:" + dataJson, callback);
+            public void onFailure(Call<ClientResponse> call, Throwable t) {
+                requestFail("网络错误！", callback);
             }
         });
     }
 
     /**
-     * 审批采购清单
+     * 审批采购清单(响应数据)
      * @param callback
      */
     public void approvalPurchase(ApprovalBean approvalBean, final Handler.Callback callback) {
         AppApi appApi = getAppApi();
-        final String dataJson = new Gson().toJson(approvalBean);
+        String dataJson = new Gson().toJson(approvalBean);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json;charset=UTF-8"), dataJson);
         Log.d(TAG, "updateInspection: " + dataJson);
-        Call<ResponseBody> inspectionListCall = appApi.approvalPurchase(body);
-        inspectionListCall.enqueue(new Callback<ResponseBody>() {
+        Call<ClientResponse> inspectionListCall = appApi.approvalPurchase(body);
+        inspectionListCall.enqueue(new Callback<ClientResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.code()!=200) {
-                    printErrorLog(response);
-                    requestFail("上传失败, data:" + dataJson, callback);
-                    return;
-                }
-                requestSuccess(response.body(), callback);
+            public void onResponse(Call<ClientResponse> call, Response<ClientResponse> response) {
+                handleClientResponse(response, callback);
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                requestFail("上传失败, data:" + dataJson, callback);
+            public void onFailure(Call<ClientResponse> call, Throwable t) {
+                requestFail("网络错误！", callback);
             }
         });
     }
 
     /**
-     * 创建购买的订单
+     * 创建购买的订单(响应数据)
      * @param callback
      */
     public void createOrder(ApprovalBean approvalBean, final Handler.Callback callback) {
@@ -537,21 +527,16 @@ public class AppModels {
         final String dataJson = new Gson().toJson(approvalBean);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json;charset=UTF-8"), dataJson);
         Log.d(TAG, "updateInspection: " + dataJson);
-        Call<ResponseBody> inspectionListCall = appApi.createOrder(body);
-        inspectionListCall.enqueue(new Callback<ResponseBody>() {
+        Call<ClientResponse> inspectionListCall = appApi.createOrder(body);
+        inspectionListCall.enqueue(new Callback<ClientResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.code()!=200) {
-                    printErrorLog(response);
-                    requestFail("上传失败, data:" + dataJson, callback);
-                    return;
-                }
-                requestSuccess(response.body(), callback);
+            public void onResponse(Call<ClientResponse> call, Response<ClientResponse> response) {
+                handleClientResponse(response, callback);
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                requestFail("上传失败, data:" + dataJson, callback);
+            public void onFailure(Call<ClientResponse> call, Throwable t) {
+                requestFail("网络错误！", callback);
             }
         });
     }
@@ -622,26 +607,21 @@ public class AppModels {
      * @param information
      * @param callback
      */
-    public void uploadRepertoryIn(OrderDetail.DataBean information, final Handler.Callback callback) {
+    public void uploadOrder(OrderDetail.DataBean information, final Handler.Callback callback) {
         AppApi appApi = getAppApi();
         final String dataJson = new Gson().toJson(information);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json;charset=UTF-8"), dataJson);
-        Log.d(TAG, "updateInspection: " + dataJson);
-        Call<ResponseBody> inspectionListCall = appApi.uploadOrder(body);
-        inspectionListCall.enqueue(new Callback<ResponseBody>() {
+        Log.d(TAG, "uploadOrder: " + dataJson);
+        Call<ClientResponse> inspectionListCall = appApi.uploadOrder(body);
+        inspectionListCall.enqueue(new Callback<ClientResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                printErrorLog(response);
-                if (response.code()!=200) {
-                    requestFail("上传失败, data:" + dataJson, callback);
-                    return;
-                }
-                requestSuccess(response.body(), callback);
+            public void onResponse(Call<ClientResponse> call, Response<ClientResponse> response) {
+               handleClientResponse(response, callback);
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                requestFail("上传失败, data:" + dataJson, callback);
+            public void onFailure(Call<ClientResponse> call, Throwable t) {
+                requestFail("网络错误", callback);
             }
         });
     }
@@ -708,7 +688,7 @@ public class AppModels {
     }
 
     /**
-     * 提交入库清单
+     * 提交入库清单（响应数据）
      * @param information
      * @param callback
      */
@@ -717,21 +697,16 @@ public class AppModels {
         final String dataJson = new Gson().toJson(information);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json;charset=UTF-8"), dataJson);
         Log.d(TAG, "updateInspection: " + dataJson);
-        Call<ResponseBody> inspectionListCall = appApi.uploadRepertoryIn(body);
-        inspectionListCall.enqueue(new Callback<ResponseBody>() {
+        Call<ClientResponse> inspectionListCall = appApi.uploadRepertoryIn(body);
+        inspectionListCall.enqueue(new Callback<ClientResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.code()!=200) {
-                    printErrorLog(response);
-                    requestFail("上传失败, data:" + dataJson, callback);
-                    return;
-                }
-                requestSuccess(response.body(), callback);
+            public void onResponse(Call<ClientResponse> call, Response<ClientResponse> response) {
+                handleClientResponse(response, callback);
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                requestFail("上传失败, data:" + dataJson, callback);
+            public void onFailure(Call<ClientResponse> call, Throwable t) {
+                requestFail("网络错误！", callback);
             }
         });
     }
@@ -782,8 +757,8 @@ public class AppModels {
         purchaseDetail.enqueue(new Callback<RepOutInfoBean>() {
             @Override
             public void onResponse(Call<RepOutInfoBean> call, Response<RepOutInfoBean> response) {
-                printErrorLog(response);
                 if (response.code()!=200) {
+                    printErrorLog(response);
                     requestFail("获取入库清单详情信息失败！", callback);
                     return;
                 }
@@ -807,27 +782,22 @@ public class AppModels {
         final String dataJson = new Gson().toJson(information);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json;charset=UTF-8"), dataJson);
         Log.d(TAG, "updateInspection: " + dataJson);
-        Call<ResponseBody> inspectionListCall = appApi.uploadRepOut(body);
-        inspectionListCall.enqueue(new Callback<ResponseBody>() {
+        Call<ClientResponse> inspectionListCall = appApi.uploadRepOut(body);
+        inspectionListCall.enqueue(new Callback<ClientResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                printErrorLog(response);
-                if (response.code()!=200) {
-                    requestFail("上传失败, data:" + dataJson, callback);
-                    return;
-                }
-                requestSuccess(response.body(), callback);
+            public void onResponse(Call<ClientResponse> call, Response<ClientResponse> response) {
+                handleClientResponse(response, callback);
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<ClientResponse> call, Throwable t) {
                 requestFail("上传失败, data:" + dataJson, callback);
             }
         });
     }
 
     /**
-     * 提交审批清单
+     * 提交审批清单(响应数据)
      * @param callback
      */
     public void approvalOut(ApprovalOutBean approvalBean, final Handler.Callback callback) {
@@ -835,23 +805,47 @@ public class AppModels {
         final String dataJson = new Gson().toJson(approvalBean);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json;charset=UTF-8"), dataJson);
         Log.d(TAG, "updateInspection: " + dataJson);
-        Call<ResponseBody> inspectionListCall = appApi.approvalOut(body);
-        inspectionListCall.enqueue(new Callback<ResponseBody>() {
+        Call<ClientResponse> inspectionListCall = appApi.approvalOut(body);
+        inspectionListCall.enqueue(new Callback<ClientResponse>() {
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                printErrorLog(response);
-                if (response.code()!=200) {
-                    requestFail("上传失败, data:" + dataJson, callback);
-                    return;
-                }
-                requestSuccess(response.body(), callback);
+            public void onResponse(Call<ClientResponse> call, Response<ClientResponse> response) {
+                handleClientResponse(response, callback);
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                requestFail("上传失败, data:" + dataJson, callback);
+            public void onFailure(Call<ClientResponse> call, Throwable t) {
+                requestFail("网络错误！" , callback);
             }
         });
+    }
+
+    /**
+     * 处理提交数据的响应数据
+     *
+     * @param response
+     * @param callback
+     */
+    private void handleClientResponse(Response<ClientResponse> response, Handler.Callback callback) {
+        if (response.code()==200) {
+            ClientResponse body = response.body();
+            if(body != null){
+                if (body.getCode() == 200) {
+                    requestSuccess(null, callback);
+                }else{
+                    requestFail(body.getMsg(), callback);
+                }
+                return;
+            }
+        }
+        try {
+            String errorMsg = response.errorBody().string();
+            JSONObject jsonObject = new JSONObject(errorMsg);
+            requestFail((String)jsonObject.get("msg"), callback);
+            return;
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+        requestFail("未知错误！", callback);
     }
 
     /***************
@@ -915,7 +909,7 @@ public class AppModels {
     }
 
     /**
-     * 提交结余清单
+     * 提交结余清单(数据响应)
      * @param information
      * @param callback
      */
@@ -924,21 +918,16 @@ public class AppModels {
         final String dataJson = new Gson().toJson(information);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json;charset=UTF-8"), dataJson);
         Log.d(TAG, "uploadRepBal: " + dataJson);
-        Call<com.working.domain.Response> inspectionListCall = appApi.uploadRepBal(body);
-        inspectionListCall.enqueue(new Callback<com.working.domain.Response>() {
+        Call<ClientResponse> inspectionListCall = appApi.uploadRepBal(body);
+        inspectionListCall.enqueue(new Callback<ClientResponse>() {
             @Override
-            public void onResponse(Call<com.working.domain.Response> call, Response<com.working.domain.Response> response) {
-                printErrorLog(response);
-                if (response.code()!=200) {
-                    requestFail("上传失败, data:" + dataJson, callback);
-                    return;
-                }
-                requestSuccess(response.body(), callback);
+            public void onResponse(Call<ClientResponse> call, Response<ClientResponse> response) {
+                handleClientResponse(response, callback);
             }
 
             @Override
-            public void onFailure(Call<com.working.domain.Response> call, Throwable t) {
-                requestFail("上传失败, data:" + dataJson, callback);
+            public void onFailure(Call<ClientResponse> call, Throwable t) {
+                requestFail("网络错误", callback);
             }
         });
     }

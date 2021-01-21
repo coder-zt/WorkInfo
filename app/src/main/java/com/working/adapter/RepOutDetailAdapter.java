@@ -26,9 +26,7 @@ import java.util.List;
  */
 public class RepOutDetailAdapter extends RecyclerView.Adapter {
     private List<RepOutInfoBean.DataBean.OutStockItemListBean> mData = new ArrayList<>();
-    private boolean committed;
     private final int TYPE_DATA = 0;
-    private final int TYPE_ADD = 1;
     private final int TYPE_PIC = 2;
     private boolean mIsCommitted = false;
     private OnDataContainerListener mCallback;
@@ -62,7 +60,6 @@ public class RepOutDetailAdapter extends RecyclerView.Adapter {
         if(holder instanceof MaterialDataView){
             ((MaterialDataView) holder).getBinding().setData(mData.get(position));
             ((MaterialDataView) holder).getBinding().setIsCommit(mIsCommitted);
-            ((MaterialDataView) holder).getBinding().counterView.setNum(Float.parseFloat(mData.get(position).getProductQuantity()));
             ((MaterialDataView) holder).getBinding().counterView.setNumChangeListener(new CounterView.OnNumberChangedListener() {
                 @Override
                 public void onNumChanged(float num) {
@@ -73,6 +70,9 @@ public class RepOutDetailAdapter extends RecyclerView.Adapter {
                     }
                 }
             });
+            ((MaterialDataView) holder).getBinding().counterView.setCanEdit(!mIsCommitted);
+            ((MaterialDataView) holder).getBinding().counterView.setNum(Float.parseFloat(mData.get(position).getProductQuantity()));
+
         }
     }
 
@@ -110,6 +110,9 @@ public class RepOutDetailAdapter extends RecyclerView.Adapter {
         if (data != null) {
             mData.addAll(data);
         }
+        if (mCallback != null) {
+            mCallback.onDataCountChange(0, mData.size());
+        }
         notifyDataSetChanged();
     }
 
@@ -120,8 +123,11 @@ public class RepOutDetailAdapter extends RecyclerView.Adapter {
     public void addData(RepOutInfoBean.DataBean.OutStockItemListBean data){
         if (data != null) {
             mData.add(data);
+            if (mCallback != null) {
+                mCallback.onDataCountChange(mData.size()-1, mData.size());
+            }
+            notifyDataSetChanged();
         }
-        notifyDataSetChanged();
     }
 
     /**
@@ -151,6 +157,14 @@ public class RepOutDetailAdapter extends RecyclerView.Adapter {
         if (mPicAdapter != null) {
             mPicAdapter.addImage(url);
         }
+        if (mCallback != null) {
+            mCallback.onDataContainerChanged(mData, mPicAdapter.getImageCollect());
+        }
+    }
+
+    public void deleteData(int adapterPosition) {
+        mData.remove(adapterPosition);
+        notifyItemRemoved(adapterPosition);
         if (mCallback != null) {
             mCallback.onDataContainerChanged(mData, mPicAdapter.getImageCollect());
         }
@@ -189,8 +203,8 @@ public class RepOutDetailAdapter extends RecyclerView.Adapter {
 
     public interface OnDataContainerListener{
 
-        void onAddMaterialClicked();
-
         void onDataContainerChanged(List<RepOutInfoBean.DataBean.OutStockItemListBean> data, String urls) ;
+
+        void onDataCountChange(int oldSize, int newSize) ;
     }
 }

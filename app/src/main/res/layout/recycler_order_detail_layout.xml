@@ -82,13 +82,5 @@
                     app:layout_constraintTop_toTopOf="@+id/editText" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <TextView
-            android:layout_width="200dp"
-            android:layout_height="match_parent"
-            android:textSize="20sp"
-            android:text="删除"
-            android:textColor="@color/white"
-            android:background="#ff0000"/>
-
     </LinearLayout>
 </layout>

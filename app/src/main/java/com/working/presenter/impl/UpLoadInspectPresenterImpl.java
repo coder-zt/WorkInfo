@@ -29,6 +29,9 @@ public class UpLoadInspectPresenterImpl extends BasePresenterImpl implements ICo
         AppModels.getInstance().uploadInspection(information, new Handler.Callback() {
             @Override
             public boolean handleMessage(@NonNull Message msg) {
+                if(mCallback == null){
+                    return true;
+                }
                 if (msg.what != -1) {
                     ((ICommitCallback)mCallback).onCommitFinished();
                     EventBus.getDefault().post(new MessageEvent(MessageEvent.upload_data_success));

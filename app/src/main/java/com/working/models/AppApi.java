@@ -17,7 +17,7 @@ import com.working.domain.RepOutInfoBean;
 import com.working.domain.RepertoryIn;
 import com.working.domain.RepInInfoData;
 import com.working.domain.LoginInfo;
-import com.working.domain.Response;
+import com.working.domain.ClientResponse;
 import com.working.domain.UserInfo;
 
 import okhttp3.MultipartBody;
@@ -72,7 +72,7 @@ public interface AppApi {
 
     //提交巡检记录
     @POST("blade-road/inspectionrecord/submit")
-    Call<ResponseBody> uploadInspection( @Body RequestBody route);
+    Call<ClientResponse> uploadInspection( @Body RequestBody route);
 
 
     //获取首页公告信息
@@ -93,15 +93,15 @@ public interface AppApi {
 
     //提交采购数据
     @POST("blade-road/purchase/submit")
-    Call<com.working.domain.Response> uploadPurchase( @Body RequestBody route);
+    Call<ClientResponse> uploadPurchase(@Body RequestBody route);
 
     //审批采购数据数据
     @POST("blade-road/purchase/approval")
-    Call<ResponseBody> approvalPurchase( @Body RequestBody route);
+    Call<ClientResponse> approvalPurchase( @Body RequestBody route);
 
     //采购数据创建订单数据
     @POST("blade-road/purchase/commit")
-    Call<ResponseBody> createOrder( @Body RequestBody route);
+    Call<ClientResponse> createOrder( @Body RequestBody route);
 
     //获取购买列表信息
     @GET("blade-road/order/list?")
@@ -113,7 +113,7 @@ public interface AppApi {
 
     //购买数据的提交
     @POST("blade-road/order/submit")
-    Call<ResponseBody> uploadOrder( @Body RequestBody route);
+    Call<ClientResponse> uploadOrder( @Body RequestBody route);
 
     //获取入库清单列表信息
     @GET("blade-road/instock/list")
@@ -125,7 +125,7 @@ public interface AppApi {
 
     //入库数据的提交
     @POST("blade-road/instock/submit")
-    Call<ResponseBody> uploadRepertoryIn( @Body RequestBody route);
+    Call<ClientResponse> uploadRepertoryIn( @Body RequestBody route);
 
     //获取出库清单列表信息
     @GET("blade-road/outstock/list")
@@ -137,11 +137,11 @@ public interface AppApi {
 
     //出库数据的提交
     @POST("blade-road/outstock/submit")
-    Call<ResponseBody> uploadRepOut( @Body RequestBody route);
+    Call<ClientResponse> uploadRepOut( @Body RequestBody route);
 
     //审批采购数据数据
     @POST("blade-road/outstock/approval")
-    Call<ResponseBody> approvalOut( @Body RequestBody route);
+    Call<ClientResponse> approvalOut(@Body RequestBody route);
 
     //获取结余清单列表信息
     @GET("blade-road/material/list")
@@ -153,7 +153,7 @@ public interface AppApi {
 
     //结余数据的提交
     @POST("blade-road/material/submit")
-    Call<Response> uploadRepBal(@Body RequestBody route);
+    Call<ClientResponse> uploadRepBal(@Body RequestBody route);
 
     //获取库存管理清单列表
     @GET("blade-road/material/select")

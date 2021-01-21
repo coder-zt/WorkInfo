@@ -1,5 +1,7 @@
 package com.working.utils;
 
+import android.util.Log;
+
 import com.working.domain.LoginInfo;
 
 import java.io.IOException;
@@ -8,6 +10,7 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -23,13 +26,26 @@ public class RetrofitManager {
     private RetrofitManager(){
         mRetrofit = new Retrofit.Builder()
                 .addConverterFactory(GsonConverterFactory.create()) //设置数据解析器
+
                 .baseUrl(AppConfig.BASE_URL) //设置网络请求的Url地址
                 .client(initClient())
                 .build();
     }
-
+    /**
+     * 设置拦截器 打印日志
+     *
+     * @return
+     */
+    private Interceptor getInterceptor() {
+        HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(message -> Log.e("HttpLoggingInterceptor", message));
+        //显示日志
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        return interceptor;
+    }
     private OkHttpClient initClient() {
         OkHttpClient.Builder httpClient = new OkHttpClient.Builder();
+        //设置拦截器
+        httpClient.addInterceptor(getInterceptor());
         LoginInfo loginInfo = UserDataMan.getInstance().getLoginInfo();
         String accessToken = "";
         if ( loginInfo != null) {

@@ -51,24 +51,29 @@ public class AddMaterialActivity extends BaseActivity implements IAddMaterialCal
         mSelectedData = getIntent().getStringArrayListExtra("data");
         if (mSelectedData != null) {
             Log.d(TAG, "getSelectData: " + mSelectedData.size());
-        }else{
+        } else {
             Log.d(TAG, "getSelectData: is null");
             mSelectedData = new ArrayList<>();
         }
     }
 
 
-    public void selectOwner(){
+    public void selectOwner() {
+        if (mSelectDateBean == null) {
+//                    mSelectDateBean = new MaterialListData.DataBean();
+            ToastUtil.showMessage("请选择产品名称后重试！");
+            return;
+        }
         List<String> str = new ArrayList<>();
         str.add("自有");
-                str.add("没有");
+        str.add("没有");
         TypePopWindow typePopWindow = new TypePopWindow(this, str, new RVListAdapter.OnItemClickedListener() {
             @Override
             public void onItemClicked(int index, String typeName) {
                 if (index == 1) {
                     mSelectDateBean.setOwned(1);
                     mBinding.setItem(mSelectDateBean);
-                }else{
+                } else {
                     mSelectDateBean.setOwned(0);
                     mBinding.setItem(mSelectDateBean);
                 }
@@ -77,12 +82,12 @@ public class AddMaterialActivity extends BaseActivity implements IAddMaterialCal
         typePopWindow.showAsDropDown(findViewById(R.id.textView22));
     }
 
-    public void selectMaterial(){
+    public void selectMaterial() {
         if (mIsLoading) {
             ToastUtil.showMessage("数据正在加载中，请稍后再试!");
             return;
         }
-        if(mSelectStr.size() == 0){
+        if (mSelectStr.size() == 0) {
             mPresenter.getMaterialList();
             mIsLoading = true;
             return;
@@ -101,7 +106,7 @@ public class AddMaterialActivity extends BaseActivity implements IAddMaterialCal
     }
 
 
-    public void save(){
+    public void save() {
         if (mMaterialNum == -1) {
             ToastUtil.showMessage("请选选择新增物料！");
             return;
@@ -124,18 +129,18 @@ public class AddMaterialActivity extends BaseActivity implements IAddMaterialCal
         int index = 0;
         for (MaterialListData.DataBean datum : mData) {
             //过滤已选数据
-            if(!mSelectedData.contains(datum.getMaterialName())){
+            if (!mSelectedData.contains(datum.getMaterialName())) {
                 mSelectStr.add(datum.getMaterialName());
-            }else{
+            } else {
                 Log.d(TAG, "onMaterialListLoaded: 过滤--> " + index);
                 indexList.add(index);
             }
             index++;
         }
         //清除已选数据
-        for (int i = indexList.size() -1; i >= 0 ; i--) {
-            Log.d(TAG, "onMaterialListLoaded: 过滤--> " + (int)indexList.get(i));
-            mData.remove((int)indexList.get(i));
+        for (int i = indexList.size() - 1; i >= 0; i--) {
+            Log.d(TAG, "onMaterialListLoaded: 过滤--> " + (int) indexList.get(i));
+            mData.remove((int) indexList.get(i));
         }
         mIsLoading = false;
     }

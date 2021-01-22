@@ -113,6 +113,7 @@ public class RepInDetailAdapter extends RecyclerView.Adapter {
             mData.addAll(data);
         }
         if (mCallback != null) {
+            mCallback.onDataContainerChanged(mData, mPicAdapter.getImageCollect());
             mCallback.onDataCountChange(0, mData.size());
         }
         notifyDataSetChanged();
@@ -126,6 +127,7 @@ public class RepInDetailAdapter extends RecyclerView.Adapter {
         if (data != null) {
             mData.add(data);
             if (mCallback != null) {
+                mCallback.onDataContainerChanged(mData, mPicAdapter.getImageCollect());
                 mCallback.onDataCountChange(mData.size()-1, mData.size());
             }
             notifyDataSetChanged();

@@ -182,9 +182,14 @@ public class RepOutInfoActivity extends BaseCommitActivity<RepOutInfoBean.DataBe
             datum.setPrice(String.valueOf(dataBean.getCommonPrice()));
             datum.setProductQuantity("0.0");
             datum.setMaterialId(dataBean.getId());
+            datum.setId("");
             datum.setOutStockId(mDataBean.getId());
             mSelectedStr.add(datum.getMaterialName());
             mAdapter.addData(datum);
+            if (mDataBean.getOutStockItemList() == null) {
+                mDataBean.setOutStockItemList(new ArrayList<>());
+                mDataBean.getOutStockItemList().add(datum);
+            }
         }
         return false;
     }

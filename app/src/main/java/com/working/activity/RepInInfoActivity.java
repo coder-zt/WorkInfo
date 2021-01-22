@@ -144,13 +144,8 @@ public class RepInInfoActivity extends BaseCommitActivity<RepInInfoData.DataBean
             return;
         }
         mDataBean.setStatus(isCommit?0:1);
-        if (mDataBean.getInStockItemList() != null) {
-            if (mDataBean.getInStockItemList().size() ==0) {
-                mDataBean.getInStockItemList().add(new RepInInfoData.DataBean.InStockItemListBean());
-            }
-        }else{
+        if (mDataBean.getInStockItemList() == null) {
             mDataBean.setInStockItemList(new ArrayList<>());
-            mDataBean.getInStockItemList().add(new RepInInfoData.DataBean.InStockItemListBean());
         }
         commitData(mDataBean);
     }
@@ -175,11 +170,17 @@ public class RepInInfoActivity extends BaseCommitActivity<RepInInfoData.DataBean
 
                     RepInInfoData.DataBean.InStockItemListBean datum = new RepInInfoData.DataBean.InStockItemListBean();
                     FileUtils.copyValue(datum, dataBean);
+                    datum.setId("");
                     datum.setPrice(String.valueOf(dataBean.getCommonPrice()));
                     datum.setProductQuantity("0.0");
                     datum.setMaterialId(String.valueOf(dataBean.getId()));
+                    datum.setInStockId(mDataBean.getId());
                     mSelectedStr.add(datum.getMaterialName());
                     mAdapter.addData(datum);
+                    if (mDataBean.getInStockItemList() == null) {
+                        mDataBean.setInStockItemList(new ArrayList<>());
+                        mDataBean.getInStockItemList().add(datum);
+                    }
                 }
                 break;
         }

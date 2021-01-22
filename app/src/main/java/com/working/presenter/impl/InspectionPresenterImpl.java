@@ -86,7 +86,7 @@ public class InspectionPresenterImpl extends BasePresenterImpl implements IInspe
             public int compare(InspectionList.DataBean.RecordsBean o1, InspectionList.DataBean.RecordsBean o2) {
                 String updateTime1 = o1.getUpdateTime();
                 String updateTime2 = o2.getUpdateTime();
-                return updateTime1.compareTo(updateTime2);
+                return updateTime1.compareTo(updateTime2) * -1;
             }
         });
         return records;

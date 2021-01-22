@@ -80,7 +80,7 @@ public class PurchasePresenterImpl extends BasePresenterImpl implements ZTIListP
             public int compare(Purchase.DataBean.RecordsBean o1, Purchase.DataBean.RecordsBean o2) {
                 String updateTime1 = o1.getUpdateTime();
                 String updateTime2 = o2.getUpdateTime();
-                return updateTime1.compareTo(updateTime2);
+                return updateTime2.compareTo(updateTime1) * -1;
             }
         });
         return records;

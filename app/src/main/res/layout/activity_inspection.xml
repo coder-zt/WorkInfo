@@ -52,8 +52,8 @@
             android:id="@+id/ll_search"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
+            android:paddingRight="20dp"
+            android:paddingLeft="20dp"
             android:background="@color/white"
             app:menu="@menu/purchase_navigation_items"
             app:layout_constraintEnd_toEndOf="parent"
@@ -115,7 +115,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-                <androidx.recyclerview.widget.RecyclerView
+                <com.yanzhenjie.recyclerview.SwipeRecyclerView
                     android:id="@+id/recyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent" />

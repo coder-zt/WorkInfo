@@ -2,6 +2,8 @@ package com.working.activity;
 
 import android.app.DatePickerDialog;
 import android.os.Bundle;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.DatePicker;
 import android.widget.FrameLayout;
 
@@ -28,7 +30,9 @@ import com.working.setting.StatusData;
 import com.working.utils.AppRouter;
 import com.working.utils.TimeUtil;
 import com.working.utils.ToastUtil;
+import com.working.utils.UIHelper;
 import com.working.view.DataLoadUtilLayout;
+import com.yanzhenjie.recyclerview.SwipeRecyclerView;
 
 import java.util.Calendar;
 import java.util.List;
@@ -39,7 +43,7 @@ import java.util.List;
 public class InspectionActivity extends BaseActivity implements IInspectCallback {
 
     private ActivityInspectionBinding mBinding;
-    private RecyclerView mRecyclerView;
+    private SwipeRecyclerView mRecyclerView;
     private InspectionInfoAdapter mAdapter;
     private IInspectionPresenter mPresenter = new InspectionPresenterImpl();
     private FrameLayout mStatusView;
@@ -70,6 +74,10 @@ public class InspectionActivity extends BaseActivity implements IInspectCallback
                 AppRouter.toAddInspectionActivity(InspectionActivity.this, data);
             }
         });
+
+        View view = new View(this);
+        view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, UIHelper.dp2px(60)));
+        mRecyclerView.addFooterView(view);
         mRecyclerView.setAdapter(mAdapter);
         mStatusView = (FrameLayout)findViewById(R.id.status_layout);
         mDataLoadUtilLayout = new DataLoadUtilLayout(this, mStatusView, new DataLoadUtilLayout.OnErrorOnTry() {

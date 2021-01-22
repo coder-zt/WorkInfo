@@ -73,7 +73,7 @@ public class RepOutPresenterImpl  extends BasePresenterImpl implements ZTIListPr
             public int compare(RepOut.DataBean.RecordsBean o1, RepOut.DataBean.RecordsBean o2) {
                 String updateTime1 = o1.getUpdateTime();
                 String updateTime2 = o2.getUpdateTime();
-                return updateTime1.compareTo(updateTime2);
+                return updateTime1.compareTo(updateTime2) * -1;
             }
         });
         return records;

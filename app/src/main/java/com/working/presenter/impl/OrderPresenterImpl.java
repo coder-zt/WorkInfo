@@ -75,7 +75,7 @@ public class OrderPresenterImpl extends BasePresenterImpl implements ZTIListPres
             public int compare(Order.DataBean.RecordsBean o1, Order.DataBean.RecordsBean o2) {
                 String updateTime1 = o1.getUpdateTime();
                 String updateTime2 = o2.getUpdateTime();
-                return updateTime1.compareTo(updateTime2);
+                return updateTime1.compareTo(updateTime2) * -1;
             }
         });
         return records;

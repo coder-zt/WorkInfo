@@ -33,7 +33,6 @@ public class FileUtils {
     private static final String TAG = "FileUtils";
 
     private static String getJson(String fileName) {
-        // TODO Auto-generated method stub
         StringBuilder sb = new StringBuilder();
         AssetManager am = WorkingApp.getContext().getAssets();
         try {

@@ -105,10 +105,14 @@ public class AddInspectionActivity extends BaseCommitActivity<InspectionFormData
                 //病害类型
                 }else if(TextUtils.equals(filedInfo.getAlias(),"病害类型")){
                     int rangeIndex = mInformation.getDiseaseType();
+                    if(rangeIndex <= 0){
+                        rangeIndex = 1;
+                    }
                     if(DevelopConfig.DEBUG){
                         rangeIndex = 13;
                     }
                     filedInfo.setRangeIndex(rangeIndex);
+
                     filedInfo.setValue(filedInfo.getRange().get(rangeIndex - 1));
                 //巡检记录描述
                 }else if(TextUtils.equals(filedInfo.getAlias(),"巡检记录描述")){

@@ -1,5 +1,6 @@
 package com.working.adapter;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +18,11 @@ import java.util.List;
 
 
 /**
- * 图片集合的适配器
+ * 清单中横向展示图片的适配器
  */
 public class ImageAlbumAdapter extends RecyclerView.Adapter<ImageAlbumAdapter.SelectImageView> {
 
-
+    private static final String TAG = "ImageAlbumAdapter";
     private List<String> imageUrls = new ArrayList<>();
 
     @NonNull
@@ -46,21 +47,20 @@ public class ImageAlbumAdapter extends RecyclerView.Adapter<ImageAlbumAdapter.Se
 
     /**
      * 设置整个图片集合的数据
-     * @param urls
+     * @param picUrl
      */
-    public void setImageCollect(List<String> urls){
-        imageUrls.clear();
-        if (urls != null) {
+    public void setPicUrl(String picUrl) {
+        Log.d(TAG, "setPicUrl: " + picUrl);
+        if (picUrl != null && picUrl.length() > 0) {
+            String[] urls = picUrl.split(",");
             for (String url : urls) {
                 if (url.endsWith(".jpg") || url.endsWith(".mp4")) {
                     imageUrls.add(url);
                 }
             }
         }
-        notifyDataSetChanged();
+
     }
-
-
 
 
     public static class SelectImageView extends RecyclerView.ViewHolder {

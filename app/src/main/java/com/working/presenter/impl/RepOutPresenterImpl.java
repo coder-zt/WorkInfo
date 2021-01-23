@@ -8,9 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import com.working.base.BasePresenterImpl;
-import com.working.domain.RepOut;
-import com.working.domain.RepOutInfoBean;
-import com.working.domain.RepertoryIn;
+import com.working.domain.OutStockList;
 import com.working.interfaces.ZTIListCallback;
 import com.working.interfaces.ZTIListPresenter;
 import com.working.models.AppModels;
@@ -27,16 +25,16 @@ public class RepOutPresenterImpl  extends BasePresenterImpl implements ZTIListPr
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public boolean handleMessage(@NonNull Message msg) {
-                        if (msg.obj instanceof RepOut) {
-                            RepOut data = (RepOut)msg.obj;
+                        if (msg.obj instanceof OutStockList) {
+                            OutStockList data = (OutStockList)msg.obj;
                             if (mCallback != null) {
-                                ((ZTIListCallback<RepOut.DataBean.RecordsBean>)mCallback)
+                                ((ZTIListCallback<OutStockList.DataBean.RecordsBean>)mCallback)
                                         .onListLoaded(reversData(data.getData().getRecords()), isCommit);
                                 return true;
                             }
                         }
                         if (mCallback != null) {
-                            ((ZTIListCallback<RepOut.DataBean.RecordsBean>) mCallback).onListLoadedFail(isCommit);
+                            ((ZTIListCallback<OutStockList.DataBean.RecordsBean>) mCallback).onListLoadedFail(isCommit);
                         }
                         return true;
                     }
@@ -50,16 +48,16 @@ public class RepOutPresenterImpl  extends BasePresenterImpl implements ZTIListPr
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public boolean handleMessage(@NonNull Message msg) {
-                        if(msg.obj instanceof RepOut){
-                            RepOut data = (RepOut)msg.obj;
+                        if(msg.obj instanceof OutStockList){
+                            OutStockList data = (OutStockList)msg.obj;
                             if (mCallback != null) {
-                                ((ZTIListCallback<RepOut.DataBean.RecordsBean>)mCallback)
+                                ((ZTIListCallback<OutStockList.DataBean.RecordsBean>)mCallback)
                                         .onListLoadedMore(reversData(data.getData().getRecords()), isCommit);
                                 return true;
                             }
                         }
                         if (mCallback != null) {
-                            ((ZTIListCallback<RepOut.DataBean.RecordsBean>) mCallback).onListLoadedMoreFail(isCommit);
+                            ((ZTIListCallback<OutStockList.DataBean.RecordsBean>) mCallback).onListLoadedMoreFail(isCommit);
                         }
                         return true;
                     }
@@ -67,10 +65,10 @@ public class RepOutPresenterImpl  extends BasePresenterImpl implements ZTIListPr
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private List<RepOut.DataBean.RecordsBean> reversData(List<RepOut.DataBean.RecordsBean> records) {
-        records.sort(new Comparator<RepOut.DataBean.RecordsBean>() {
+    private List<OutStockList.DataBean.RecordsBean> reversData(List<OutStockList.DataBean.RecordsBean> records) {
+        records.sort(new Comparator<OutStockList.DataBean.RecordsBean>() {
             @Override
-            public int compare(RepOut.DataBean.RecordsBean o1, RepOut.DataBean.RecordsBean o2) {
+            public int compare(OutStockList.DataBean.RecordsBean o1, OutStockList.DataBean.RecordsBean o2) {
                 String updateTime1 = o1.getUpdateTime();
                 String updateTime2 = o2.getUpdateTime();
                 return updateTime1.compareTo(updateTime2) * -1;

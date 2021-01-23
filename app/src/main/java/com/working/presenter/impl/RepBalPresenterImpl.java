@@ -9,8 +9,6 @@ import androidx.annotation.RequiresApi;
 
 import com.working.base.BasePresenterImpl;
 import com.working.domain.RepBalData;
-import com.working.domain.ClientResponse;
-import com.working.domain.RepOut;
 import com.working.interfaces.ICommitCallback;
 import com.working.interfaces.ZTIListCallback;
 import com.working.interfaces.ZTIListPresenter;

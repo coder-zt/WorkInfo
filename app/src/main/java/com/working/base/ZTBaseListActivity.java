@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -44,7 +45,7 @@ public abstract class ZTBaseListActivity extends BaseActivity {
     private boolean mIsSearch;
     private String mStartTime;
     private String mEndTime;
-    //    private EditText mEtSearchInput;
+    private EditText mEtSearchInput;
     private long end,start;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,7 +96,7 @@ public abstract class ZTBaseListActivity extends BaseActivity {
             mBinding.llSearch.setVisibility(View.GONE);
         }
         mVpFragmentContainer.setAdapter(new IndexPagerAdapter(fragments, getSupportFragmentManager()));
-//        mEtSearchInput = findViewById(R.id.et_search);
+        mEtSearchInput = findViewById(R.id.et_search);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -129,31 +130,40 @@ public abstract class ZTBaseListActivity extends BaseActivity {
 
             }
         });
-//        mEtSearchInput.addTextChangedListener(new TextWatcher() {
-//            @Override
-//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//            }
-//
-//            @Override
-//            public void onTextChanged(CharSequence s, int start, int before, int count) {
-//                Log.d(TAG, "onTextChanged: " +s.toString());
-//                searchWithFragments(s.toString());
-//            }
-//
-//            @Override
-//            public void afterTextChanged(Editable s) {
-//                Log.d(TAG, "afterTextChanged: "+s.toString());
-//            }
-//        });
+        mEtSearchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.d(TAG, "onTextChanged: " +s.toString());
+                searchWithFragments(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.d(TAG, "afterTextChanged: "+s.toString());
+            }
+        });
     }
 
-    protected void searchWithFragments(String startTime, String endTime) {
+    protected void searchWithFragments(String info) {
         if (mCommittedFragment != null) {
-            mCommittedFragment.search(startTime, endTime);
+            mCommittedFragment.search(info);
         }
         if (mUnCommitFragment != null) {
-            mUnCommitFragment.search(startTime, endTime);
+            mUnCommitFragment.search(info);
+        }
+    }
+
+    protected void filterWithFragments(String startTime, String endTime) {
+        if (mCommittedFragment != null) {
+            mCommittedFragment.filter(startTime, endTime);
+        }
+        if (mUnCommitFragment != null) {
+            mUnCommitFragment.filter(startTime, endTime);
         }
     }
 
@@ -164,6 +174,25 @@ public abstract class ZTBaseListActivity extends BaseActivity {
 
     }
 
+    @Override
+    public void onBack() {
+        if(!mIsSearch){
+            super.onBack();
+        }else{
+            mBinding.setIsSearch(false);
+            mEtSearchInput.setText("");
+            mIsSearch = false;
+        }
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode == KeyEvent.KEYCODE_BACK && mIsSearch){
+            onBack();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 
     /**
      * 搜索功能
@@ -171,7 +200,7 @@ public abstract class ZTBaseListActivity extends BaseActivity {
     public void onSearch() {
         mIsSearch = true;
         mBinding.setIsSearch(true);
-//        mEtSearchInput.setText("");
+        mEtSearchInput.setText("");
     }
 
     public void onSelectTime(boolean isEnd) {
@@ -193,7 +222,7 @@ public abstract class ZTBaseListActivity extends BaseActivity {
                             ToastUtil.showMessage("开始时间不得大于结束时间");
                             return;
                         }
-                        searchWithFragments(mStartTime, mEndTime);
+                        filterWithFragments(mStartTime, mEndTime);
                     }
                 } else {
                     start = TimeUtil.getTimeInMills(year, month,dayOfMonth);
@@ -204,7 +233,7 @@ public abstract class ZTBaseListActivity extends BaseActivity {
                             ToastUtil.showMessage("开始时间不得大于结束时间");
                             return;
                         }
-                        searchWithFragments(mStartTime, mEndTime);
+                        filterWithFragments(mStartTime, mEndTime);
                     }
                 }
             }

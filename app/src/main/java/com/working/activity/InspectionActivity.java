@@ -200,5 +200,4 @@ public class InspectionActivity extends BaseActivity implements IInspectCallback
         mRefreshLayout.finishLoadmore();
         mRefreshLayout.setEnableLoadmore(false);
     }
-
 }

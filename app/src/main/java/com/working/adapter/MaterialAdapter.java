@@ -1,21 +1,16 @@
 package com.working.adapter;
 
-import android.app.Activity;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.working.R;
 import com.working.databinding.RecyclerBalanceLayoutBinding;
-import com.working.databinding.RecyclerInLayoutBinding;
 import com.working.domain.RepBalData;
-import com.working.domain.RepertoryIn;
 import com.working.utils.UserDataMan;
 import com.working.view.CounterView;
 
@@ -63,8 +58,7 @@ public class MaterialAdapter extends RecyclerView.Adapter<MaterialAdapter.ItemVi
         });
         String freezeQuantity = mData.get(position).getFreezeQuantity();
         if(freezeQuantity != null && freezeQuantity.length() > 0){
-            float freezeNum = Float.parseFloat(freezeQuantity);
-            holder.mBinding.counterView.setScopeValue(freezeNum, 9999f);
+            holder.mBinding.counterView.setScopeValue(freezeQuantity, "9999.0");
         }
         holder.mBinding.setData(mData.get(position));
         holder.mBinding.setClickObject(holder);
@@ -131,6 +125,10 @@ public class MaterialAdapter extends RecyclerView.Adapter<MaterialAdapter.ItemVi
             int i = mData.indexOf(recordsBean);
             notifyItemChanged(i);
         }
+    }
+
+    public void search() {
+
     }
 
     public class ItemView extends RecyclerView.ViewHolder {

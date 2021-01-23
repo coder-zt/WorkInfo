@@ -105,6 +105,7 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
             PurchaseDetail.DataBean.PurchaseItemListBean datum = new  PurchaseDetail.DataBean.PurchaseItemListBean();
             FileUtils.copyValue(datum, dataBean);
             datum.setId("");
+            datum.setMin("0.0");
             datum.setPrice(String.valueOf(dataBean.getCommonPrice()));
             datum.setProductQuantity("0.0");
             datum.setPriceMarket(datum.getPrice());
@@ -229,19 +230,6 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
     public void onDetailDataLoaded(PurchaseDetail.DataBean data) {
         mLoadUtilLayout.setStatus(StatusData.LOADED);
         List<PurchaseDetail.DataBean.PurchaseItemListBean> purchaseItemList = data.getPurchaseItemList();
-        for (PurchaseDetail.DataBean.PurchaseItemListBean purchaseItemListBean : purchaseItemList) {
-            mSelectedItem.add(purchaseItemListBean.getMaterialName());
-            float max = Float.parseFloat(purchaseItemListBean.getMax());
-            float min = Float.parseFloat(purchaseItemListBean.getMin());
-            float productQuantity = Float.parseFloat(purchaseItemListBean.getProductQuantity());
-            if(productQuantity > Math.max(max, min)){
-                productQuantity = Math.max(max, min);
-            }
-            if(productQuantity < Math.min(max, min)){
-                productQuantity = Math.min(max, min);
-            }
-            purchaseItemListBean.setProductQuantity(String.valueOf(productQuantity));
-        }
         mDataBean = data;
         countAccount();
         mAdapter.setData(purchaseItemList);

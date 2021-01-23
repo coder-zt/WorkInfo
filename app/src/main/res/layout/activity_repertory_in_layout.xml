@@ -34,7 +34,7 @@
         <TextView
             android:id="@+id/textView"
             android:layout_width="match_parent"
-            android:layout_height="46dp"
+            android:layout_height="56dp"
             android:gravity="center"
             android:text="@{title}"
             android:textColor="@color/text_black_color"
@@ -44,23 +44,23 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-<!---->
-<!--        <EditText-->
-<!--            android:id="@+id/et_search"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="36dp"-->
-<!--            android:layout_marginLeft="12dp"-->
-<!--            android:layout_marginRight="12dp"-->
-<!--            android:background="@drawable/search_et_bg"-->
-<!--            android:hint="请输入搜索内容"-->
-<!--            android:textSize="14sp"-->
-<!--            android:gravity="center"-->
-<!--            android:paddingLeft="12dp"-->
-<!--            android:visibility="@{isSearch?view.VISIBLE:view.GONE}"-->
-<!--            app:layout_constraintBottom_toBottomOf="@+id/textView"-->
-<!--            app:layout_constraintEnd_toEndOf="@+id/textView"-->
-<!--            app:layout_constraintStart_toEndOf="@+id/imageView2"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
+
+        <EditText
+            android:id="@+id/et_search"
+            android:layout_width="0dp"
+            android:layout_height="36dp"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:background="@drawable/search_et_bg"
+            android:hint="请输入搜索内容"
+            android:textSize="14sp"
+            android:gravity="center"
+            android:paddingLeft="12dp"
+            android:visibility="@{isSearch?view.VISIBLE:view.GONE}"
+            app:layout_constraintBottom_toBottomOf="@+id/textView"
+            app:layout_constraintEnd_toEndOf="@+id/textView"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <ImageView
             android:id="@+id/imageView2"
@@ -74,17 +74,18 @@
             app:layout_constraintStart_toStartOf="@+id/textView"
             app:layout_constraintTop_toTopOf="parent" />
 
-<!--        <ImageView-->
-<!--            android:id="@+id/imageView4"-->
-<!--            android:layout_width="32dp"-->
-<!--            android:layout_height="32dp"-->
-<!--            android:layout_marginRight="24dp"-->
-<!--            android:visibility="@{isSearch?view.GONE:view.VISIBLE}"-->
-<!--            android:onClick="@{()->activity.onSearch()}"-->
-<!--            android:src="@mipmap/search_icon"-->
-<!--            app:layout_constraintBottom_toBottomOf="@+id/textView"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
+        <ImageView
+            android:id="@+id/imageView4"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginRight="24dp"
+            android:padding="6dp"
+            android:visibility="@{isSearch?view.GONE:view.VISIBLE}"
+            android:onClick="@{()->activity.onSearch()}"
+            android:src="@mipmap/search_icon"
+            app:layout_constraintBottom_toBottomOf="@+id/textView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <LinearLayout
             android:id="@+id/ll_search"

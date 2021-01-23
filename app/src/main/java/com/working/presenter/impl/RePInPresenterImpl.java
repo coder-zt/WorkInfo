@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 
 import com.working.base.BasePresenterImpl;
-import com.working.domain.RepertoryIn;
+import com.working.domain.InStockList;
 import com.working.interfaces.ZTIListCallback;
 import com.working.interfaces.ZTIListPresenter;
 import com.working.models.AppModels;
@@ -28,15 +28,15 @@ public class RePInPresenterImpl extends BasePresenterImpl implements ZTIListPres
         @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         public boolean handleMessage(@NonNull Message msg) {
-                if(msg.obj instanceof RepertoryIn ){
-                    RepertoryIn data = (RepertoryIn)msg.obj;
+                if(msg.obj instanceof InStockList){
+                    InStockList data = (InStockList)msg.obj;
                     if (mCallback != null) {
-                        ((ZTIListCallback<RepertoryIn.DataBean.RecordsBean>)mCallback)
+                        ((ZTIListCallback<InStockList.DataBean.RecordsBean>)mCallback)
                                 .onListLoaded(reversData(data.getData().getRecords()), isCommit);
                     }
                 } else{
                     if (mCallback != null) {
-                        ((ZTIListCallback<RepertoryIn.DataBean.RecordsBean>) mCallback)
+                        ((ZTIListCallback<InStockList.DataBean.RecordsBean>) mCallback)
                                 .onListLoadedFail(isCommit);
                     }
                 }
@@ -52,15 +52,15 @@ public class RePInPresenterImpl extends BasePresenterImpl implements ZTIListPres
                 @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public boolean handleMessage(@NonNull Message msg) {
-                    if(msg.obj instanceof RepertoryIn ){
-                        RepertoryIn data = (RepertoryIn)msg.obj;
+                    if(msg.obj instanceof InStockList){
+                        InStockList data = (InStockList)msg.obj;
                         if (mCallback != null) {
-                            ((ZTIListCallback<RepertoryIn.DataBean.RecordsBean>)mCallback)
+                            ((ZTIListCallback<InStockList.DataBean.RecordsBean>)mCallback)
                                 .onListLoadedMore(reversData(data.getData().getRecords()), isCommit);
                         }
                     } else{
                         if (mCallback != null) {
-                            ((ZTIListCallback<RepertoryIn.DataBean.RecordsBean>) mCallback)
+                            ((ZTIListCallback<InStockList.DataBean.RecordsBean>) mCallback)
                                     .onListLoadedMoreFail(isCommit);
                         }
                     }
@@ -70,10 +70,10 @@ public class RePInPresenterImpl extends BasePresenterImpl implements ZTIListPres
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private List<RepertoryIn.DataBean.RecordsBean> reversData(List<RepertoryIn.DataBean.RecordsBean> records) {
-        records.sort(new Comparator<RepertoryIn.DataBean.RecordsBean>() {
+    private List<InStockList.DataBean.RecordsBean> reversData(List<InStockList.DataBean.RecordsBean> records) {
+        records.sort(new Comparator<InStockList.DataBean.RecordsBean>() {
             @Override
-            public int compare(RepertoryIn.DataBean.RecordsBean o1, RepertoryIn.DataBean.RecordsBean o2) {
+            public int compare(InStockList.DataBean.RecordsBean o1, InStockList.DataBean.RecordsBean o2) {
                 String updateTime1 = o1.getUpdateTime();
                 String updateTime2 = o2.getUpdateTime();
                 return updateTime1.compareTo(updateTime2) * -1;

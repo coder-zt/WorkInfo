@@ -26,8 +26,6 @@ import java.util.List;
  * 巡检记录的适配器
  */
 public class InspectionInfoAdapter extends RecyclerView.Adapter<InspectionInfoAdapter.InformationView>{
-//        BaseRecyclerAdapter<InspectionInfoAdapter.InformationView,
-//        InspectionList.DataBean.RecordsBean, RecyclerInspectionInfoLayoutBinding> {
 
     private List<InspectionList.DataBean.RecordsBean> mData = new ArrayList<>();
 

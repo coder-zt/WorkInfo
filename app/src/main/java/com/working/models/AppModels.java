@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.working.domain.ApprovalBean;
 import com.working.domain.ApprovalOutBean;
 import com.working.domain.ClientResponse;
+import com.working.domain.InStockList;
 import com.working.domain.IndexNotice;
 import com.working.domain.InspectionDetail;
 import com.working.domain.InspectionFormData;
@@ -26,9 +27,8 @@ import com.working.domain.PurchaseDetail;
 import com.working.domain.RepBalData;
 import com.working.domain.RepBalInfoData;
 import com.working.domain.RepInInfoData;
-import com.working.domain.RepOut;
+import com.working.domain.OutStockList;
 import com.working.domain.RepOutInfoBean;
-import com.working.domain.RepertoryIn;
 import com.working.domain.UserInfo;
 import com.working.other.MessageEvent;
 import com.working.utils.AppConfig;
@@ -46,7 +46,6 @@ import java.io.IOException;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -503,7 +502,6 @@ public class AppModels {
         AppApi appApi = getAppApi();
         String dataJson = new Gson().toJson(approvalBean);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json;charset=UTF-8"), dataJson);
-        Log.d(TAG, "updateInspection: " + dataJson);
         Call<ClientResponse> inspectionListCall = appApi.approvalPurchase(body);
         inspectionListCall.enqueue(new Callback<ClientResponse>() {
             @Override
@@ -640,11 +638,11 @@ public class AppModels {
     public void getRepertoryInList(int page, int pageSize, String startTime, String endTime,
                                    final int status, final Handler.Callback callback){
         AppApi api = getAppApi();
-        Call<RepertoryIn> call = api.getRepertoryInList(page, pageSize, status, startTime, endTime);
-        call.enqueue(new Callback<RepertoryIn>() {
+        Call<InStockList> call = api.getRepertoryInList(page, pageSize, status, startTime, endTime);
+        call.enqueue(new Callback<InStockList>() {
 
             @Override
-            public void onResponse(Call<RepertoryIn> call, Response<RepertoryIn> response) {
+            public void onResponse(Call<InStockList> call, Response<InStockList> response) {
                 if (response.code()!=200) {
                     printErrorLog(response);
                     requestFail("获取" + (status == 1 ? "未上报":"上报") + "购买清单失败！", callback);
@@ -654,7 +652,7 @@ public class AppModels {
             }
 
             @Override
-            public void onFailure(Call<RepertoryIn> call, Throwable t) {
+            public void onFailure(Call<InStockList> call, Throwable t) {
                 Log.d(TAG, "onFailure: " + t.getMessage());
                 requestFail("获取" + (status == 1 ? "未上报":"上报") + "购买清单失败！", callback);
             }
@@ -725,11 +723,11 @@ public class AppModels {
     public void getRepOutList(int page, int pageSize, String startTime, String endTime,
                               final int status, final Handler.Callback callback){
         AppApi api = getAppApi();
-        Call<RepOut> call = api.getRepOutList(page, pageSize, status, startTime, endTime);
-        call.enqueue(new Callback<RepOut>() {
+        Call<OutStockList> call = api.getRepOutList(page, pageSize, status, startTime, endTime);
+        call.enqueue(new Callback<OutStockList>() {
 
             @Override
-            public void onResponse(Call<RepOut> call, Response<RepOut> response) {
+            public void onResponse(Call<OutStockList> call, Response<OutStockList> response) {
                 if (response.code()!=200) {
                     printErrorLog(response);
                     requestFail("获取出库清单列表信息失败！", callback);
@@ -739,7 +737,7 @@ public class AppModels {
             }
 
             @Override
-            public void onFailure(Call<RepOut> call, Throwable t) {
+            public void onFailure(Call<OutStockList> call, Throwable t) {
                 Log.d(TAG, "onFailure: " + t.getMessage());
                 requestFail("获取" + (status == 1 ? "未上报":"上报") + "购买清单失败！", callback);
             }

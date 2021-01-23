@@ -21,6 +21,7 @@ import com.huantansheng.easyphotos.models.album.entity.Photo;
 import com.working.R;
 import com.working.adapter.ImageCollectAdapter;
 import com.working.domain.ApprovalBean;
+import com.working.domain.ApprovalOutBean;
 import com.working.domain.PostedFileBean;
 import com.working.interfaces.ICommitCallback;
 import com.working.interfaces.IUploadFileCallback;
@@ -108,8 +109,12 @@ public abstract class BaseCommitActivity<T> extends BaseActivity
      * @param data
      */
     protected void commitData(T data){//审批数据和提交数据
-        if (mPresenter instanceof IApprovalPresenter && data instanceof ApprovalBean){
-            ((IApprovalPresenter)mPresenter).approvalData((ApprovalBean)data);
+        if (mPresenter instanceof IApprovalPresenter){
+            if( data instanceof  ApprovalBean){
+                ((IApprovalPresenter)mPresenter).approvalData((ApprovalBean)data);
+            }else if(data instanceof ApprovalOutBean){
+                ((IApprovalPresenter)mPresenter).approvalOutData((ApprovalOutBean) data);
+            }
         }else{
             mPresenter.uploadData(data);
         }

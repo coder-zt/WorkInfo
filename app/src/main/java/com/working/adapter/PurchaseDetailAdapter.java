@@ -101,19 +101,8 @@ public class PurchaseDetailAdapter extends RecyclerView.Adapter<PurchaseDetailAd
                    }
                }
            });
-           if(mData.get(position).getMin() != null &&mData.get(position).getMax() != null  ){
-               float minValue = Float.parseFloat(mData.get(position).getMin());
-               float maxValue = Float.parseFloat(mData.get(position).getMax());
-               if(minValue > maxValue) {
-                   float temp = minValue;
-                   minValue = maxValue;
-                   maxValue = temp;
-               }
-               holder.mBinding.counterView.setScopeValue(minValue, maxValue);
-           }else{
-               holder.mBinding.counterView.setScopeValue(0.0F,0.0F);
-           }
-            holder.mBinding.counterView.setNum(Float.parseFloat(mData.get(position).getProductQuantity()));
+           holder.mBinding.counterView.setScopeValue(mData.get(position).getMin(), mData.get(position).getMax());
+           holder.mBinding.counterView.setNum(Float.parseFloat(mData.get(position).getProductQuantity()));
         }
     }
 

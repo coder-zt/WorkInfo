@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.gson.Gson;
 import com.working.R;
 import com.working.adapter.ApprovalOutAdapter;
-import com.working.base.CommitActivity;
+import com.working.base.BaseCommitActivity;
 import com.working.databinding.ActivityOutApprovealLayoutBinding;
 import com.working.domain.ApprovalOutBean;
 import com.working.domain.RepOutInfoBean;
@@ -29,7 +29,7 @@ import com.working.view.DataLoadUtilLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ApprovalOutActivity extends CommitActivity<ApprovalOutBean>
+public class ApprovalOutActivity extends BaseCommitActivity<ApprovalOutBean>
         implements IDetailCallback<RepOutInfoBean.DataBean> {
 
 
@@ -79,6 +79,16 @@ public class ApprovalOutActivity extends CommitActivity<ApprovalOutBean>
         return new ApprovalPresenterImpl();
     }
 
+    @Override
+    protected void onCommitFail() {
+
+    }
+
+    @Override
+    protected void addImageUrl(String link) {
+
+    }
+
 
     public void approvalPurchase(boolean pass, String approval){
         ApprovalOutBean bean = new ApprovalOutBean();
@@ -112,7 +122,7 @@ public class ApprovalOutActivity extends CommitActivity<ApprovalOutBean>
         bean.setId(mDetailData.getId());
         bean.setOutStockNo(mDetailData.getOutStockNo());
         Log.d(TAG, "approvalPurchase: " + new Gson().toJson(bean));
-        uploadData(bean);
+        commitData(bean);
     }
 
     private static final String TAG = "ApprovalOutActivity";

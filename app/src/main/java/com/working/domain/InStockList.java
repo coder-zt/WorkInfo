@@ -7,9 +7,12 @@ import java.util.List;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * 入库清单的数据
+ */
 @NoArgsConstructor
 @Data
-public class RepertoryIn {
+public class InStockList {
 
     /**
      * code : 200
@@ -54,7 +57,7 @@ public class RepertoryIn {
 
         @NoArgsConstructor
         @Data
-        public static class RecordsBean implements ISearchInfo,IStatusShow{
+        public static class RecordsBean implements ISearchInfo, IStockInfo {
             /**
              * id : 1344206599311142913
              * createUser : 1123598821738675201
@@ -86,21 +89,18 @@ public class RepertoryIn {
                 return inStockNo;
             }
 
+
             @Override
-            public String getStringShow() {
+            public String getStockNo() {
+                return inStockNo;
+            }
+
+            @Override
+            public String getStatusShow() {
                 if(status == 0){
                     return "<font color=\"#ff9696\">草稿</font>";
                 }else{
                     return "<font color=\"#3a97ff\">已提交</font>";
-                }
-            }
-
-            @Override
-            public int getColorShow() {
-                if (status == 1) {
-                    return Color.GREEN;
-                }else {
-                    return Color.RED;
                 }
             }
         }

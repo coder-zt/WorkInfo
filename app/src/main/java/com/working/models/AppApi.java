@@ -1,5 +1,6 @@
 package com.working.models;
 
+import com.working.domain.InStockList;
 import com.working.domain.IndexNotice;
 import com.working.domain.InspectionDetail;
 import com.working.domain.InspectionList;
@@ -12,9 +13,8 @@ import com.working.domain.Purchase;
 import com.working.domain.PurchaseDetail;
 import com.working.domain.RepBalData;
 import com.working.domain.RepBalInfoData;
-import com.working.domain.RepOut;
+import com.working.domain.OutStockList;
 import com.working.domain.RepOutInfoBean;
-import com.working.domain.RepertoryIn;
 import com.working.domain.RepInInfoData;
 import com.working.domain.LoginInfo;
 import com.working.domain.ClientResponse;
@@ -22,7 +22,6 @@ import com.working.domain.UserInfo;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -117,7 +116,7 @@ public interface AppApi {
 
     //获取入库清单列表信息
     @GET("blade-road/instock/list")
-    Call<RepertoryIn> getRepertoryInList(@Query("current") int page, @Query("size")int pageSize, @Query("status")int status, @Query("startTime")String startTime, @Query("endTime")String endTime);
+    Call<InStockList> getRepertoryInList(@Query("current") int page, @Query("size")int pageSize, @Query("status")int status, @Query("startTime")String startTime, @Query("endTime")String endTime);
 
     //获取单个入库记录的详情
     @GET("blade-road/instock/detail?")
@@ -129,7 +128,7 @@ public interface AppApi {
 
     //获取出库清单列表信息
     @GET("blade-road/outstock/list")
-    Call<RepOut> getRepOutList(@Query("current") int page, @Query("size")int pageSize, @Query("status")int status, @Query("startTime")String startTime, @Query("endTime")String endTime);
+    Call<OutStockList> getRepOutList(@Query("current") int page, @Query("size")int pageSize, @Query("status")int status, @Query("startTime")String startTime, @Query("endTime")String endTime);
 
     //获取出库清单记录的详情
     @GET("blade-road/outstock/detail?")

@@ -1,14 +1,14 @@
 package com.working.interfaces;
 
 import com.working.domain.OrderDetail;
-import com.working.domain.RepOut;
+import com.working.domain.OutStockList;
 
 import java.util.List;
 
 /**
  * 获取购买清单的回调接口
  */
-public interface IRepertoryOutCallback extends IListCallback<RepOut.DataBean.RecordsBean>  {
+public interface IRepertoryOutCallback extends IListCallback<OutStockList.DataBean.RecordsBean>  {
 
     /**
      * 获取购买清单的详情

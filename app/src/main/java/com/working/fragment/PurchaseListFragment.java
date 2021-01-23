@@ -58,10 +58,10 @@ public class PurchaseListFragment  extends
     }
 
 
-//    @Override
-//    public void search(String info) {
-//        mAdapter.search(info);
-//    }
+    @Override
+    public void search(String info) {
+        mAdapter.search(info);
+    }
 
     @Override
     protected ZTIListPresenter getSubPresenter() {

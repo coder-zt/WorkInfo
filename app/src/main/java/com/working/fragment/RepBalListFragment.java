@@ -1,33 +1,22 @@
 package com.working.fragment;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.view.View;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.working.R;
 import com.working.adapter.MaterialAdapter;
-import com.working.base.BaseDataAdapter;
 import com.working.base.ListFragment;
 import com.working.domain.MaterialList;
-import com.working.domain.PostedFileBean;
 import com.working.domain.RepBalData;
-import com.working.domain.RepertoryIn;
 import com.working.interfaces.ICommitCallback;
-import com.working.interfaces.IUploadFileCallback;
 import com.working.interfaces.ZTIListCallback;
 import com.working.interfaces.ZTIListPresenter;
 import com.working.presenter.impl.RepBalPresenterImpl;
 import com.working.setting.StatusData;
 import com.working.utils.FileUtils;
-import com.working.utils.ToastUtil;
-import com.working.utils.UserDataMan;
 import com.working.view.CommonDialog;
 
 import java.util.ArrayList;
@@ -88,6 +77,11 @@ public class RepBalListFragment extends ListFragment<RepBalData.DataBean.Records
     public void onListLoadedMore(List<RepBalData.DataBean.RecordsBean> recordsBeans, boolean isCommit) {
         super.onListLoadedMore(recordsBeans, isCommit);
         mAdapter.addCollectData(recordsBeans);
+    }
+
+    @Override
+    public void search(String info) {
+        mAdapter.search();
     }
 
 

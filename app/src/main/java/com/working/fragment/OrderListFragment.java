@@ -63,4 +63,9 @@ public class OrderListFragment  extends ListFragment<Order.DataBean.RecordsBean>
         mAdapter.addCollect(recordsBeans);
     }
 
+    @Override
+    public void search(String info) {
+        mAdapter.search(info);
+    }
+
 }

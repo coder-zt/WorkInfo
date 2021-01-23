@@ -150,15 +150,21 @@ public class CounterView extends LinearLayout {
         mCallback = listener;
     }
 
-    public void setScopeValue(float min, float max){
-        if(min == max&&max == 0.0F){
-            minValue = 0.0F;
-            maxValue = 9999.0F;
-        }else{
-            minValue = min;
-            maxValue = max;
+    public void setScopeValue(String min, String max){
+        float maxV = 0.0f;
+        float minV = 0.0f;
+        if (min != null) {
+            minV = Float.parseFloat(min);
         }
-
+        if (max != null) {
+            maxV = Float.parseFloat(max);
+        }
+        minValue = Math.max(minV, 0.0f);
+        if(maxV > minValue){
+            maxValue = maxV;
+        }else{
+            maxValue = 9999.0f;
+        }
     }
 
     public void setCanEdit(boolean canEdit) {

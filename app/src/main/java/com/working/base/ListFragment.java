@@ -131,10 +131,12 @@ public abstract class ListFragment<T>
         mDataLoadUtilLayout.setStatus(status);
     }
 
-    public void search(String startTime, String endTime){
+    public void filter(String startTime, String endTime){
         mStartTime = startTime;
         mEndTime = endTime;
         mDataLoadUtilLayout.setStatus(StatusData.LOADING);
         mPresenter.loadListData(mIsCommitted, mStartTime, mEndTime);
     }
+
+    public abstract void search(String info);
 }

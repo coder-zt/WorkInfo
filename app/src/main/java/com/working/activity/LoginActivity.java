@@ -113,7 +113,7 @@ public class LoginActivity extends BaseActivity implements IUserCallback {
         mWaitingDialog.dismiss();
         Log.d(TAG, "onUserAuthLoaded: " + "初始化用户信息！");
         if (loginInfo == null) {
-            ToastUtil.showMessage("用户信息不存在！");
+            ToastUtil.showMessage("用户名或密码错误！");
             return;
         }
         UserDataMan.getInstance().init(loginInfo, true);

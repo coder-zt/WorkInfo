@@ -11,18 +11,14 @@ import com.working.domain.MaterialList;
 import com.working.fragment.OrderListFragment;
 import com.working.fragment.PurchaseListFragment;
 import com.working.fragment.RepBalListFragment;
-import com.working.fragment.RepertoryInListFragment;
-import com.working.fragment.RepertoryOutListFragment;
+import com.working.fragment.InStockListFragment;
+import com.working.fragment.OutStockListFragment;
 import com.working.interfaces.IMaterialListCallback;
-import com.working.other.MessageEvent;
 import com.working.presenter.impl.MaterialListPresenterImpl;
 import com.working.utils.AppRouter;
 import com.working.utils.ToastUtil;
 import com.working.utils.UserDataMan;
 import com.working.view.TypePopWindow;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,9 +77,9 @@ public class ListActivity extends ZTBaseListActivity implements IMaterialListCal
             case 3:
                 return OrderListFragment.getInstance(iusCommit);
             case 4://入库的fragment
-                return RepertoryInListFragment.getInstance(iusCommit);
+                return InStockListFragment.getInstance(iusCommit);
             case 5://出库的fragment
-                return RepertoryOutListFragment.getInstance(iusCommit);
+                return OutStockListFragment.getInstance(iusCommit);
             case 6:
                 if (iusCommit) {
                     return null;

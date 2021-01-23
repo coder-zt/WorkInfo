@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
 @Data
-public class RepOut {
+public class OutStockList {
 
     /**
      * code : 200
@@ -54,7 +54,7 @@ public class RepOut {
 
         @NoArgsConstructor
         @Data
-        public static class RecordsBean implements IStatusShow,ISearchInfo {
+        public static class RecordsBean implements IStockInfo {
             /**
              * id : 1
              * createUser : -1
@@ -94,8 +94,14 @@ public class RepOut {
                 return outStockNo;
             }
 
+
             @Override
-            public String getStringShow() {
+            public String getStockNo() {
+                return outStockNo;
+            }
+
+            @Override
+            public String getStatusShow() {
                 if(status == 0){
                     return "草稿";
                 }else{
@@ -105,21 +111,6 @@ public class RepOut {
                         return "<font color=\"#ff9696\">已拒绝</font>";
                     }else{
                         return "<font color=\"#27b13e\">已通过</font>";
-                    }
-                }
-            }
-
-            @Override
-            public int getColorShow() {
-                if(status == 0){
-                    return Color.RED;
-                }else{
-                    if(approvalStatus < 2){
-                        return Color.BLUE;
-                    }else if(approvalStatus == 3){
-                        return Color.RED;
-                    }else{
-                        return Color.GREEN;
                     }
                 }
             }

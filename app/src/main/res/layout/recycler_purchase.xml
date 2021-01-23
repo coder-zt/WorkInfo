@@ -38,7 +38,7 @@
             android:gravity="center"
             android:maxLength="30"
             android:maxLines="1"
-            android:text="@{ data.purchaseName, default=`002*$$$$$$$$$$$$$**道路采购清单`}"
+            android:text="@{ data.purchaseName, default=`002***道路采购清单`}"
             android:textColor="@color/text_black_color"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
@@ -64,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:gravity="center"
-            android:text="清单ID:"
+            android:text="清单编号:"
             android:textColor="@color/gary_text_color"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="@+id/textView14"
@@ -78,7 +78,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginTop="16dp"
             android:gravity="center"
-            android:text="@{data.id ,default=`123456`}"
+            android:text="@{data.purchaseNo ,default=`123456`}"
             android:textColor="@color/text_black_color"
             android:textSize="14sp"
             app:layout_constraintStart_toEndOf="@+id/textView13"
@@ -87,30 +87,29 @@
 
         <TextView
             android:id="@+id/textView37"
-            android:visibility='@{data.status == 0?view.GONE:view.VISIBLE}'
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:gravity="center"
             android:text="状态:"
+            android:layout_marginRight="8dp"
             android:textColor="@color/gary_text_color"
             android:textSize="14sp"
-            android:layout_marginLeft="160dp"
-            app:layout_constraintEnd_toEndOf="@+id/imageView3"
-            app:layout_constraintStart_toEndOf="@+id/textView13"
+            android:visibility='@{data.status == 0?view.GONE:view.VISIBLE}'
+            app:layout_constraintEnd_toStartOf="@+id/textView42"
             app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
 
         <TextView
+            android:id="@+id/textView42"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:layout_marginLeft="8dp"
             android:gravity="center"
-            android:visibility='@{data.status == 0?view.GONE:view.VISIBLE}'
             android:text="@{html.fromHtml(data.getStringShow()) ,default=`通过`}"
             android:textSize="14sp"
-            app:layout_constraintStart_toEndOf="@+id/textView37"
+            android:visibility='@{data.status == 0?view.GONE:view.VISIBLE}'
+            app:layout_constraintEnd_toEndOf="@+id/imageView3"
             app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
         <View

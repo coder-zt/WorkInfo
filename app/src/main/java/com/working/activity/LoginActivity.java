@@ -110,6 +110,7 @@ public class LoginActivity extends BaseActivity implements IUserCallback {
         if (!mWaitingDialog.isShowing()) {
             return;
         }
+        mWaitingDialog.dismiss();
         Log.d(TAG, "onUserAuthLoaded: " + "初始化用户信息！");
         if (loginInfo == null) {
             ToastUtil.showMessage("用户信息不存在！");
@@ -146,18 +147,20 @@ public class LoginActivity extends BaseActivity implements IUserCallback {
         if (mPresenter != null) {
             mPresenter.unregisterCallback();
         }
+        dismissWaitingDialog();
     }
 
     /**
      * show等待Dialog
      */
     protected void showWaitingDialog() {
-
         mWaitingDialog.setTitle("登录中");
         mWaitingDialog.setMessage("等待中...");
         mWaitingDialog.setIndeterminate(true);
         mWaitingDialog.setCancelable(true);
-        mWaitingDialog.show();
+        if (!mWaitingDialog.isShowing()) {
+            mWaitingDialog.show();
+        }
     }
 
 
@@ -169,4 +172,6 @@ public class LoginActivity extends BaseActivity implements IUserCallback {
             mWaitingDialog.dismiss();
         }
     }
+
+
 }

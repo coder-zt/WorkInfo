@@ -116,6 +116,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter {
         }
         if (mCallback != null) {
             mCallback.onDataCountChange(0, mData.size());
+            mCallback.onDataContainerChanged(mData, mPicAdapter.getImageCollect());
         }
         notifyDataSetChanged();
     }
@@ -130,6 +131,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter {
             notifyDataSetChanged();
             if (mCallback != null) {
                 mCallback.onDataCountChange(mData.size()-1, mData.size());
+                mCallback.onDataContainerChanged(mData, mPicAdapter.getImageCollect());
             }
         }
     }
@@ -141,7 +143,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter {
     public void setPicUrls(String url){
         List<String> urls = new ArrayList<>();
         if (url.contains(",")) {
-            String[] urlArray = url.split("\\.");
+            String[] urlArray = url.split(",");
             for (String s : urlArray) {
                 urls.add(s);
             }

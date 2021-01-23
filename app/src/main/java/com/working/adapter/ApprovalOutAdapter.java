@@ -19,7 +19,6 @@ import java.util.List;
 public class ApprovalOutAdapter extends RecyclerView.Adapter {
 
     List<ItemData> mDataList = new ArrayList<>();
-    private RecyclerRepoutApprovalLayoutBinding mBind;
     private final ImageCollectAdapter mAdapter;
 
     public ApprovalOutAdapter(){
@@ -33,8 +32,8 @@ public class ApprovalOutAdapter extends RecyclerView.Adapter {
         if(viewType == 1){//物料数据
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.recycler_repout_approval_layout, parent, false);
-            mBind = DataBindingUtil.bind(view);
-            return new ItemView(view);
+            RecyclerRepoutApprovalLayoutBinding mBind = DataBindingUtil.bind(view);
+            return new ItemView(view,mBind);
         }else if(viewType == 2){//图片
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.recycler_image_layout, parent, false);
@@ -46,7 +45,9 @@ public class ApprovalOutAdapter extends RecyclerView.Adapter {
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof ItemView) {
-            ((ItemView)holder).setData(mBind, mDataList.get(position));
+            ((ItemView)holder).getBinding().setData(mDataList.get(position));
+            ((ItemView)holder).getBinding().counterView.setCanEdit(false);
+            ((ItemView) holder).getBinding().counterView.setNum(Float.parseFloat(mDataList.get(position).getProductQuantity()));
         }else if(holder instanceof  ImageCollectView){
             ((ImageCollectView)holder).setData(mDataList.get(position).getPicUrl());
         }
@@ -76,12 +77,15 @@ public class ApprovalOutAdapter extends RecyclerView.Adapter {
 
     public static class ItemView extends RecyclerView.ViewHolder{
 
-        public ItemView(@NonNull View itemView) {
+        RecyclerRepoutApprovalLayoutBinding mBinding;
+        public ItemView(@NonNull View itemView, RecyclerRepoutApprovalLayoutBinding bind) {
             super(itemView);
+            mBinding = bind;
         }
 
-        public void setData(RecyclerRepoutApprovalLayoutBinding bind, ItemData itemData) {
-            bind.setData(itemData);
+
+        public RecyclerRepoutApprovalLayoutBinding getBinding(){
+            return mBinding;
         }
     }
 

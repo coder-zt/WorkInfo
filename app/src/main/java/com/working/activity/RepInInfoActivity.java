@@ -95,6 +95,7 @@ public class RepInInfoActivity extends BaseCommitActivity<RepInInfoData.DataBean
             @Override
             public void onDataContainerChanged(List<RepInInfoData.DataBean.InStockItemListBean> data, String urls) {
                 mDataBean.setInStockItemList(data);
+                mDataBean.setPicUrl(urls);
                 accountCount();
             }
 
@@ -143,10 +144,23 @@ public class RepInInfoActivity extends BaseCommitActivity<RepInInfoData.DataBean
             ToastUtil.showMessage("已提交数据无法修改");
             return;
         }
-        mDataBean.setStatus(isCommit?0:1);
-        if (mDataBean.getInStockItemList() == null) {
-            mDataBean.setInStockItemList(new ArrayList<>());
+
+        if (mDataBean.getInStockItemList() != null) {
+            if (mDataBean.getInStockItemList().size()==0) {
+                ToastUtil.showMessage("请添加物料！");
+                return;
+            }
+        }else{
+            ToastUtil.showMessage("请添加物料！");
+            return;
         }
+        for (RepInInfoData.DataBean.InStockItemListBean inStockItemListBean : mDataBean.getInStockItemList()) {
+            if(Float.parseFloat(inStockItemListBean.getProductQuantity()) <= 0.0){
+                ToastUtil.showMessage(inStockItemListBean.getMaterialName() + "的数量必须大于0");
+                return;
+            }
+        }
+        mDataBean.setStatus(isCommit?0:1);
         commitData(mDataBean);
     }
 
@@ -229,6 +243,7 @@ public class RepInInfoActivity extends BaseCommitActivity<RepInInfoData.DataBean
     public void onDetailDataLoaded(RepInInfoData.DataBean data) {
         mDataBean = data;
         mLoadUtilLayout.setStatus(StatusData.LOADED);
+        mAdapter.setPicUrls(data.getPicUrl());
         mAdapter.setData(data.getInStockItemList());
         boolean grant = UserDataMan.getInstance().checkMaterialGrant();
         mAdapter.setCommitted(data.getStatus() == 1 || !grant);
@@ -245,7 +260,6 @@ public class RepInInfoActivity extends BaseCommitActivity<RepInInfoData.DataBean
                 mDataBinding.recyclerView.setAdapter(mAdapter);
             }
         }
-        mAdapter.setPicUrls(data.getPicUrl());
         accountCount();
     }
 

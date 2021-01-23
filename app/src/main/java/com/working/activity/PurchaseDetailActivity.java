@@ -104,6 +104,7 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
             MaterialListData.DataBean dataBean = new Gson().fromJson(result, MaterialListData.DataBean.class);
             PurchaseDetail.DataBean.PurchaseItemListBean datum = new  PurchaseDetail.DataBean.PurchaseItemListBean();
             FileUtils.copyValue(datum, dataBean);
+            datum.setId("");
             datum.setPrice(String.valueOf(dataBean.getCommonPrice()));
             datum.setProductQuantity("0.0");
             datum.setPriceMarket(datum.getPrice());
@@ -203,6 +204,21 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
         if (mDataBean.getStatus() == 1) {
             ToastUtil.showMessage("数据不可重复提交！");
             return;
+        }
+        if (mDataBean.getPurchaseItemList() != null) {
+            if (mDataBean.getPurchaseItemList().size() == 0) {
+                ToastUtil.showMessage("请添加物料！");
+                return;
+            }
+        }else{
+            ToastUtil.showMessage("请添加物料！");
+            return;
+        }
+        for (PurchaseDetail.DataBean.PurchaseItemListBean purchaseItemListBean : mDataBean.getPurchaseItemList()) {
+            if (Float.parseFloat(purchaseItemListBean.getProductQuantity()) <= 0.0f) {
+                ToastUtil.showMessage(purchaseItemListBean.getMaterialName() + "的数据必须大于0！");
+                return;
+            }
         }
         mDataBean.setStatus(isDraft?0:1);
         //提交

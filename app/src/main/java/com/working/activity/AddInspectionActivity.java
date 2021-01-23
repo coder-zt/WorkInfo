@@ -105,15 +105,15 @@ public class AddInspectionActivity extends BaseCommitActivity<InspectionFormData
                 //病害类型
                 }else if(TextUtils.equals(filedInfo.getAlias(),"病害类型")){
                     int rangeIndex = mInformation.getDiseaseType();
-                    if(rangeIndex <= 0){
-                        rangeIndex = 1;
-                    }
                     if(DevelopConfig.DEBUG){
                         rangeIndex = 13;
                     }
                     filedInfo.setRangeIndex(rangeIndex);
-
-                    filedInfo.setValue(filedInfo.getRange().get(rangeIndex - 1));
+                    if(rangeIndex == 0){
+                        filedInfo.setValue("点击选择病害类型");
+                    }else{
+                        filedInfo.setValue(filedInfo.getRange().get(rangeIndex - 1));
+                    }
                 //巡检记录描述
                 }else if(TextUtils.equals(filedInfo.getAlias(),"巡检记录描述")){
                     filedInfo.setValue(mInformation.getExtension());
@@ -163,51 +163,90 @@ public class AddInspectionActivity extends BaseCommitActivity<InspectionFormData
             ToastUtil.showMessage("已提交的记录无法更新！");
             return;
         }
-        //业务状态->0（草稿）->1(提交)
-        mInformation.setStatus(isDraft?0:1);
         for (InspectionFiledInfo filedInfo : mShowFiledInfos) {
             //缺损质量->用户输入
             if(TextUtils.equals(filedInfo.getAlias(),"缺损质量")){
                 mInformation.setDefectQuality(filedInfo.getValue());
+                if (filedInfo.getValue().isEmpty()) {
+                    ToastUtil.showMessage("缺损质量为空！");
+                    return;
+                }
             //病害类型->用户选择
             }else if(TextUtils.equals(filedInfo.getAlias(),"病害类型")){
                 int rangeIndex = filedInfo.getRangeIndex();
+                if (rangeIndex == 0) {
+                    ToastUtil.showMessage("未选择病害类型！");
+                    return;
+                }
                 if(DevelopConfig.DEBUG){
                     rangeIndex = 13;
                 }
                 mInformation.setDiseaseType(rangeIndex);
             //巡检记录描述->用户输入
             }else if(TextUtils.equals(filedInfo.getAlias(),"巡检记录描述")){
+                if (filedInfo.getValue().isEmpty()) {
+                    ToastUtil.showMessage("巡检记录描述为空！");
+                    return;
+                }
                 mInformation.setExtension(filedInfo.getValue());
             //程度->用户输入
             }else if(TextUtils.equals(filedInfo.getAlias(),"程度")){
+                if (filedInfo.getValue().isEmpty()) {
+                    ToastUtil.showMessage("程度为空！");
+                    return;
+                }
                 mInformation.setExtent(filedInfo.getValue());
             //养护措施->用户输入
             }else if(TextUtils.equals(filedInfo.getAlias(),"养护措施")){
+                if (filedInfo.getValue().isEmpty()) {
+                    ToastUtil.showMessage("养护措施为空！");
+                    return;
+                }
                 mInformation.setMaintenanceMeasures(filedInfo.getValue());
             //性质->用户输入
             }else if(TextUtils.equals(filedInfo.getAlias(),"性质")){
+                if (filedInfo.getValue().isEmpty()) {
+                    ToastUtil.showMessage("性质为空！");
+                    return;
+                }
                 mInformation.setNature(filedInfo.getValue());
             //缺损位置-具体桩号->用户输入
             }else if(TextUtils.equals(filedInfo.getAlias(),"缺损位置")){
+                if (filedInfo.getValue().isEmpty()) {
+                    ToastUtil.showMessage("缺损位置为空！");
+                    return;
+                }
                 mInformation.setPileNo(filedInfo.getValue() );
             //标度->用户输入
             }else if(TextUtils.equals(filedInfo.getAlias(),"标度")){
+                if (filedInfo.getValue().isEmpty()) {
+                    ToastUtil.showMessage("标度为空！");
+                    return;
+                }
                 mInformation.setScale(filedInfo.getValue());
             //结构名称->用户输入
             }else if(TextUtils.equals(filedInfo.getAlias(),"结构名称")){
+                if (filedInfo.getValue().isEmpty()) {
+                    ToastUtil.showMessage("结构名称为空！");
+                    return;
+                }
                 mInformation.setStructureName(filedInfo.getValue());
             //巡检记录标题->用户输入
             }else if(TextUtils.equals(filedInfo.getAlias(),"巡检记录标题")){
+                if (filedInfo.getValue().isEmpty()) {
+                    ToastUtil.showMessage("巡检记录标题为空！");
+                    return;
+                }
                 mInformation.setTitle(filedInfo.getValue());
             }
         }
+        //业务状态->0（草稿）->1(提交)
+        mInformation.setStatus(isDraft?0:1);
         //设置图片数据
         mInformation.setPicUrl(mAdapter.getImageCollect());
         if (isUpdate) {
             mInformation.setId(mRecordsBean.getId());
         }
-        Log.d(TAG, "addInspection: " + new Gson().toJson(mInformation));
         commitData(mInformation);
     }
 

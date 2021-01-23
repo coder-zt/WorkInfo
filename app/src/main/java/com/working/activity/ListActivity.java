@@ -85,6 +85,9 @@ public class ListActivity extends ZTBaseListActivity implements IMaterialListCal
             case 5://出库的fragment
                 return RepertoryOutListFragment.getInstance(iusCommit);
             case 6:
+                if (iusCommit) {
+                    return null;
+                }
                 return RepBalListFragment.getInstance(iusCommit);
         }
         return null;
@@ -113,7 +116,6 @@ public class ListActivity extends ZTBaseListActivity implements IMaterialListCal
                         public void onItemClicked(int index, String typeName) {
                             if (mUnCommitFragment instanceof RepBalListFragment) {
                                 mData.get(index - 1).setId("");
-//                                mData.get(index - 1).setVersion();
                                 ((RepBalListFragment)mUnCommitFragment).addNewMaterial(mData.get(index - 1));
                             }
                         }
@@ -141,8 +143,11 @@ public class ListActivity extends ZTBaseListActivity implements IMaterialListCal
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK){
-            onBack();
-            return true;
+            if (mUnCommitFragment instanceof RepBalListFragment) {
+                if(((RepBalListFragment)mUnCommitFragment).checkNoSaveData()){
+                    return true;
+                }
+            }
         }
         return super.onKeyDown(keyCode, event);
     }

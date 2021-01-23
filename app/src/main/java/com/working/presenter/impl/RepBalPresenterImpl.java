@@ -24,7 +24,7 @@ public class RepBalPresenterImpl extends BasePresenterImpl implements ZTIListPre
     @Override
     public void loadListData(final boolean isCommit, String startTime, String endTime) {
         AppModels.getInstance().getRepBalList(getPage(isCommit, false), pageSize,
-                startTime, endTime, isCommit ? 1 : 0, new Handler.Callback() {
+                startTime, endTime, new Handler.Callback() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public boolean handleMessage(@NonNull Message msg) {
@@ -47,7 +47,7 @@ public class RepBalPresenterImpl extends BasePresenterImpl implements ZTIListPre
     @Override
     public void loadListDataMore(final boolean isCommit, String startTime, String endTime) {
         AppModels.getInstance().getRepBalList(getPage(isCommit, true), pageSize,
-                startTime, endTime, isCommit ? 1 : 0, new Handler.Callback() {
+                startTime, endTime, new Handler.Callback() {
                     @RequiresApi(api = Build.VERSION_CODES.N)
                     @Override
                     public boolean handleMessage(@NonNull Message msg) {

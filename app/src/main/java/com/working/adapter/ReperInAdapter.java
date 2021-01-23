@@ -67,11 +67,6 @@ public class ReperInAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         return filter;
     }
 
-    public void search(String info) {
-        searchInfo = info;
-        notifyDataSetChanged();
-    }
-
     @Override
     public void setCollectData(List<RepertoryIn.DataBean.RecordsBean> data) {
         mData.clear();

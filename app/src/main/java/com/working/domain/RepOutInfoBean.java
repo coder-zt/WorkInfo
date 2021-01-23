@@ -55,7 +55,7 @@ public class RepOutInfoBean {
         private int isDeleted;
         private String outStockNo;
         private String picUrl;
-        private int approvalUser;
+        private String approvalUser;
         private String approvalTime;
         private String auditOpinion;
         private int approvalStatus;

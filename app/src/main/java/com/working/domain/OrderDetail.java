@@ -212,7 +212,7 @@ public class OrderDetail {
             private String unit;
             private String price;
             private String productQuantity;
-            private int remainingQuantity;
+            private String remainingQuantity;
             private int owned;
 
             public String getId() {
@@ -327,11 +327,11 @@ public class OrderDetail {
                 this.productQuantity = productQuantity;
             }
 
-            public int getRemainingQuantity() {
+            public String getRemainingQuantity() {
                 return remainingQuantity;
             }
 
-            public void setRemainingQuantity(int remainingQuantity) {
+            public void setRemainingQuantity(String remainingQuantity) {
                 this.remainingQuantity = remainingQuantity;
             }
 

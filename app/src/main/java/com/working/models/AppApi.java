@@ -145,7 +145,7 @@ public interface AppApi {
 
     //获取结余清单列表信息
     @GET("blade-road/material/list")
-    Call<RepBalData> getRepBalList(@Query("current") int page, @Query("size")int pageSize, @Query("status")int status, @Query("startTime")String startTime, @Query("endTime")String endTime);
+    Call<RepBalData> getRepBalList(@Query("current") int page, @Query("size")int pageSize, @Query("startTime")String startTime, @Query("endTime")String endTime);
 
     //获取结余清单记录的详情
     @GET("blade-road/material/detail?")

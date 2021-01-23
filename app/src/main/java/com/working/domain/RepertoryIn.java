@@ -88,10 +88,10 @@ public class RepertoryIn {
 
             @Override
             public String getStringShow() {
-                if (status == 1) {
-                    return "已提交";
-                }else {
-                    return "草稿";
+                if(status == 0){
+                    return "<font color=\"#ff9696\">草稿</font>";
+                }else{
+                    return "<font color=\"#3a97ff\">已提交</font>";
                 }
             }
 

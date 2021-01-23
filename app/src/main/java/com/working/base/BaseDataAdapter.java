@@ -91,6 +91,13 @@ public class BaseDataAdapter<D extends ISearchInfo> extends RecyclerView.Adapter
         notifyDataSetChanged();
     }
 
+    public void addTopData(D data){
+        if (data != null) {
+            this.data.add(0, data);
+        }
+        notifyDataSetChanged();
+    }
+
     public void clearData() {
         if (data != null) {
             data.clear();

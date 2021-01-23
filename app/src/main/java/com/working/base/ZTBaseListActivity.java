@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -87,7 +88,12 @@ public abstract class ZTBaseListActivity extends BaseActivity {
             fragments.add(mUnCommitFragment);
         }
         mCommittedFragment = getListFragment(true);
-        fragments.add(mCommittedFragment);
+        if (mCommittedFragment != null) {
+            fragments.add(mCommittedFragment);
+        }else{
+            mBinding.bottomNavigationView.setVisibility(View.GONE);
+            mBinding.llSearch.setVisibility(View.GONE);
+        }
         mVpFragmentContainer.setAdapter(new IndexPagerAdapter(fragments, getSupportFragmentManager()));
 //        mEtSearchInput = findViewById(R.id.et_search);
     }
@@ -158,16 +164,6 @@ public abstract class ZTBaseListActivity extends BaseActivity {
 
     }
 
-    @Override
-    public void onBack() {
-        if (mIsSearch) {
-            mIsSearch = false;
-            mBinding.setIsSearch(false);
-        } else {
-            super.onBack();
-        }
-//        mEtSearchInput.setText("");
-    }
 
     /**
      * 搜索功能

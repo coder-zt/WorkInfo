@@ -773,7 +773,7 @@ public class AppModels {
     }
 
     /**
-     * 提交入库清单
+     * 提交出库清单
      * @param information
      * @param callback
      */
@@ -856,13 +856,11 @@ public class AppModels {
      * 结余清单列表
      * @param page
      * @param pageSize
-     * @param status
      * @param callback
      */
-    public void getRepBalList(int page, int pageSize, String startTime, String endTime,
-                              final int status, final Handler.Callback callback){
+    public void getRepBalList(int page, int pageSize, String startTime, String endTime, final Handler.Callback callback){
         AppApi api = getAppApi();
-        Call<RepBalData> call = api.getRepBalList(page, pageSize, status, startTime, endTime);;
+        Call<RepBalData> call = api.getRepBalList(page, pageSize, startTime, endTime);;
         call.enqueue(new Callback<RepBalData>() {
 
             @Override
@@ -877,7 +875,7 @@ public class AppModels {
 
             @Override
             public void onFailure(Call<RepBalData> call, Throwable t) {
-                requestFail("获取" + (status == 1 ? "未上报":"上报") + "购买清单失败！", callback);
+                requestFail("获取库存结余清单失败！", callback);
             }
         });
     }

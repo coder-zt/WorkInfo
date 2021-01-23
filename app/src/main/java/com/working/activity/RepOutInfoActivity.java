@@ -43,7 +43,7 @@ public class RepOutInfoActivity extends BaseCommitActivity<RepOutInfoBean.DataBe
     private RepOutInfoBean.DataBean mDataBean;
     private RepOutDetailAdapter mAdapter;
     private List<String> mSelectedStr = new ArrayList<>();
-    private final int REQUEST_CODE = 111;
+    private final int REQUEST_CODE = 1;
     private ActivityRepoutDetailBinding mDataBinding;
     private IDetailPresenter mPresenter = new RepOutDetailPresenterImpl();
     private String mIdData;
@@ -65,6 +65,7 @@ public class RepOutInfoActivity extends BaseCommitActivity<RepOutInfoBean.DataBe
             @Override
             public void onDataContainerChanged(List<RepOutInfoBean.DataBean.OutStockItemListBean> data, String urls) {
                 mDataBean.setOutStockItemList(data);
+                mDataBean.setPicUrl(urls);
                 accountCount();
             }
 
@@ -127,18 +128,25 @@ public class RepOutInfoActivity extends BaseCommitActivity<RepOutInfoBean.DataBe
             return;
         }
         if (mDataBean.getStatus() == 1) {
-            ToastUtil.showMessage("权限不足，无法操作");
+            ToastUtil.showMessage("该数据已提交");
             return;
         }
-        mDataBean.setStatus(isCommit?0:1);
         if (mDataBean.getOutStockItemList() != null) {
             if (mDataBean.getOutStockItemList().size() ==0) {
-                mDataBean.getOutStockItemList().add(new RepOutInfoBean.DataBean.OutStockItemListBean());
+                ToastUtil.showMessage("请添加物料！");
+                return;
             }
         }else{
-            mDataBean.setOutStockItemList(new ArrayList<>());
-            mDataBean.getOutStockItemList().add(new RepOutInfoBean.DataBean.OutStockItemListBean());
+            ToastUtil.showMessage("请添加物料！");
+            return;
         }
+        for (RepOutInfoBean.DataBean.OutStockItemListBean outStockItemListBean : mDataBean.getOutStockItemList()) {
+            if(Float.parseFloat(outStockItemListBean.getProductQuantity()) <= 0.0f){
+                ToastUtil.showMessage(outStockItemListBean.getMaterialName() + "的数量必须大于0！");
+                return;
+            }
+        }
+        mDataBean.setStatus(isCommit?0:1);
         commitData(mDataBean);
     }
 
@@ -238,6 +246,7 @@ public class RepOutInfoActivity extends BaseCommitActivity<RepOutInfoBean.DataBe
     public void onDetailDataLoaded(RepOutInfoBean.DataBean data) {
         mDataBean = data;
         mLoadUtilLayout.setStatus(StatusData.LOADED);
+        mAdapter.setPicUrls(data.getPicUrl());
         mAdapter.setData(data.getOutStockItemList());
         boolean grant = UserDataMan.getInstance().checkMaterialGrant();
         mAdapter.setCommitted(data.getStatus() == 1 || !grant);
@@ -254,7 +263,6 @@ public class RepOutInfoActivity extends BaseCommitActivity<RepOutInfoBean.DataBe
                 mDataBinding.recyclerView.setAdapter(mAdapter);
             }
         }
-        mAdapter.setPicUrls(data.getPicUrl());
         accountCount();
     }
 

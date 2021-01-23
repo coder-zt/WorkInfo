@@ -18,6 +18,7 @@ import com.working.databinding.ActivityOrderDetailBinding;
 import com.working.domain.MaterialListData;
 import com.working.domain.Order;
 import com.working.domain.OrderDetail;
+import com.working.domain.PurchaseDetail;
 import com.working.interfaces.IDetailCallback;
 import com.working.presenter.ICommitPresenter;
 import com.working.presenter.IDetailPresenter;
@@ -172,11 +173,15 @@ public class OrderDetailActivity extends BaseCommitActivity<OrderDetail.DataBean
                 }
                 MaterialListData.DataBean dataBean = new Gson().fromJson(result, MaterialListData.DataBean.class);
                 OrderDetail.DataBean.OrderItemListBean  datum1 = new OrderDetail.DataBean.OrderItemListBean();
+                datum1.setOrderId("");
                 datum1.setMaterialId(String.valueOf(dataBean.getId()));
                 datum1.setMaterialName(dataBean.getMaterialName());
                 datum1.setOwned(dataBean.getOwned());
                 datum1.setPrice(String.valueOf(dataBean.getCommonPrice()));
                 datum1.setUnit(dataBean.getUnit());
+                if (mCommitData != null) {
+                    datum1.setOrderId(mCommitData.getId());
+                }
                 datum1.setProductQuantity("0.0");
                 mAdapter.addData(datum1);
                 return true;
@@ -197,16 +202,22 @@ public class OrderDetailActivity extends BaseCommitActivity<OrderDetail.DataBean
             ToastUtil.showMessage("该数据已提交！");
             return;
         }
-        mCommitData.setStatus(isDraft?0:1);
-        Log.d(TAG, "commit: " + new Gson().toJson(mCommitData));
         if (mCommitData.getOrderItemList() != null) {
             if (mCommitData.getOrderItemList().size() == 0) {
-                mCommitData.getOrderItemList().add(new OrderDetail.DataBean.OrderItemListBean());
+                ToastUtil.showMessage("请添加物料！");
+                return;
             }
         }else{
-            mCommitData.setOrderItemList(new ArrayList<>());
-            mCommitData.getOrderItemList().add(new OrderDetail.DataBean.OrderItemListBean());
+            ToastUtil.showMessage("请添加物料！");
+            return;
         }
+        for (OrderDetail.DataBean.OrderItemListBean orderItemListBean : mCommitData.getOrderItemList()) {
+            if (Float.parseFloat(orderItemListBean.getProductQuantity()) <= 0.0f) {
+                ToastUtil.showMessage(orderItemListBean.getMaterialName() + "的数据必须大于0！");
+                return;
+            }
+        }
+        mCommitData.setStatus(isDraft?0:1);
         commitData(mCommitData);
     }
 

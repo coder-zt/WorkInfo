@@ -127,7 +127,7 @@ public class PurchaseApprovalAdapter extends RecyclerView.Adapter {
     public void setPicUrls(String url){
         List<String> urls = new ArrayList<>();
         if (url.contains(",")) {
-            String[] urlArray = url.split("\\.");
+            String[] urlArray = url.split(",");
             for (String s : urlArray) {
                 urls.add(s);
             }

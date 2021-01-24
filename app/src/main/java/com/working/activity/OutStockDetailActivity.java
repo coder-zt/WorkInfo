@@ -14,6 +14,7 @@ import com.working.R;
 import com.working.adapter.CommonDetailAdapter;
 import com.working.base.BaseCommitActivity;
 import com.working.databinding.ActivityRepoutDetailBinding;
+import com.working.domain.ApprovalContentBean;
 import com.working.domain.ImageCollectBean;
 import com.working.domain.InStockDetail;
 import com.working.domain.MaterialList;
@@ -262,6 +263,11 @@ public class OutStockDetailActivity extends BaseCommitActivity<OutStockDetail.Da
         mLoadUtilLayout.setStatus(StatusData.LOADED);
         ArrayList<IRecyclerDetail> iRecyclerDetails = new ArrayList<>(data.getOutStockItemList());
         iRecyclerDetails.add(new ImageCollectBean(data.getPicUrl()));
+        //设置审核信息
+        if(mDataBean.getApprovalStatus()>0){
+            iRecyclerDetails.add(new ApprovalContentBean("一级审核", mDataBean.getAuditOpinion().isEmpty()?"无":mDataBean.getAuditOpinion()));
+            iRecyclerDetails.add(new ApprovalContentBean("二级审核", mDataBean.getAuditOpinion2().isEmpty()?"无":mDataBean.getAuditOpinion2()));
+        }
         mAdapter.setData(iRecyclerDetails);
         boolean grant = UserDataMan.getInstance().checkMaterialGrant();
         mAdapter.setCommitted(data.getStatus() == 1 || !grant);

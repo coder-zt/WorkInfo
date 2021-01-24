@@ -252,8 +252,8 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
         ArrayList<IRecyclerDetail> recyclerDetails = new ArrayList<>(purchaseItemList);
         //设置审核信息
         if(mDataBean.getApprovalStatus()>0){
-            recyclerDetails.add(new ApprovalContentBean("一级审核", mDataBean.getAuditOpinion()));
-            recyclerDetails.add(new ApprovalContentBean("二级审核", mDataBean.getAuditOpinion2()));
+            recyclerDetails.add(new ApprovalContentBean("一级审核", mDataBean.getAuditOpinion().isEmpty()?"无":mDataBean.getAuditOpinion()));
+            recyclerDetails.add(new ApprovalContentBean("二级审核", mDataBean.getAuditOpinion2().isEmpty()?"无":mDataBean.getAuditOpinion2()));
         }
 
         mAdapter.setData(recyclerDetails);

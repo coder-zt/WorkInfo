@@ -24,6 +24,7 @@ import com.working.presenter.IIndexInfoPresenter;
 import com.working.presenter.impl.IndexInfoPresenterImpl;
 import com.working.setting.MineMenuItem;
 import com.working.setting.StatusData;
+import com.working.utils.AppConfig;
 import com.working.utils.AppRouter;
 import com.working.utils.UIHelper;
 import com.working.view.AutoLoopViewPager;
@@ -181,7 +182,7 @@ public class IndexFragment extends BaseFragment implements IIndexInfoCallback {
                 "巡检记录", new MineMenuItem.OnItemClickedListener() {
             @Override
             public void onItemClick() {
-                AppRouter.toInspectionActivity(getActivity());
+                AppRouter.toListActivity(getActivity(), AppConfig.ACTIVITY_INSPECTION);
             }
         }));
 
@@ -189,7 +190,7 @@ public class IndexFragment extends BaseFragment implements IIndexInfoCallback {
                 "采购清单", new MineMenuItem.OnItemClickedListener() {
             @Override
             public void onItemClick() {
-                AppRouter.toListActivity(getActivity(), 2);
+                AppRouter.toListActivity(getActivity(), AppConfig.ACTIVITY_PURCHASE);
             }
         }));
 
@@ -197,7 +198,7 @@ public class IndexFragment extends BaseFragment implements IIndexInfoCallback {
                 "购买记录", new MineMenuItem.OnItemClickedListener() {
             @Override
             public void onItemClick() {
-                AppRouter.toListActivity(getActivity(), 3);
+                AppRouter.toListActivity(getActivity(), AppConfig.ACTIVITY_ORDER);
             }
         }));
         mDatas.add(new MineMenuItem(getResources().getDrawable(R.mipmap.repertory_icon_big),

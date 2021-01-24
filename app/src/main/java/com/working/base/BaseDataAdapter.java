@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
-public class BaseDataAdapter<D extends ISearchInfo> extends RecyclerView.Adapter<BaseDataAdapter.DataView<D>> {
+public class BaseDataAdapter<D extends ISearchInfo> extends SearchAdapter<BaseDataAdapter.DataView<D>, D> {
 
     private List<D> data = new ArrayList<>();
     private final int mLayerId;
@@ -42,29 +42,12 @@ public class BaseDataAdapter<D extends ISearchInfo> extends RecyclerView.Adapter
 
     @Override
     public void onBindViewHolder(@NonNull DataView<D> holder, int position) {
-        holder.setData(data.get(position), position, mCallback);
+        holder.setData(filterData.get(position), position, mCallback);
     }
 
     @Override
     public int getItemCount() {
-        List<D> tempData = new ArrayList<>();
-        List<Integer> indexData = new ArrayList<>();
-        int i = 0;
-        for (D datum : data) {
-            if (!datum.getSearchInfo().contains(searchInfo)) {
-                indexData.add(i);
-            }
-            i++;
-        }
-        i = 0;
-        for (Integer indexDatum : indexData) {
-            tempData.add(data.remove((int)indexDatum - i));
-            i++;
-        }
-        data.addAll(tempData);
-        tempData = null;
-        int filter = data.size() - indexData.size();
-        return filter;
+        return filterData(data);
     }
 
     public void setData(List<D> data){
@@ -102,11 +85,6 @@ public class BaseDataAdapter<D extends ISearchInfo> extends RecyclerView.Adapter
         if (data != null) {
             data.clear();
         }
-    }
-
-    public void search(String info) {
-        searchInfo = info;
-        notifyDataSetChanged();
     }
 
     public static class DataView<D> extends RecyclerView.ViewHolder {

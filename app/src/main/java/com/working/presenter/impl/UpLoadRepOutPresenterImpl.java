@@ -6,7 +6,7 @@ import android.os.Message;
 import androidx.annotation.NonNull;
 
 import com.working.base.BasePresenterImpl;
-import com.working.domain.RepOutInfoBean;
+import com.working.domain.OutStockDetail;
 import com.working.interfaces.ICommitCallback;
 import com.working.models.AppModels;
 import com.working.presenter.ICommitPresenter;
@@ -14,7 +14,7 @@ import com.working.presenter.ICommitPresenter;
 /**
  * 上传/更新巡检记录信息
  */
-public class UpLoadRepOutPresenterImpl extends BasePresenterImpl implements ICommitPresenter<RepOutInfoBean.DataBean> {
+public class UpLoadRepOutPresenterImpl extends BasePresenterImpl implements ICommitPresenter<OutStockDetail.DataBean> {
 
     /**
      * 上传/更新：相比于上传要多传一个Id
@@ -22,7 +22,7 @@ public class UpLoadRepOutPresenterImpl extends BasePresenterImpl implements ICom
      * @param information
      */
     @Override
-    public void uploadData(RepOutInfoBean.DataBean information) {
+    public void uploadData(OutStockDetail.DataBean information) {
         AppModels.getInstance().uploadRepOut(information, new Handler.Callback() {
             @Override
             public boolean handleMessage(@NonNull Message msg) {

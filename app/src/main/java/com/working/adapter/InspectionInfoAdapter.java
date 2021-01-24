@@ -14,7 +14,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.working.R;
 import com.working.base.BaseItemView;
 import com.working.base.BaseRecyclerAdapter;
+import com.working.base.SearchAdapter;
 import com.working.databinding.RecyclerInspectionInfoLayoutBinding;
+import com.working.domain.ISearchInfo;
 import com.working.domain.InspectionList;
 import com.working.domain.RecordsBean;
 
@@ -25,7 +27,7 @@ import java.util.List;
 /**
  * 巡检记录的适配器
  */
-public class InspectionInfoAdapter extends RecyclerView.Adapter<InspectionInfoAdapter.InformationView>{
+public class InspectionInfoAdapter extends SearchAdapter<InspectionInfoAdapter.InformationView, InspectionList.DataBean.RecordsBean> {
 
     private List<InspectionList.DataBean.RecordsBean> mData = new ArrayList<>();
 
@@ -49,13 +51,15 @@ public class InspectionInfoAdapter extends RecyclerView.Adapter<InspectionInfoAd
     @Override
     public void onBindViewHolder(@NonNull InformationView holder, int position) {
         holder.getBinding().setItemView(holder);
-        holder.getBinding().setItem(mData.get(position));
+        holder.getBinding().setItem(filterData.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return filterData(mData);
     }
+
+
 
     public void addData(List<InspectionList.DataBean.RecordsBean> data) {
         mData.addAll(data);
@@ -69,6 +73,8 @@ public class InspectionInfoAdapter extends RecyclerView.Adapter<InspectionInfoAd
         }
         notifyDataSetChanged();
     }
+
+
 
     public class InformationView extends RecyclerView.ViewHolder {
         RecyclerInspectionInfoLayoutBinding mBinding = null;

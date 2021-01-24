@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.LongDef;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
@@ -94,6 +95,7 @@ public class ImageCollectAdapter extends RecyclerView.Adapter {
     }
 
     public void addImage(String url){
+        Log.d("相机", "addImage: " + url);
         if (!url.isEmpty()) {
             imageUrls.add(imageUrls.size() - 1, url);
         }
@@ -104,19 +106,23 @@ public class ImageCollectAdapter extends RecyclerView.Adapter {
      * 设置整个图片集合的数据
      * @param urls
      */
-    public void setImageCollect(List<String> urls){
+    /**
+     * 设置整个图片集合的数据
+     * @param picUrl
+     */
+    public void setImageCollect(String picUrl) {
         imageUrls.clear();
-        if (urls != null) {
+        if (picUrl != null && picUrl.length() > 0) {
+            String[] urls = picUrl.split(",");
             for (String url : urls) {
                 if (url.endsWith(".jpg") || url.endsWith(".mp4")) {
                     imageUrls.add(url);
                 }
             }
         }
-        if (imageUrls.size() == 0 ||!mCommitted) {
+        if (!mCommitted || (mCommitted && imageUrls.size() == 0)) {
             imageUrls.add("add_url");
         }
-        notifyDataSetChanged();
     }
 
     /**

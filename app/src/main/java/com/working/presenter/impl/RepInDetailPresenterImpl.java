@@ -6,8 +6,7 @@ import android.os.Message;
 import androidx.annotation.NonNull;
 
 import com.working.base.BasePresenterImpl;
-import com.working.domain.OrderDetail;
-import com.working.domain.RepInInfoData;
+import com.working.domain.InStockDetail;
 import com.working.interfaces.IDetailCallback;
 import com.working.models.AppModels;
 import com.working.presenter.IDetailPresenter;
@@ -22,15 +21,15 @@ public class RepInDetailPresenterImpl extends BasePresenterImpl implements IDeta
 
             @Override
             public boolean handleMessage(@NonNull Message msg) {
-                if (msg.obj instanceof RepInInfoData) {
-                    RepInInfoData data = (RepInInfoData) msg.obj;
+                if (msg.obj instanceof InStockDetail) {
+                    InStockDetail data = (InStockDetail) msg.obj;
                     if (mCallback != null) {
-                        ((IDetailCallback<RepInInfoData.DataBean>) mCallback)
+                        ((IDetailCallback<InStockDetail.DataBean>) mCallback)
                                 .onDetailDataLoaded(data.getData());
                     }
                 } else {
                     if (mCallback != null) {
-                        ((IDetailCallback<RepInInfoData.DataBean>) mCallback).onDetailDataLoadedFail();
+                        ((IDetailCallback<InStockDetail.DataBean>) mCallback).onDetailDataLoadedFail();
                     }
                 }
                 return true;

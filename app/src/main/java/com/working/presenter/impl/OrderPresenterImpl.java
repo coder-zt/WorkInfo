@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * 购买清单的Presenter
  */
-public class OrderPresenterImpl extends BasePresenterImpl implements ZTIListPresenter {
+public class OrderPresenterImpl extends BasePresenterImpl<Order.DataBean.RecordsBean> implements ZTIListPresenter {
 
     @Override
     public void loadListData(final boolean isCommit, String startTime, String endTime) {
@@ -38,6 +38,7 @@ public class OrderPresenterImpl extends BasePresenterImpl implements ZTIListPres
                             }
                         }
                         if (mCallback != null) {
+                            setPageOnError(isCommit);
                             ((ZTIListCallback<Order.DataBean.RecordsBean>) mCallback).onListLoadedFail(isCommit);
                         }
                         return true;
@@ -61,6 +62,7 @@ public class OrderPresenterImpl extends BasePresenterImpl implements ZTIListPres
                             }
                         }
                         if (mCallback != null) {
+                            setPageOnError(isCommit);
                             ((ZTIListCallback<Order.DataBean.RecordsBean>) mCallback).onListLoadedMoreFail(isCommit);
                         }
                         return true;
@@ -68,17 +70,5 @@ public class OrderPresenterImpl extends BasePresenterImpl implements ZTIListPres
                 });
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private List<Order.DataBean.RecordsBean> reversData(List<Order.DataBean.RecordsBean> records) {
-        records.sort(new Comparator<Order.DataBean.RecordsBean>() {
-            @Override
-            public int compare(Order.DataBean.RecordsBean o1, Order.DataBean.RecordsBean o2) {
-                String updateTime1 = o1.getUpdateTime();
-                String updateTime2 = o2.getUpdateTime();
-                return updateTime1.compareTo(updateTime2) * -1;
-            }
-        });
-        return records;
-    }
 
 }

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="approvalInfo"
+            type="String" />
+
+        <variable
+            name="grade"
+            type="String" />
+
+       </data>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_margin="12dp"
+        android:padding="12dp"
+        android:background="@drawable/index_model_bg">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/text_black_color"
+            android:textSize="16sp"
+            android:text="@{grade + `:`, default=`一级审核：`}"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/gary_text_color"
+            android:layout_marginTop="12dp"
+            android:textSize="12sp"
+            android:layout_marginRight="12dp"
+            android:layout_marginLeft="12dp"
+            android:text="@{approvalInfo, default=`一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核一级审核：`}"/>
+
+    </LinearLayout>
+
+</layout>

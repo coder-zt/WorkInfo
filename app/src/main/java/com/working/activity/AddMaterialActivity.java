@@ -13,28 +13,32 @@ import com.working.R;
 import com.working.adapter.RVListAdapter;
 import com.working.base.BaseActivity;
 import com.working.databinding.ActivityAddGoodsBinding;
+import com.working.domain.MaterialList;
 import com.working.domain.MaterialListData;
 import com.working.interfaces.IAddMaterialCallback;
+import com.working.interfaces.IMaterialListCallback;
 import com.working.presenter.IAddMaterialPresenter;
+import com.working.presenter.IMaterialListPresenter;
 import com.working.presenter.impl.AddMaterialPresenter;
+import com.working.presenter.impl.MaterialListPresenterImpl;
 import com.working.utils.ToastUtil;
 import com.working.view.TypePopWindow;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AddMaterialActivity extends BaseActivity implements IAddMaterialCallback {
+public class AddMaterialActivity extends BaseActivity implements IMaterialListCallback {
 
 
     private static final String TAG = "AddMaterialActivity";
     private ActivityAddGoodsBinding mBinding;
-    List<MaterialListData.DataBean> mData = new ArrayList();
+    List<MaterialList.DataBean> mData = new ArrayList();
     List<String> mSelectStr = new ArrayList();
-    IAddMaterialPresenter mPresenter = new AddMaterialPresenter();
+    IMaterialListPresenter mPresenter = new MaterialListPresenterImpl();
     private boolean mIsLoading;
     private ArrayList<String> mSelectedData;
     private int mMaterialNum = -1;
-    private MaterialListData.DataBean mSelectDateBean;
+    private MaterialList.DataBean mSelectDateBean;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,7 +115,7 @@ public class AddMaterialActivity extends BaseActivity implements IAddMaterialCal
             ToastUtil.showMessage("请选选择新增物料！");
             return;
         }
-        MaterialListData.DataBean dataBean = mData.get(mMaterialNum);
+        MaterialList.DataBean dataBean = mData.get(mMaterialNum);
         if (dataBean.getOwned() == -1) {
             ToastUtil.showMessage("点击选择是否自有");
             return;
@@ -123,11 +127,11 @@ public class AddMaterialActivity extends BaseActivity implements IAddMaterialCal
     }
 
     @Override
-    public void onMaterialListLoaded(List<MaterialListData.DataBean> data) {
+    public void onMaterialListLoaded(List<MaterialList.DataBean> data) {
         mData.addAll(data);
         List<Integer> indexList = new ArrayList<>();
         int index = 0;
-        for (MaterialListData.DataBean datum : mData) {
+        for (MaterialList.DataBean datum : mData) {
             //过滤已选数据
             if (!mSelectedData.contains(datum.getMaterialName())) {
                 mSelectStr.add(datum.getMaterialName());

@@ -12,6 +12,7 @@ import com.working.interfaces.ZTIListCallback;
 import com.working.interfaces.ZTIListPresenter;
 import com.working.presenter.impl.OrderPresenterImpl;
 import com.working.utils.AppRouter;
+import com.working.utils.UserDataMan;
 
 import java.util.List;
 
@@ -23,6 +24,10 @@ public class OrderListFragment  extends ListFragment<Order.DataBean.RecordsBean>
     private ZTIListPresenter mPresenter;
 
     public static ListFragment getInstance(boolean isCommit){
+        if (!isCommit && (UserDataMan.getInstance().checkSecondApprovalGrant()
+                ||UserDataMan.getInstance().checkFirstApprovalGrant())) {
+            return null;
+        }
         Bundle data =new Bundle();
         data.putBoolean("isCommit", isCommit);
         ListFragment fragment = new OrderListFragment();

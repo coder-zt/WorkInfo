@@ -19,7 +19,7 @@ import java.util.List;
 /**
  * 入库Presenter
  */
-public class RePInPresenterImpl extends BasePresenterImpl implements ZTIListPresenter {
+public class InStockPresenterImpl extends BasePresenterImpl<InStockList.DataBean.RecordsBean> implements ZTIListPresenter {
 
     @Override
     public void loadListData(final boolean isCommit, String startTime, String endTime) {
@@ -36,6 +36,7 @@ public class RePInPresenterImpl extends BasePresenterImpl implements ZTIListPres
                     }
                 } else{
                     if (mCallback != null) {
+                        setPageOnError(isCommit);
                         ((ZTIListCallback<InStockList.DataBean.RecordsBean>) mCallback)
                                 .onListLoadedFail(isCommit);
                     }
@@ -60,6 +61,7 @@ public class RePInPresenterImpl extends BasePresenterImpl implements ZTIListPres
                         }
                     } else{
                         if (mCallback != null) {
+                            setPageOnError(isCommit);
                             ((ZTIListCallback<InStockList.DataBean.RecordsBean>) mCallback)
                                     .onListLoadedMoreFail(isCommit);
                         }
@@ -67,19 +69,6 @@ public class RePInPresenterImpl extends BasePresenterImpl implements ZTIListPres
                     return true;
                 }
             });
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private List<InStockList.DataBean.RecordsBean> reversData(List<InStockList.DataBean.RecordsBean> records) {
-        records.sort(new Comparator<InStockList.DataBean.RecordsBean>() {
-            @Override
-            public int compare(InStockList.DataBean.RecordsBean o1, InStockList.DataBean.RecordsBean o2) {
-                String updateTime1 = o1.getUpdateTime();
-                String updateTime2 = o2.getUpdateTime();
-                return updateTime1.compareTo(updateTime2) * -1;
-            }
-        });
-        return records;
     }
 
 }

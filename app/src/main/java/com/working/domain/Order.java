@@ -2,6 +2,8 @@ package com.working.domain;
 
 import android.graphics.Color;
 
+import com.working.base.IOrderInfo;
+
 import java.util.List;
 
 import lombok.Data;
@@ -55,7 +57,7 @@ public class Order {
 
         @NoArgsConstructor
         @Data
-        public static class RecordsBean implements ISearchInfo,IStatusShow {
+        public static class RecordsBean implements ISearchInfo,IStatusShow, IOrderInfo {
             /**
              * id : 1343974849151795202
              * createUser : 1123598821738675201
@@ -105,6 +107,11 @@ public class Order {
                 }else{
                     return Color.RED;
                 }
+            }
+
+            @Override
+            public String getOrderInfo() {
+                return updateTime;
             }
         }
     }

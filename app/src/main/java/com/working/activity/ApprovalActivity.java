@@ -124,6 +124,13 @@ public class ApprovalActivity extends BaseCommitActivity<ApprovalBean>{
                 return;
             }
             mBean.setApprovalStatus(pass?2:3);
+        }else if(mBean.getApprovalStatus() == 2 || mBean.getApprovalStatus() == 3){
+            ToastUtil.showMessage("已审核");
+            return;
+        }
+        if(!pass && approvalInfo == null){
+            ToastUtil.showMessage("如果拒绝需要填写相关意见!");
+            return;
         }
         if (approvalInfo == null) {
             approvalInfo = "同意";

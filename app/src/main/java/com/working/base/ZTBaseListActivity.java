@@ -20,6 +20,7 @@ import com.working.R;
 import com.working.adapter.IndexPagerAdapter;
 import com.working.databinding.ActivityRepertoryInLayoutBinding;
 import com.working.other.MessageEvent;
+import com.working.utils.AppConfig;
 import com.working.utils.TimeUtil;
 import com.working.utils.ToastUtil;
 import com.working.utils.UserDataMan;
@@ -84,15 +85,18 @@ public abstract class ZTBaseListActivity extends BaseActivity {
         if (instance.checkSecondApprovalGrant() || instance.checkFirstApprovalGrant()) {
             mBinding.setIsApproval(true);
             mVpFragmentContainer.setCurrentItem(0);
-        } else {
-            mUnCommitFragment = getListFragment(false);
-            fragments.add(mUnCommitFragment);
         }
-        mCommittedFragment = getListFragment(true);
-        if (mCommittedFragment != null) {
-            fragments.add(mCommittedFragment);
+
+        mUnCommitFragment = getListFragment(false);
+        if (mUnCommitFragment != null) {
+            fragments.add(mUnCommitFragment);
         }else{
             mBinding.bottomNavigationView.setVisibility(View.GONE);
+        }
+        mCommittedFragment = getListFragment(true);
+        fragments.add(mCommittedFragment);
+        //控制搜索栏的显示
+        if(mActivityCode == AppConfig.ACTIVITY_MATERIAL) {
             mBinding.llSearch.setVisibility(View.GONE);
         }
         mVpFragmentContainer.setAdapter(new IndexPagerAdapter(fragments, getSupportFragmentManager()));

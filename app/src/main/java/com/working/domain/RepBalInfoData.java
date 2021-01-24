@@ -1,5 +1,10 @@
 package com.working.domain;
 
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
+@Data
 public class RepBalInfoData {
 
     /**
@@ -14,38 +19,9 @@ public class RepBalInfoData {
     private DataBean data;
     private String msg;
 
-    public int getCode() {
-        return code;
-    }
 
-    public void setCode(int code) {
-        this.code = code;
-    }
-
-    public boolean isSuccess() {
-        return success;
-    }
-
-    public void setSuccess(boolean success) {
-        this.success = success;
-    }
-
-    public DataBean getData() {
-        return data;
-    }
-
-    public void setData(DataBean data) {
-        this.data = data;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
+    @NoArgsConstructor
+    @Data
     public static class DataBean {
         /**
          * id : 1343090944706203649
@@ -82,133 +58,5 @@ public class RepBalInfoData {
         private String availableQuantity;
         private String company;
         private int version;
-
-        public String getId() {
-            return id;
-        }
-
-        public void setId(String id) {
-            this.id = id;
-        }
-
-        public String getCreateUser() {
-            return createUser;
-        }
-
-        public void setCreateUser(String createUser) {
-            this.createUser = createUser;
-        }
-
-        public String getCreateDept() {
-            return createDept;
-        }
-
-        public void setCreateDept(String createDept) {
-            this.createDept = createDept;
-        }
-
-        public String getCreateTime() {
-            return createTime;
-        }
-
-        public void setCreateTime(String createTime) {
-            this.createTime = createTime;
-        }
-
-        public String getUpdateUser() {
-            return updateUser;
-        }
-
-        public void setUpdateUser(String updateUser) {
-            this.updateUser = updateUser;
-        }
-
-        public String getUpdateTime() {
-            return updateTime;
-        }
-
-        public void setUpdateTime(String updateTime) {
-            this.updateTime = updateTime;
-        }
-
-        public int getStatus() {
-            return status;
-        }
-
-        public void setStatus(int status) {
-            this.status = status;
-        }
-
-        public int getIsDeleted() {
-            return isDeleted;
-        }
-
-        public void setIsDeleted(int isDeleted) {
-            this.isDeleted = isDeleted;
-        }
-
-        public String getCommonId() {
-            return commonId;
-        }
-
-        public void setCommonId(String commonId) {
-            this.commonId = commonId;
-        }
-
-        public String getUnit() {
-            return unit;
-        }
-
-        public void setUnit(String unit) {
-            this.unit = unit;
-        }
-
-        public String getPrice() {
-            return price;
-        }
-
-        public void setPrice(String price) {
-            this.price = price;
-        }
-
-        public String getQuantity() {
-            return quantity;
-        }
-
-        public void setQuantity(String quantity) {
-            this.quantity = quantity;
-        }
-
-        public int getFreezeQuantity() {
-            return freezeQuantity;
-        }
-
-        public void setFreezeQuantity(int freezeQuantity) {
-            this.freezeQuantity = freezeQuantity;
-        }
-
-        public String getAvailableQuantity() {
-            return availableQuantity;
-        }
-
-        public void setAvailableQuantity(String availableQuantity) {
-            this.availableQuantity = availableQuantity;
-        }
-
-        public String getCompany() {
-            return company;
-        }
-
-        public void setCompany(String company) {
-            this.company = company;
-        }
-
-        public int getVersion() {
-            return version;
-        }
-
-        public void setVersion(int version) {
-            this.version = version;
-        }
     }
 }

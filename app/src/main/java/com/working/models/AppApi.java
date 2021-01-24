@@ -1,5 +1,6 @@
 package com.working.models;
 
+import com.working.domain.ApprovalRecord;
 import com.working.domain.InStockList;
 import com.working.domain.IndexNotice;
 import com.working.domain.InspectionDetail;
@@ -14,8 +15,8 @@ import com.working.domain.PurchaseDetail;
 import com.working.domain.RepBalData;
 import com.working.domain.RepBalInfoData;
 import com.working.domain.OutStockList;
-import com.working.domain.RepOutInfoBean;
-import com.working.domain.RepInInfoData;
+import com.working.domain.OutStockDetail;
+import com.working.domain.InStockDetail;
 import com.working.domain.LoginInfo;
 import com.working.domain.ClientResponse;
 import com.working.domain.UserInfo;
@@ -120,7 +121,7 @@ public interface AppApi {
 
     //获取单个入库记录的详情
     @GET("blade-road/instock/detail?")
-    Call<RepInInfoData> getRepertoryInDetail(@Query("id")String id);
+    Call<InStockDetail> getRepertoryInDetail(@Query("id")String id);
 
     //入库数据的提交
     @POST("blade-road/instock/submit")
@@ -132,7 +133,7 @@ public interface AppApi {
 
     //获取出库清单记录的详情
     @GET("blade-road/outstock/detail?")
-    Call<RepOutInfoBean> getRepOutDetail(@Query("id")String id);
+    Call<OutStockDetail> getRepOutDetail(@Query("id")String id);
 
     //出库数据的提交
     @POST("blade-road/outstock/submit")
@@ -142,20 +143,24 @@ public interface AppApi {
     @POST("blade-road/outstock/approval")
     Call<ClientResponse> approvalOut(@Body RequestBody route);
 
-    //获取结余清单列表信息
+    //获取库存清单列表信息
     @GET("blade-road/material/list")
     Call<RepBalData> getRepBalList(@Query("current") int page, @Query("size")int pageSize, @Query("startTime")String startTime, @Query("endTime")String endTime);
 
-    //获取结余清单记录的详情
+    //获取库存清单记录的详情
     @GET("blade-road/material/detail?")
     Call<RepBalInfoData> getRepBalDetail(@Query("id")String id);
 
-    //结余数据的提交
+    //库存数据的提交
     @POST("blade-road/material/submit")
     Call<ClientResponse> uploadRepBal(@Body RequestBody route);
 
     //获取库存管理清单列表
     @GET("blade-road/material/select")
     Call<MaterialList> getMaterialList();
+
+    //获取审批清单列表信息
+    @GET("blade-road/approvalrecord/list")
+    Call<ApprovalRecord> getApprovalRecord(@Query("approvalUser")String id, @Query("current") int page, @Query("size")int pageSize, @Query("startTime")String startTime, @Query("endTime")String endTime);
 
 }

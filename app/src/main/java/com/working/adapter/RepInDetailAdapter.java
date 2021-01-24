@@ -1,10 +1,6 @@
 package com.working.adapter;
 
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,22 +9,18 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.working.R;
-import com.working.activity.OrderDetailActivity;
-import com.working.databinding.RecyclerMaterialLayoutBinding;
 import com.working.databinding.RecyclerRepinDetailLayoutBinding;
-import com.working.domain.RepInInfoData;
-import com.working.utils.FileUtils;
+import com.working.domain.InStockDetail;
 import com.working.view.CounterView;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class RepInDetailAdapter extends RecyclerView.Adapter {
-    private List<RepInInfoData.DataBean.InStockItemListBean> mData = new ArrayList<>();
+    private List<InStockDetail.DataBean.InStockItemListBean> mData = new ArrayList<>();
     private final int TYPE_DATA = 0;
     private final int TYPE_ADD = 1;
     private final int TYPE_PIC = 2;
@@ -66,7 +58,7 @@ public class RepInDetailAdapter extends RecyclerView.Adapter {
             ((MaterialDataView) holder).getBinding().counterView.setNumChangeListener(new CounterView.OnNumberChangedListener() {
                 @Override
                 public void onNumChanged(float num) {
-                    RepInInfoData.DataBean.InStockItemListBean orderItemListBean = mData.get(position);
+                    InStockDetail.DataBean.InStockItemListBean orderItemListBean = mData.get(position);
                     orderItemListBean.setProductQuantity(String.valueOf(num));
                     if (mCallback != null) {
                         mCallback.onDataContainerChanged(mData, mPicAdapter.getImageCollect());
@@ -107,7 +99,7 @@ public class RepInDetailAdapter extends RecyclerView.Adapter {
      * 设置详情的物料数据
      * @param data
      */
-    public void setData(List<RepInInfoData.DataBean.InStockItemListBean> data){
+    public void setData(List<InStockDetail.DataBean.InStockItemListBean> data){
         mData.clear();
         if (data != null) {
             mData.addAll(data);
@@ -123,7 +115,7 @@ public class RepInDetailAdapter extends RecyclerView.Adapter {
      * 添加详情的物料数据
      * @param data
      */
-    public void addData(RepInInfoData.DataBean.InStockItemListBean data){
+    public void addData(InStockDetail.DataBean.InStockItemListBean data){
         if (data != null) {
             mData.add(data);
             if (mCallback != null) {
@@ -139,18 +131,7 @@ public class RepInDetailAdapter extends RecyclerView.Adapter {
      * @param url
      */
     public void setPicUrls(String url){
-        List<String> urls = new ArrayList<>();
-        if (url.contains(",")) {
-            String[] urlArray = url.split(",");
-            for (String s : urlArray) {
-                urls.add(s);
-            }
-        }else if(url.length() != 0){
-            urls.add(url);
-        }
-        if (mPicAdapter != null) {
-            mPicAdapter.setImageCollect(urls);
-        }
+            mPicAdapter.setImageCollect(url);
     }
 
     /**
@@ -206,7 +187,7 @@ public class RepInDetailAdapter extends RecyclerView.Adapter {
 
     public interface OnDataContainerListener{
 
-        void onDataContainerChanged(List<RepInInfoData.DataBean.InStockItemListBean> data, String urls) ;
+        void onDataContainerChanged(List<InStockDetail.DataBean.InStockItemListBean> data, String urls) ;
 
         void onDataCountChange(int oldSize, int newSize) ;
     }

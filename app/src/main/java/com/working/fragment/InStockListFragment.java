@@ -10,8 +10,9 @@ import com.working.domain.IStockInfo;
 import com.working.domain.InStockList;
 import com.working.interfaces.ZTIListCallback;
 import com.working.interfaces.ZTIListPresenter;
-import com.working.presenter.impl.RePInPresenterImpl;
+import com.working.presenter.impl.InStockPresenterImpl;
 import com.working.utils.AppRouter;
+import com.working.utils.UserDataMan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,10 +24,14 @@ public class InStockListFragment extends ListFragment<InStockList.DataBean.Recor
         implements ZTIListCallback<InStockList.DataBean.RecordsBean> {
 
 
-    private RePInPresenterImpl mPresenter;
+    private InStockPresenterImpl mPresenter;
     private StockListAdapter mAdapter;
 
     public static ListFragment getInstance(boolean isCommit){
+        if (!isCommit && (UserDataMan.getInstance().checkSecondApprovalGrant()
+                ||UserDataMan.getInstance().checkFirstApprovalGrant())) {
+            return null;
+        }
         Bundle data =new Bundle();
         data.putBoolean("isCommit", isCommit);
         ListFragment fragment = new InStockListFragment();
@@ -69,7 +74,7 @@ public class InStockListFragment extends ListFragment<InStockList.DataBean.Recor
 
     @Override
     protected ZTIListPresenter getSubPresenter() {
-        mPresenter = new RePInPresenterImpl();
+        mPresenter = new InStockPresenterImpl();
         return mPresenter;
     }
 }

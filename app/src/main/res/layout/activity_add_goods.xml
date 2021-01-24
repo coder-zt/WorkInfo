@@ -11,7 +11,7 @@
 
         <variable
             name="item"
-            type="com.working.domain.MaterialListData.DataBean" />
+            type="com.working.domain.MaterialList.DataBean" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -118,7 +118,7 @@
                 android:textSize="16sp"
                 android:hint="请输入产品价格"
                 android:paddingLeft="12dp"
-                android:text='@{item.commonPrice != null ? String.valueOf(item.commonPrice):``}'
+                android:text='@{item.price != null ? item.price:``}'
                 app:layout_constraintBottom_toBottomOf="@+id/textView32"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/textView31" />

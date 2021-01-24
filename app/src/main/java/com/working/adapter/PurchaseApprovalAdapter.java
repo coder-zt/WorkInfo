@@ -125,18 +125,7 @@ public class PurchaseApprovalAdapter extends RecyclerView.Adapter {
      * @param url
      */
     public void setPicUrls(String url){
-        List<String> urls = new ArrayList<>();
-        if (url.contains(",")) {
-            String[] urlArray = url.split(",");
-            for (String s : urlArray) {
-                urls.add(s);
-            }
-        }else if(url.length() != 0){
-            urls.add(url);
-        }
-        if (mPicAdapter != null) {
-            mPicAdapter.setImageCollect(urls);
-        }
+        mPicAdapter.setImageCollect(url);
     }
 
     /**

@@ -55,6 +55,7 @@
             android:hint="请输入搜索内容"
             android:textSize="14sp"
             android:gravity="center"
+            android:singleLine="true"
             android:paddingLeft="12dp"
             android:visibility="@{isSearch?view.VISIBLE:view.GONE}"
             app:layout_constraintBottom_toBottomOf="@+id/textView"

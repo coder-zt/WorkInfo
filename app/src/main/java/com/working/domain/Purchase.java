@@ -2,6 +2,8 @@ package com.working.domain;
 
 import android.graphics.Color;
 
+import com.working.base.IOrderInfo;
+
 import java.util.List;
 
 import lombok.Data;
@@ -54,24 +56,29 @@ public class Purchase {
 
         @NoArgsConstructor
         @Data
-        public static class RecordsBean implements ISearchInfo,IStatusShow{
+        public static class RecordsBean implements ISearchInfo,IStatusShow, IOrderInfo {
             /**
-             * id : 1344281382158860290
-             * createUser : 1123598821738675201
+             * id : 1353226929195753474
+             * createUser : 1341292276263723010
              * createDept : 1123598813738675203
-             * createTime : 2020-12-30 21:57:11
+             * createTime : 2021-01-24 14:23:36
              * updateUser : 1123598821738675204
-             * updateTime : 2021-01-03 17:32:21
+             * updateTime : 2021-01-24 19:16:09
              * status : 1
              * isDeleted : 0
-             * inspectionRecordId : 1344276266961862657
-             * purchaseNo : 102020123000000
-             * purchaseName : 测试
-             * approvalUser : 1123598821738675203
-             * approvalTime : 2021-01-03 01:44:55
-             * auditOpinion :
-             * approvalStatus : 2
-             * itemCount : 1
+             * inspectionRecordId : 1353226927958433793
+             * purchaseNo : 312021012400000
+             * purchaseName : 重新测试采购单
+             * approvalUser : 1123598821738675204
+             * approvalTime : 2021-01-24 19:16:09
+             * auditOpinion : 同意
+             * approvalUser2 : -1
+             * approvalTime2 :
+             * auditOpinion2 :
+             * approvalStatus : 1
+             * itemCount : 8
+             * startTime :
+             * endTime :
              */
 
             private String id;
@@ -88,8 +95,13 @@ public class Purchase {
             private String approvalUser;
             private String approvalTime;
             private String auditOpinion;
+            private int approvalUser2;
+            private String approvalTime2;
+            private String auditOpinion2;
             private int approvalStatus;
             private int itemCount;
+            private String startTime;
+            private String endTime;
 
             @Override
             public String getSearchInfo() {
@@ -124,6 +136,11 @@ public class Purchase {
                         return Color.GREEN;
                     }
                 }
+            }
+
+            @Override
+            public String getOrderInfo() {
+                return updateTime;
             }
         }
     }

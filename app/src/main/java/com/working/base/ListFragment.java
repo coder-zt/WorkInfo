@@ -31,7 +31,6 @@ public abstract class ListFragment<T>
     protected Map<String, T> detailInfoCacheMap = new HashMap<>();
     private boolean mIsCommitted;
     private TwinklingRefreshLayout mRefreshLayout;
-    private RecyclerView mRecyclerView;
     private DataLoadUtilLayout mDataLoadUtilLayout;
     private ZTIListPresenter mPresenter;
     private String mStartTime;
@@ -57,9 +56,9 @@ public abstract class ListFragment<T>
     @Override
     protected void initView(View view) {
         mRefreshLayout = view.findViewById(R.id.refresh_layout);
-        mRecyclerView = view.findViewById(R.id.recycler_view);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setAdapter(getRecyclerAdapter());
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(getRecyclerAdapter());
         mRefreshLayout.setOnRefreshListener(new RefreshListenerAdapter() {
             @Override
             public void onRefresh(TwinklingRefreshLayout refreshLayout) {

@@ -7,14 +7,14 @@
 
         <variable
             name="item"
-            type="com.working.domain.PurchaseDetail.DataBean.PurchaseItemListBean" />
+            type="com.working.interfaces.IRecyclerDetail" />
         <variable
             name="isCommit"
             type="Boolean" />
-
-        <variable
-            name="ClickItem"
-            type="com.working.adapter.PurchaseDetailAdapter.InformationView" />
+<import type="android.view.View" />
+<!--        <variable-->
+<!--            name="ClickItem"-->
+<!--            type="com.working.adapter.CommonDetailAdapter" />-->
     </data>
 <LinearLayout
     android:layout_width="match_parent"

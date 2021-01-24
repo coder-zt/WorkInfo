@@ -103,23 +103,8 @@ public class OrderRecordingAdapter extends  RecyclerView.Adapter{
         }
 
         public void setData(String picUrl) {
-            if(picUrl.contains(",")){
-                String[] split = picUrl.split(",");
-                List<String> imageUrls = new ArrayList<>();
-                for (int i = 0; i < split.length; i++) {
-                    imageUrls.add(split[i]);
-                }
-                mAdapter.setImageCollect(imageUrls);
-            }else if(!picUrl.isEmpty()){
-                List<String> imageUrls = new ArrayList<>();
-                imageUrls.add(picUrl);
-                mAdapter.setImageCollect(imageUrls);
-            }else{
-                mAdapter.setImageCollect(null);
-            }
-
+                mAdapter.setImageCollect(picUrl);
         }
     }
-
 
 }

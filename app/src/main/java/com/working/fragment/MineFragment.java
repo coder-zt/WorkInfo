@@ -12,6 +12,7 @@ import com.working.base.BaseFragment;
 import com.working.databinding.FragmentMineBinding;
 import com.working.domain.LoginInfo;
 import com.working.setting.MineMenuItem;
+import com.working.utils.AppConfig;
 import com.working.utils.AppRouter;
 import com.working.utils.UserDataMan;
 
@@ -46,7 +47,7 @@ public class MineFragment extends BaseFragment<FragmentMineBinding> {
                 "巡检记录", new MineMenuItem.OnItemClickedListener() {
             @Override
             public void onItemClick() {
-                AppRouter.toInspectionActivity(getActivity());
+                AppRouter.toListActivity(getActivity(), AppConfig.ACTIVITY_INSPECTION);
             }
         }));
 
@@ -54,7 +55,7 @@ public class MineFragment extends BaseFragment<FragmentMineBinding> {
                 "采购清单", new MineMenuItem.OnItemClickedListener() {
             @Override
             public void onItemClick() {
-                AppRouter.toListActivity(getActivity(), 2);
+                AppRouter.toListActivity(getActivity(), AppConfig.ACTIVITY_PURCHASE);
             }
         }));
 
@@ -62,7 +63,7 @@ public class MineFragment extends BaseFragment<FragmentMineBinding> {
                 "购买记录", new MineMenuItem.OnItemClickedListener() {
             @Override
             public void onItemClick() {
-                AppRouter.toListActivity(getActivity(), 3);
+                AppRouter.toListActivity(getActivity(), AppConfig.ACTIVITY_ORDER);
             }
         }));
         mDatas.add(new MineMenuItem(getResources().getDrawable(R.mipmap.repertory_icon),
@@ -72,6 +73,15 @@ public class MineFragment extends BaseFragment<FragmentMineBinding> {
                 AppRouter.toRepertoryManageActivity(getActivity());
             }
         }));
+        if(UserDataMan.getInstance().checkFirstApprovalGrant() || UserDataMan.getInstance().checkSecondApprovalGrant()){
+            mDatas.add(new MineMenuItem(getResources().getDrawable(R.mipmap.inspection_icon),
+                    "审批记录", new MineMenuItem.OnItemClickedListener() {
+                @Override
+                public void onItemClick() {
+                    AppRouter.toListActivity(getActivity(), AppConfig.ACTIVITY_APPROVAL);
+                }
+            }));
+        }
         adapter.setData(mDatas);
     }
 

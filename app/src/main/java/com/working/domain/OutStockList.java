@@ -2,6 +2,8 @@ package com.working.domain;
 
 import android.graphics.Color;
 
+import com.working.base.IOrderInfo;
+
 import java.util.List;
 
 import lombok.Data;
@@ -54,7 +56,7 @@ public class OutStockList {
 
         @NoArgsConstructor
         @Data
-        public static class RecordsBean implements IStockInfo {
+        public static class RecordsBean implements IStockInfo, IOrderInfo {
             /**
              * id : 1
              * createUser : -1
@@ -113,6 +115,11 @@ public class OutStockList {
                         return "<font color=\"#27b13e\">已通过</font>";
                     }
                 }
+            }
+
+            @Override
+            public String getOrderInfo() {
+                return updateTime;
             }
         }
     }

@@ -2,7 +2,6 @@ package com.working.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -13,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.lcodecore.tkrefreshlayout.TwinklingRefreshLayout;
 import com.working.R;
-import com.working.activity.InspectionActivity;
 import com.working.setting.StatusData;
 
 public class DataLoadUtilLayout extends FrameLayout {

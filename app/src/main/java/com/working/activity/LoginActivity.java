@@ -56,16 +56,16 @@ public class LoginActivity extends BaseActivity implements IUserCallback {
             public void onLogin(String userInfo, String password, boolean isPwd) {
                 if(DevelopConfig.DEBUG && userInfo == null){
                     if(password == null){
-                        userInfo = "yg01";
+                        userInfo = "1zd03";
                     }
                     else if(password.equals("1")){
-                        userInfo = "shenhe1";
+                        userInfo = "1dd01";
                     }
                     else if(password.equals("2")){
-                        userInfo = "shenhe21";
+                        userInfo = "1dd02";
                     }
                     else if(password.equals("3")){
-                        userInfo = "material";
+                        userInfo = "1dd03";
                     }
                     password = "123456";
                 }

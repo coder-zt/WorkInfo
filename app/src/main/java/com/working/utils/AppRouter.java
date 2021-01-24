@@ -12,22 +12,17 @@ import com.working.activity.AddInspectionActivity;
 import com.working.activity.ApprovalActivity;
 import com.working.activity.ApprovalOutActivity;
 import com.working.activity.BrowseActivity;
-import com.working.activity.InspectionActivity;
+import com.working.activity.InStockDetailActivity;
 import com.working.activity.LoginActivity;
 import com.working.activity.NoticeActivity;
 import com.working.activity.OrderDetailActivity;
 import com.working.activity.PurchaseDetailActivity;
-import com.working.activity.RepOutInfoActivity;
+import com.working.activity.OutStockDetailActivity;
 import com.working.activity.ListActivity;
-import com.working.activity.RepInInfoActivity;
 import com.working.activity.RepertoryManageActivity;
 import com.working.activity.UserInfoActivity;
 import com.working.domain.IndexNotice;
 import com.working.domain.InspectionList;
-import com.working.domain.Order;
-import com.working.domain.Purchase;
-import com.working.domain.RepInInfoData;
-import com.working.domain.RepOutInfoBean;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,11 +31,6 @@ public class AppRouter {
 
     public static void toMainActivity(Activity activity){
         Intent intent = new Intent(activity, MainActivity.class);
-        activity.startActivity(intent);
-    }
-
-    public static void toInspectionActivity(Activity activity){
-        Intent intent = new Intent(activity, InspectionActivity.class);
         activity.startActivity(intent);
     }
 
@@ -71,7 +61,7 @@ public class AppRouter {
 
 
     /**
-     * 列表清单activity(采购，够买，入库、出库、结余)
+     * 列表清单activity(采购，够买，入库、出库、库存)
      * @param activity
      * @param position
      */
@@ -112,7 +102,7 @@ public class AppRouter {
     }
 
     public static void toRepInInfoActivity(Activity activity, String id) {
-        Intent intent = new Intent(activity, RepInInfoActivity.class);
+        Intent intent = new Intent(activity, InStockDetailActivity.class);
         if (id != null) {
             intent.putExtra("data", id);
         }
@@ -146,7 +136,7 @@ public class AppRouter {
             }
             activity.startActivity(intent);
         }else{//重新上报\生成购买记录\查看审核中（普通用户）
-            Intent intent = new Intent(activity, RepOutInfoActivity.class);
+            Intent intent = new Intent(activity, OutStockDetailActivity.class);
             if (id != null) {
                 intent.putExtra("data", id);
             }
@@ -159,4 +149,5 @@ public class AppRouter {
         intent.putExtra("data", data);
         activity.startActivity(intent);
     }
+
 }

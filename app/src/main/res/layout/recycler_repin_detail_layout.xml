@@ -6,7 +6,7 @@
     <data>
         <variable
             name="data"
-            type="com.working.domain.RepInInfoData.DataBean.InStockItemListBean" />
+            type="com.working.domain.InStockDetail.DataBean.InStockItemListBean" />
 
         <import type="android.view.View"
             alias="view"/>

@@ -10,8 +10,9 @@ import com.working.domain.IStockInfo;
 import com.working.domain.OutStockList;
 import com.working.interfaces.ZTIListCallback;
 import com.working.interfaces.ZTIListPresenter;
-import com.working.presenter.impl.RepOutPresenterImpl;
+import com.working.presenter.impl.OutStockPresenterImpl;
 import com.working.utils.AppRouter;
+import com.working.utils.UserDataMan;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +22,14 @@ public class OutStockListFragment extends
         implements ZTIListCallback<OutStockList.DataBean.RecordsBean> {
 
 
-    private RepOutPresenterImpl mPresenter;
+    private OutStockPresenterImpl mPresenter;
     private StockListAdapter mAdapter;
 
     public static ListFragment getInstance(boolean isCommit){
+        if (!isCommit && (UserDataMan.getInstance().checkSecondApprovalGrant()
+                ||UserDataMan.getInstance().checkFirstApprovalGrant())) {
+            return null;
+        }
         Bundle data =new Bundle();
         data.putBoolean("isCommit", isCommit);
         ListFragment fragment = new OutStockListFragment();
@@ -64,12 +69,14 @@ public class OutStockListFragment extends
 
     @Override
     public void search(String info) {
-        mAdapter.search(info);
+        if (mAdapter != null) {
+            mAdapter.search(info);
+        }
     }
 
     @Override
     protected ZTIListPresenter getSubPresenter() {
-        mPresenter = new RepOutPresenterImpl();
+        mPresenter = new OutStockPresenterImpl();
         return mPresenter;
     }
 }

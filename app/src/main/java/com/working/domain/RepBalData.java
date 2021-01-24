@@ -1,5 +1,7 @@
 package com.working.domain;
 
+import com.working.base.IOrderInfo;
+
 import java.util.List;
 
 import lombok.Data;
@@ -52,7 +54,7 @@ public class RepBalData {
 
         @NoArgsConstructor
         @Data
-        public static class RecordsBean implements ISearchInfo{
+        public static class RecordsBean implements ISearchInfo, IOrderInfo {
             /**
              * id : 1343090944706203649
              * createUser : 1341292276263723010
@@ -116,6 +118,11 @@ public class RepBalData {
             @Override
             public String getSearchInfo() {
                 return materialName;
+            }
+
+            @Override
+            public String getOrderInfo() {
+                return updateTime;
             }
         }
     }

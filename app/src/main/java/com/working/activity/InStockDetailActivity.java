@@ -12,12 +12,14 @@ import androidx.databinding.DataBindingUtil;
 
 import com.google.gson.Gson;
 import com.working.R;
-import com.working.adapter.RepInDetailAdapter;
+import com.working.adapter.CommonDetailAdapter;
 import com.working.base.BaseCommitActivity;
 import com.working.databinding.ActivityRepinDetailBinding;
-import com.working.domain.MaterialListData;
-import com.working.domain.RepInInfoData;
+import com.working.domain.ImageCollectBean;
+import com.working.domain.InStockDetail;
+import com.working.domain.MaterialList;
 import com.working.interfaces.IDetailCallback;
+import com.working.interfaces.IRecyclerDetail;
 import com.working.presenter.ICommitPresenter;
 import com.working.presenter.IDetailPresenter;
 import com.working.presenter.impl.RepInDetailPresenterImpl;
@@ -42,22 +44,22 @@ import java.util.List;
 /**
  * 入库清单的详情页面
  */
-public class RepInInfoActivity extends BaseCommitActivity<RepInInfoData.DataBean> implements IDetailCallback<RepInInfoData.DataBean> {
+public class InStockDetailActivity extends BaseCommitActivity<InStockDetail.DataBean> implements IDetailCallback<InStockDetail.DataBean> {
     private static final String TAG = "RepertoryInDetailActivi";
-    private RepInInfoData.DataBean mDataBean = new RepInInfoData.DataBean();
-    private RepInDetailAdapter mAdapter;
+    private InStockDetail.DataBean mDataBean = new InStockDetail.DataBean();
+    private CommonDetailAdapter mAdapter;
     private List<String> mSelectedStr = new ArrayList<>();
     private final int REQUEST_CODE = 1;
     private IDetailPresenter mIDetailPresenter = new RepInDetailPresenterImpl();
-    private ActivityRepinDetailBinding mDataBinding;
+    private ActivityRepinDetailBinding mBinding;
     private DataLoadUtilLayout mLoadUtilLayout;
     private String mIdData;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDataBinding = DataBindingUtil.setContentView(this, R.layout.activity_repin_detail);
-        mDataBinding.setActivity(this);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_repin_detail);
+        mBinding.setActivity(this);
         mIDetailPresenter.registerCallback(this);
         initView();
         initData();
@@ -70,13 +72,16 @@ public class RepInInfoActivity extends BaseCommitActivity<RepInInfoData.DataBean
 
     @Override
     protected void addImageUrl(String link) {
-        mAdapter.addPicUrl(link);
+        Log.d(TAG, "addImageUrl: " + link);
+        mAdapter.addPic(link);
     }
 
 
     private void accountCount() {
         BigDecimal sum = new BigDecimal("0.0");
-        for (RepInInfoData.DataBean.InStockItemListBean inStockItemListBean : mDataBean.getInStockItemList()) {
+        mSelectedStr.clear();
+        for (InStockDetail.DataBean.InStockItemListBean inStockItemListBean : mDataBean.getInStockItemList()) {
+            mSelectedStr.add(inStockItemListBean.getMaterialName());
             String priceStr = inStockItemListBean.getPrice();
             String productQuantity = inStockItemListBean.getProductQuantity();
             BigDecimal bigPrice = new BigDecimal(priceStr);
@@ -86,27 +91,33 @@ public class RepInInfoActivity extends BaseCommitActivity<RepInInfoData.DataBean
             sum = add;
         }
         Log.d(TAG, "onCountChange: " + sum.floatValue());
-        mDataBinding.setAccount(sum.floatValue());
+        mBinding.setAccount(sum.floatValue());
     }
 
     private void initView() {
-        mAdapter = new RepInDetailAdapter(new RepInDetailAdapter.OnDataContainerListener() {
+        mAdapter = new CommonDetailAdapter(new CommonDetailAdapter.OnAddViewClickedListener() {
 
             @Override
-            public void onDataContainerChanged(List<RepInInfoData.DataBean.InStockItemListBean> data, String urls) {
-                mDataBean.setInStockItemList(data);
-                mDataBean.setPicUrl(urls);
+            public void onMaterialNumChanged(List<IRecyclerDetail> data, String pciUrls) {
+                List<InStockDetail.DataBean.InStockItemListBean> tempData = new ArrayList<>();
+                for (IRecyclerDetail datum : data) {
+                    if (datum instanceof InStockDetail.DataBean.InStockItemListBean) {
+                        tempData.add((InStockDetail.DataBean.InStockItemListBean)datum);
+                    }
+                }
+                mDataBean.setInStockItemList(new ArrayList<InStockDetail.DataBean.InStockItemListBean>(tempData));
+                mDataBean.setPicUrl(pciUrls);
                 accountCount();
             }
 
             @Override
-            public void onDataCountChange(int oldSize, int newSize) {
-                mDataBinding.recyclerView.setSwipeItemMenuEnabled(oldSize, true);
-                mDataBinding.recyclerView.setSwipeItemMenuEnabled(newSize, false);
+            public void onDataContainerCountChange(int oldCount, int newCount) {
+                mBinding.recyclerView.setSwipeItemMenuEnabled(oldCount - 1, true);
+                mBinding.recyclerView.setSwipeItemMenuEnabled(newCount - 1, false);
             }
 
         }, mImageListener);
-        mLoadUtilLayout = new DataLoadUtilLayout(this, mDataBinding.statusLayout, new DataLoadUtilLayout.OnErrorOnTry() {
+        mLoadUtilLayout = new DataLoadUtilLayout(this, mBinding.statusLayout, new DataLoadUtilLayout.OnErrorOnTry() {
             @Override
             public void onTry() {
                 mIDetailPresenter.getDetailData(mIdData);
@@ -115,7 +126,7 @@ public class RepInInfoActivity extends BaseCommitActivity<RepInInfoData.DataBean
     }
 
     public void onAddViewClicked() {
-        AppRouter.toAddMaterialActivity(RepInInfoActivity.this, mSelectedStr, REQUEST_CODE);
+        AppRouter.toAddMaterialActivity(InStockDetailActivity.this, mSelectedStr, REQUEST_CODE);
     }
 
     private void initData() {
@@ -123,14 +134,16 @@ public class RepInInfoActivity extends BaseCommitActivity<RepInInfoData.DataBean
         if (mIdData != null) {
             mIDetailPresenter.getDetailData(mIdData);
         }else{
-            mAdapter.setPicUrls("");
-            mDataBinding.setTitle("入库清单详情(草稿)");
-            mDataBinding.setCommit(!UserDataMan.getInstance().checkMaterialGrant());
-            mDataBinding.setAccount(0.0f);
+            ArrayList<IRecyclerDetail> iRecyclerDetails = new ArrayList<>();
+            iRecyclerDetails.add(new ImageCollectBean(""));
+            mAdapter.setData(iRecyclerDetails);
+            mBinding.setTitle("入库清单详情(草稿)");
+            mBinding.setCommit(!UserDataMan.getInstance().checkMaterialGrant());
+            mBinding.setAccount(0.0f);
             if (UserDataMan.getInstance().checkMaterialGrant()) {
                 createSlideMenu();
             }else{
-                mDataBinding.recyclerView.setAdapter(mAdapter);
+                mBinding.recyclerView.setAdapter(mAdapter);
             }
         }
     }
@@ -154,7 +167,7 @@ public class RepInInfoActivity extends BaseCommitActivity<RepInInfoData.DataBean
             ToastUtil.showMessage("请添加物料！");
             return;
         }
-        for (RepInInfoData.DataBean.InStockItemListBean inStockItemListBean : mDataBean.getInStockItemList()) {
+        for (InStockDetail.DataBean.InStockItemListBean inStockItemListBean : mDataBean.getInStockItemList()) {
             if(Float.parseFloat(inStockItemListBean.getProductQuantity()) <= 0.0){
                 ToastUtil.showMessage(inStockItemListBean.getMaterialName() + "的数量必须大于0");
                 return;
@@ -167,7 +180,7 @@ public class RepInInfoActivity extends BaseCommitActivity<RepInInfoData.DataBean
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
+        Log.d(TAG, "onActivityResult: ");
         switch (requestCode) {
             case REQUEST_CODE :
                 if (data != null) {
@@ -180,12 +193,12 @@ public class RepInInfoActivity extends BaseCommitActivity<RepInInfoData.DataBean
                         ToastUtil.showMessage("选择新增用品失败！");
                         return;
                     }
-                    MaterialListData.DataBean dataBean = new Gson().fromJson(result, MaterialListData.DataBean.class);
+                    MaterialList.DataBean dataBean = new Gson().fromJson(result, MaterialList.DataBean.class);
 
-                    RepInInfoData.DataBean.InStockItemListBean datum = new RepInInfoData.DataBean.InStockItemListBean();
+                    InStockDetail.DataBean.InStockItemListBean datum = new InStockDetail.DataBean.InStockItemListBean();
                     FileUtils.copyValue(datum, dataBean);
                     datum.setId("");
-                    datum.setPrice(String.valueOf(dataBean.getCommonPrice()));
+                    datum.setPrice(dataBean.getPrice());
                     datum.setProductQuantity("0.0");
                     datum.setMaterialId(String.valueOf(dataBean.getId()));
                     datum.setInStockId(mDataBean.getId());
@@ -203,9 +216,9 @@ public class RepInInfoActivity extends BaseCommitActivity<RepInInfoData.DataBean
     private void createSlideMenu() {
         View view = new View(this);
         view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, UIHelper.dp2px(100)));
-        mDataBinding.recyclerView.addFooterView(view);
-        mDataBinding.recyclerView.setSwipeItemMenuEnabled(true);
-        mDataBinding.recyclerView.setSwipeMenuCreator(new SwipeMenuCreator() {
+        mBinding.recyclerView.addFooterView(view);
+        mBinding.recyclerView.setSwipeItemMenuEnabled(true);
+        mBinding.recyclerView.setSwipeMenuCreator(new SwipeMenuCreator() {
             @Override
             public void onCreateMenu(SwipeMenu leftMenu, SwipeMenu rightMenu, int position) {
                 SwipeMenuItem right = new SwipeMenuItem(getApplicationContext());
@@ -218,14 +231,14 @@ public class RepInInfoActivity extends BaseCommitActivity<RepInInfoData.DataBean
                 rightMenu.addMenuItem(right);
             }
         });
-        mDataBinding.recyclerView.setOnItemMenuClickListener(new OnItemMenuClickListener() {
+        mBinding.recyclerView.setOnItemMenuClickListener(new OnItemMenuClickListener() {
             @Override
             public void onItemClick(SwipeMenuBridge menuBridge, int adapterPosition) {
                 mAdapter.deleteData(adapterPosition);
             }
         });
-        mDataBinding.recyclerView.setSwipeItemMenuEnabled(0, false);
-        mDataBinding.recyclerView.setAdapter(mAdapter);
+        mBinding.recyclerView.setSwipeItemMenuEnabled(0, false);
+        mBinding.recyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -240,24 +253,25 @@ public class RepInInfoActivity extends BaseCommitActivity<RepInInfoData.DataBean
 
 
     @Override
-    public void onDetailDataLoaded(RepInInfoData.DataBean data) {
+    public void onDetailDataLoaded(InStockDetail.DataBean data) {
         mDataBean = data;
         mLoadUtilLayout.setStatus(StatusData.LOADED);
-        mAdapter.setPicUrls(data.getPicUrl());
-        mAdapter.setData(data.getInStockItemList());
+        ArrayList<IRecyclerDetail> iRecyclerDetails = new ArrayList<>(data.getInStockItemList());
+        iRecyclerDetails.add(new ImageCollectBean(data.getPicUrl()));
+        mAdapter.setData(iRecyclerDetails);
         boolean grant = UserDataMan.getInstance().checkMaterialGrant();
         mAdapter.setCommitted(data.getStatus() == 1 || !grant);
         if (data.getStatus() == 1) {
-            mDataBinding.setTitle("入库清单详情(已提交)");
-            mDataBinding.setCommit(true);
-            mDataBinding.recyclerView.setAdapter(mAdapter);
+            mBinding.setTitle("入库清单详情(已提交)");
+            mBinding.setCommit(true);
+            mBinding.recyclerView.setAdapter(mAdapter);
         }else{
-            mDataBinding.setTitle("入库清单详情(草稿)");
-            mDataBinding.setCommit(!UserDataMan.getInstance().checkMaterialGrant());
+            mBinding.setTitle("入库清单详情(草稿)");
+            mBinding.setCommit(!UserDataMan.getInstance().checkMaterialGrant());
             if (UserDataMan.getInstance().checkMaterialGrant()) {
                 createSlideMenu();
             }else{
-                mDataBinding.recyclerView.setAdapter(mAdapter);
+                mBinding.recyclerView.setAdapter(mAdapter);
             }
         }
         accountCount();

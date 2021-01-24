@@ -88,6 +88,7 @@ public class MaterialList {
         private int version;
         private String materialName;
         private String materialDesc;
+        private int owned;
 
         public String getId() {
             return id;
@@ -234,6 +235,14 @@ public class MaterialList {
 
         public void setFreezeQuantity(String freezeQuantity) {
             this.freezeQuantity = freezeQuantity;
+        }
+
+        public void setOwned(int owned) {
+            this.owned = owned;
+        }
+
+        public int getOwned() {
+            return owned;
         }
     }
 }

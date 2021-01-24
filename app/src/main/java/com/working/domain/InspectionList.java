@@ -1,5 +1,7 @@
 package com.working.domain;
 
+import com.working.base.IOrderInfo;
+
 import java.util.List;
 
 public class InspectionList {
@@ -162,7 +164,7 @@ public class InspectionList {
             this.orders = orders;
         }
 
-        public static class RecordsBean {
+        public static class RecordsBean implements ISearchInfo, IOrderInfo {
             /**
              * id : 1342406065400168450
              * createUser : 1342396148266156034
@@ -400,6 +402,16 @@ public class InspectionList {
 
             public String getExtensionShow() {
                 return  formatStr("巡检记录描述", extension);
+            }
+
+            @Override
+            public String getSearchInfo() {
+                return title;
+            }
+
+            @Override
+            public String getOrderInfo() {
+                return updateTime;
             }
         }
     }

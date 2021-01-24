@@ -6,7 +6,7 @@
     <data>
         <variable
             name="activity"
-            type="com.working.activity.RepOutInfoActivity" />
+            type="com.working.activity.OutStockDetailActivity" />
         <import type="android.text.Html"/>
         <variable
             name="title"

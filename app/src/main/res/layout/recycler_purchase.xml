@@ -112,18 +112,62 @@
             app:layout_constraintEnd_toEndOf="@+id/imageView3"
             app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="审批意见:"
+            android:textColor="@color/gary_text_color"
+            android:textSize="12sp"
+            android:visibility="@{data.approvalStatus==0?view.GONE:view.VISIBLE}"
+            app:layout_constraintStart_toStartOf="@+id/textView13"
+            app:layout_constraintTop_toBottomOf="@+id/textView13" />
+
+
+        <TextView
+            android:id="@+id/textView19"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="8dp"
+            android:visibility="@{data.approvalStatus==0?view.GONE:view.VISIBLE}"
+            android:text="@{`一级审批：` + data.auditOpinion==null?`无`:data.auditOpinion, default=`审批意见`}"
+            android:textColor="@color/text_black_color"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@+id/textView13"
+            app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+
+        <TextView
+            android:id="@+id/textView41"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="12dp"
+            android:layout_marginTop="8dp"
+            android:visibility="@{data.approvalStatus==0?view.GONE:view.VISIBLE}"
+            android:text="@{`二级审批：` + data.auditOpinion2==null?`无`:data.auditOpinion2, default=`审审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见审批意见批意见`}"
+            android:textColor="@color/text_black_color"
+            android:textSize="12sp"
+            app:layout_constraintStart_toStartOf="@+id/textView13"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textView19" />
+
+
         <View
             android:id="@+id/view3"
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
-            android:layout_marginTop="14dp"
+            android:layout_marginTop="12dp"
             android:layout_marginLeft="12dp"
-            android:layout_marginRight="12dp"
             android:layout_marginBottom="34dp"
             android:background="@color/divder_line_color"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/textView13"
-            app:layout_constraintTop_toBottomOf="@+id/textView13" />
+            app:layout_constraintTop_toBottomOf="@+id/textView41" />
 
         <TextView
             android:id="@+id/textView15"

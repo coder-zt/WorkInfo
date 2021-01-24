@@ -7,7 +7,7 @@
 
         <variable
             name="activity"
-            type="com.working.activity.RepInInfoActivity" />
+            type="com.working.activity.InStockDetailActivity" />
         <import type="android.text.Html"/>
         <variable
             name="title"

@@ -51,6 +51,7 @@ public class ImageAlbumAdapter extends RecyclerView.Adapter<ImageAlbumAdapter.Se
      */
     public void setPicUrl(String picUrl) {
         Log.d(TAG, "setPicUrl: " + picUrl);
+        imageUrls.clear();
         if (picUrl != null && picUrl.length() > 0) {
             String[] urls = picUrl.split(",");
             for (String url : urls) {

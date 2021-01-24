@@ -1,6 +1,5 @@
 package com.working.activity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -13,14 +12,16 @@ import androidx.databinding.DataBindingUtil;
 
 import com.google.gson.Gson;
 import com.working.R;
-import com.working.adapter.PurchaseDetailAdapter;
+import com.working.adapter.CommonDetailAdapter;
 import com.working.base.BaseCommitActivity;
 import com.working.databinding.ActivityPurcahseDetailBinding;
 import com.working.domain.ApprovalBean;
-import com.working.domain.MaterialListData;
+import com.working.domain.ApprovalContentBean;
+import com.working.domain.MaterialList;
 import com.working.domain.PurchaseDetail;
 import com.working.interfaces.IDetailCallback;
 import com.working.interfaces.IPurchaseOrderData;
+import com.working.interfaces.IRecyclerDetail;
 import com.working.presenter.ICommitPresenter;
 import com.working.presenter.IDetailPresenter;
 import com.working.presenter.impl.ApprovalPresenterImpl;
@@ -54,7 +55,7 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
     List<String> mSelectedItem = new ArrayList<>();
     private ApprovalBean mApprovalBean = new ApprovalBean();
     private PurchaseDetail.DataBean mDataBean = new PurchaseDetail.DataBean();
-    private PurchaseDetailAdapter mAdapter;
+    private CommonDetailAdapter mAdapter;
     private DataLoadUtilLayout mLoadUtilLayout;
     private int mApprovalStatus;
     private String mId;
@@ -101,12 +102,12 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
                 ToastUtil.showMessage("选择新增用品失败！");
                 return true;
             }
-            MaterialListData.DataBean dataBean = new Gson().fromJson(result, MaterialListData.DataBean.class);
+            MaterialList.DataBean dataBean = new Gson().fromJson(result, MaterialList.DataBean.class);
             PurchaseDetail.DataBean.PurchaseItemListBean datum = new  PurchaseDetail.DataBean.PurchaseItemListBean();
             FileUtils.copyValue(datum, dataBean);
             datum.setId("");
             datum.setMin("0.0");
-            datum.setPrice(String.valueOf(dataBean.getCommonPrice()));
+            datum.setPrice(dataBean.getPrice());
             datum.setProductQuantity("0.0");
             datum.setPriceMarket(datum.getPrice());
             datum.setMaterialId(String.valueOf(dataBean.getId()));
@@ -135,14 +136,30 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
     private static final String TAG = "PurchaseDetailActivity";
 
     protected void initView() {
-        mAdapter = new PurchaseDetailAdapter(new PurchaseDetailAdapter.OnAddViewClickedListener() {
+        mAdapter = new CommonDetailAdapter(new CommonDetailAdapter.OnAddViewClickedListener() {
 
             @Override
-            public void onMaterialNumChanged(List<PurchaseDetail.DataBean.PurchaseItemListBean> data) {
-                mDataBean.setPurchaseItemList(data);
+            public void onMaterialNumChanged(List<IRecyclerDetail> data, String picUrls) {
+                List<PurchaseDetail.DataBean.PurchaseItemListBean> tempData = new ArrayList<>();
+                for (IRecyclerDetail datum : data) {
+                    if (datum instanceof PurchaseDetail.DataBean.PurchaseItemListBean) {
+                        tempData.add((PurchaseDetail.DataBean.PurchaseItemListBean)datum);
+                    }
+                }
+                mDataBean.setPurchaseItemList(tempData);
                 countAccount();
             }
-        });
+
+            @Override
+            public void onDataContainerCountChange(int oldCount, int newCount) {
+                if(mDataBean.getApprovalStatus()>0) {
+                    mBinding.recyclerView.setSwipeItemMenuEnabled(oldCount - 1, true);
+                    mBinding.recyclerView.setSwipeItemMenuEnabled(oldCount - 2, true);
+                    mBinding.recyclerView.setSwipeItemMenuEnabled(newCount - 1, false);
+                    mBinding.recyclerView.setSwipeItemMenuEnabled(newCount - 2, false);
+                }
+            }
+        }, null);
         mLoadUtilLayout = new DataLoadUtilLayout(this, mBinding.statusLayout, () -> {
             mDetailPresenter.getDetailData(mId);
         });
@@ -159,7 +176,7 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
         Log.d(TAG, "countAccount: ==============================================================");
         for (PurchaseDetail.DataBean.PurchaseItemListBean datum: mDataBean.getPurchaseItemList()) {
             String priceStr = datum.getPrice();
-            if (priceStr.length() == 0) {
+            if (datum.getType() == 2 || priceStr.length() == 0) {
                 continue;
             }
             String productQuantity = datum.getProductQuantity();
@@ -232,16 +249,20 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
         List<PurchaseDetail.DataBean.PurchaseItemListBean> purchaseItemList = data.getPurchaseItemList();
         mDataBean = data;
         countAccount();
-        mAdapter.setData(purchaseItemList);
+        ArrayList<IRecyclerDetail> recyclerDetails = new ArrayList<>(purchaseItemList);
+        //设置审核信息
+        if(mDataBean.getApprovalStatus()>0){
+            recyclerDetails.add(new ApprovalContentBean("一级审核", mDataBean.getAuditOpinion()));
+            recyclerDetails.add(new ApprovalContentBean("二级审核", mDataBean.getAuditOpinion2()));
+        }
+
+        mAdapter.setData(recyclerDetails);
         mAdapter.setCommitted(data.getStatus() == 1);
         if (data != null) {
             mBinding.setApproval(data.getApprovalStatus());
             if (data.getStatus() == 1) {
                 mBinding.setCommit(true);
-                if (data.getApprovalStatus() == 3) {
-                    mBinding.setTitle("采购清单详情(未通过)");
-                    createSlideMenu();
-                } else if (data.getApprovalStatus() == 2) {
+                if (data.getApprovalStatus() == 2) {
                     mBinding.setTitle("采购清单详情(通过)");
                     setCreateData(data);
                     setRecyclerAdapter();
@@ -251,7 +272,11 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
                 }
             } else {
                 mBinding.setCommit(false);
-                mBinding.setTitle("采购清单详情(未上报)");
+                if (data.getApprovalStatus() == 3) {
+                    mBinding.setTitle("采购清单详情(未通过)");
+                }else{
+                    mBinding.setTitle("采购清单详情(未上报)");
+                }
                 createSlideMenu();
             }
         }
@@ -267,6 +292,10 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
         view.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,UIHelper.dp2px(100)));
         mBinding.recyclerView.addFooterView(view);
         mBinding.recyclerView.setSwipeItemMenuEnabled(true);
+        if(mDataBean.getApprovalStatus()>0) {
+            mBinding.recyclerView.setSwipeItemMenuEnabled(mDataBean.getPurchaseItemList().size() - 1, false);
+            mBinding.recyclerView.setSwipeItemMenuEnabled(mDataBean.getPurchaseItemList().size() - 2, false);
+        }
         mBinding.recyclerView.setSwipeMenuCreator(new SwipeMenuCreator() {
             @Override
             public void onCreateMenu(SwipeMenu leftMenu, SwipeMenu rightMenu, int position) {

@@ -7,14 +7,19 @@ import android.view.KeyEvent;
 import com.working.adapter.RVListAdapter;
 import com.working.base.ZTBaseListActivity;
 import com.working.base.ListFragment;
-import com.working.domain.MaterialList;
+import com.working.domain.MaterialListData;
+import com.working.fragment.ApprovalListFragment;
+import com.working.fragment.InspectionFragment;
+import com.working.fragment.InspectionListFragment;
 import com.working.fragment.OrderListFragment;
 import com.working.fragment.PurchaseListFragment;
-import com.working.fragment.RepBalListFragment;
+import com.working.fragment.MaterialListFragment;
 import com.working.fragment.InStockListFragment;
 import com.working.fragment.OutStockListFragment;
-import com.working.interfaces.IMaterialListCallback;
-import com.working.presenter.impl.MaterialListPresenterImpl;
+import com.working.interfaces.IAddMaterialCallback;
+import com.working.presenter.IAddMaterialPresenter;
+import com.working.presenter.impl.AddMaterialPresenter;
+import com.working.utils.AppConfig;
 import com.working.utils.AppRouter;
 import com.working.utils.ToastUtil;
 import com.working.utils.UserDataMan;
@@ -26,23 +31,25 @@ import java.util.List;
 /**
  * 库存管理->入库清单
  */
-public class ListActivity extends ZTBaseListActivity implements IMaterialListCallback {
+public class ListActivity extends ZTBaseListActivity implements IAddMaterialCallback {
 
     private static final String TAG = "ListActivity";
-    private MaterialListPresenterImpl mMPresenter;
-    private List<MaterialList.DataBean> mData = new ArrayList<>();;
+    private IAddMaterialPresenter mMPresenter;
+    private List<MaterialListData.DataBean> mData = new ArrayList<>();;
     private List<String> mShowData = new ArrayList<>();;
 
     @Override
     protected Boolean getIsCreate() {
         switch (mActivityCode){
-            case 2:
-                return false;
-            case 3:
+            case AppConfig.ACTIVITY_INSPECTION:
+            case AppConfig.ACTIVITY_ORDER:
                 return true;
-            case 4:
-            case 5:
-            case 6:
+            case AppConfig.ACTIVITY_PURCHASE:
+            case AppConfig.ACTIVITY_APPROVAL:
+                return false;
+            case AppConfig.ACTIVITY_STOCK_IN:
+            case AppConfig.ACTIVITY_STOCK_OUT:
+            case AppConfig.ACTIVITY_MATERIAL:
                 return UserDataMan.getInstance().checkMaterialGrant();
 
         }
@@ -52,19 +59,23 @@ public class ListActivity extends ZTBaseListActivity implements IMaterialListCal
     @Override
     protected String getActivityTitle() {
         switch (mActivityCode){
-            case 2:
+            case AppConfig.ACTIVITY_INSPECTION:
+                return "巡检记录";
+            case AppConfig.ACTIVITY_PURCHASE:
                 return "采购清单";
-            case 3:
+            case AppConfig.ACTIVITY_ORDER:
                 return "购买清单";
-            case 4:
+            case AppConfig.ACTIVITY_STOCK_IN:
                 return "入库清单";
-            case 5:
+            case AppConfig.ACTIVITY_STOCK_OUT:
                 return "出库清单";
-            case 6:
-                mMPresenter = new MaterialListPresenterImpl();
+            case AppConfig.ACTIVITY_MATERIAL:
+                mMPresenter = new AddMaterialPresenter();
                 mMPresenter.registerCallback(this);
                 mMPresenter.getMaterialList();
                 return "库存清单";
+            case AppConfig.ACTIVITY_APPROVAL:
+                return "审批记录";
         }
         return null;
     }
@@ -72,19 +83,20 @@ public class ListActivity extends ZTBaseListActivity implements IMaterialListCal
     @Override
     protected ListFragment getListFragment(boolean iusCommit) {
         switch (mActivityCode){
-            case 2:
+            case AppConfig.ACTIVITY_INSPECTION:
+                return InspectionListFragment.getInstance(iusCommit);
+            case AppConfig.ACTIVITY_PURCHASE:
                 return PurchaseListFragment.getInstance(iusCommit);
-            case 3:
+            case AppConfig.ACTIVITY_ORDER://购买订单
                 return OrderListFragment.getInstance(iusCommit);
-            case 4://入库的fragment
+            case AppConfig.ACTIVITY_STOCK_IN://入库的fragment
                 return InStockListFragment.getInstance(iusCommit);
-            case 5://出库的fragment
+            case AppConfig.ACTIVITY_STOCK_OUT://出库的fragment
                 return OutStockListFragment.getInstance(iusCommit);
-            case 6:
-                if (iusCommit) {
-                    return null;
-                }
-                return RepBalListFragment.getInstance(iusCommit);
+            case AppConfig.ACTIVITY_MATERIAL://库存管理
+                return MaterialListFragment.getInstance(iusCommit);
+            case AppConfig.ACTIVITY_APPROVAL://审批记录的fragment
+                return ApprovalListFragment.getInstance(iusCommit);
         }
         return null;
     }
@@ -93,26 +105,30 @@ public class ListActivity extends ZTBaseListActivity implements IMaterialListCal
     @Override
     public void create() {
         switch (mActivityCode){
-            case 2:
+            case AppConfig.ACTIVITY_INSPECTION://创建新的巡检记录
+                AppRouter.toAddInspectionActivity(this, null);
                 break;
-            case 3:
+            case AppConfig.ACTIVITY_PURCHASE:
+            case AppConfig.ACTIVITY_APPROVAL:
+                break;
+            case AppConfig.ACTIVITY_ORDER://创建新的购买清单
                 AppRouter.toOrderDetailActivity(this, null);
                 break;
-            case 4://创建新的入库清单
+            case AppConfig.ACTIVITY_STOCK_IN://创建新的入库清单
                 AppRouter.toRepInInfoActivity(this, null);
                 break;
-            case 5://创建新的入库清单
+            case AppConfig.ACTIVITY_STOCK_OUT://创建新的入库清单
                 AppRouter.toRepOutInfoActivity(this, null);
                 break;
-            case 6://创建新的库存清单
+            case AppConfig.ACTIVITY_MATERIAL://创建新的库存清单
                //直接展示物料列表
                 if (mShowData != null && mShowData.size() > 0) {
                     TypePopWindow popWindow = new TypePopWindow(this, mShowData, new RVListAdapter.OnItemClickedListener() {
                         @Override
                         public void onItemClicked(int index, String typeName) {
-                            if (mUnCommitFragment instanceof RepBalListFragment) {
+                            if (mUnCommitFragment instanceof MaterialListFragment) {
                                 mData.get(index - 1).setId("");
-                                ((RepBalListFragment)mUnCommitFragment).addNewMaterial(mData.get(index - 1));
+                                ((MaterialListFragment)mUnCommitFragment).addNewMaterial(mData.get(index - 1));
                             }
                         }
                     });
@@ -127,11 +143,11 @@ public class ListActivity extends ZTBaseListActivity implements IMaterialListCal
 
 
     @Override
-    public void onMaterialListLoaded(List<MaterialList.DataBean> data) {
+    public void onMaterialListLoaded(List<MaterialListData.DataBean> data) {
         mData.clear();
         mData.addAll(data);
         mShowData.clear();
-        for (MaterialList.DataBean datum : data) {
+        for (MaterialListData.DataBean datum : data) {
             mShowData.add(datum.getMaterialName());
         }
     }
@@ -139,8 +155,8 @@ public class ListActivity extends ZTBaseListActivity implements IMaterialListCal
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if(keyCode == KeyEvent.KEYCODE_BACK){
-            if (mUnCommitFragment instanceof RepBalListFragment) {
-                if(((RepBalListFragment)mUnCommitFragment).checkNoSaveData()){
+            if (mUnCommitFragment instanceof MaterialListFragment) {
+                if(((MaterialListFragment)mUnCommitFragment).checkNoSaveData()){
                     return true;
                 }
             }

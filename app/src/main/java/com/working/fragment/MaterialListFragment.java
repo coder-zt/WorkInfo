@@ -9,34 +9,39 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.working.R;
 import com.working.adapter.MaterialAdapter;
 import com.working.base.ListFragment;
-import com.working.domain.MaterialList;
+import com.working.domain.MaterialListData;
 import com.working.domain.RepBalData;
 import com.working.interfaces.ICommitCallback;
 import com.working.interfaces.ZTIListCallback;
 import com.working.interfaces.ZTIListPresenter;
-import com.working.presenter.impl.RepBalPresenterImpl;
+import com.working.presenter.impl.MaterialPresenterImpl;
 import com.working.setting.StatusData;
 import com.working.utils.FileUtils;
+import com.working.utils.UserDataMan;
 import com.working.view.CommonDialog;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class RepBalListFragment extends ListFragment<RepBalData.DataBean.RecordsBean>
+/**
+ * 库存清单的fragment
+ */
+public class MaterialListFragment extends ListFragment<RepBalData.DataBean.RecordsBean>
         implements ZTIListCallback<RepBalData.DataBean.RecordsBean>, ICommitCallback {
 
 
-    private RepBalPresenterImpl mPresenter;
+    private MaterialPresenterImpl mPresenter;
     private MaterialAdapter mAdapter;
     private ProgressDialog mWaitingDialog;
     private boolean isBack;
-    private int mFailBean;
-    private int mCountBean;
 
     public static ListFragment getInstance(boolean isCommit){
+        if (!isCommit) {//该页面只有一个fragment
+            return null;
+        }
         Bundle data =new Bundle();
         data.putBoolean("isCommit", isCommit);
-        ListFragment fragment = new RepBalListFragment();
+        ListFragment fragment = new MaterialListFragment();
         fragment.setArguments(data);
         return fragment;
     }
@@ -81,17 +86,17 @@ public class RepBalListFragment extends ListFragment<RepBalData.DataBean.Records
 
     @Override
     public void search(String info) {
-        mAdapter.search();
+        mAdapter.search(info);
     }
 
 
     @Override
     protected ZTIListPresenter getSubPresenter() {
-        mPresenter = new RepBalPresenterImpl();
+        mPresenter = new MaterialPresenterImpl();
         return mPresenter;
     }
 
-    public void addNewMaterial(MaterialList.DataBean dataBean) {
+    public void addNewMaterial(MaterialListData.DataBean dataBean) {
         RepBalData.DataBean.RecordsBean data = new RepBalData.DataBean.RecordsBean();
         FileUtils.copyValue(data, dataBean);
         data.setStatus(0);

@@ -11,6 +11,7 @@ import androidx.databinding.ViewDataBinding;
 import com.working.R;
 import com.working.base.BaseActivity;
 import com.working.databinding.ActivityRepertoryManageLayoutBinding;
+import com.working.utils.AppConfig;
 import com.working.utils.AppRouter;
 
 public class RepertoryManageActivity extends BaseActivity {
@@ -31,21 +32,21 @@ public class RepertoryManageActivity extends BaseActivity {
      * 去查看入库记录
      */
     public void toInRecord(){
-        AppRouter.toListActivity(this, 4);
+        AppRouter.toListActivity(this, AppConfig.ACTIVITY_STOCK_IN);
     }
 
     /**
      * 去查看出库记录
      */
     public void toOutRecord(){
-            AppRouter.toListActivity(this, 5);
+            AppRouter.toListActivity(this, AppConfig.ACTIVITY_STOCK_OUT);
     }
 
     /**
-     * 去查看结余清单
+     * 去查看库存清单
      */
     public void toBalanceRecord(){
-        AppRouter.toListActivity(this, 6);
+        AppRouter.toListActivity(this, AppConfig.ACTIVITY_MATERIAL);
     }
 
 }

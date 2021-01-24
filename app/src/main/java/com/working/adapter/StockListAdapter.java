@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.working.R;
+import com.working.base.SearchAdapter;
 import com.working.databinding.RecyclerStockBinding;
 import com.working.domain.IStockInfo;
 import com.working.domain.InStockList;
@@ -26,13 +27,12 @@ import java.util.List;
 /**
  * 出入库清单的适配器
  */
-public class StockListAdapter extends RecyclerView.Adapter<StockListAdapter.ItemView>
+public class StockListAdapter extends SearchAdapter<StockListAdapter.ItemView, IStockInfo>
         implements IAddData<IStockInfo>{
 
     private static final String TAG = "StockListAdapter";
     List<IStockInfo> mData = new ArrayList<>();
     private final OnItemClickListener mCallback;
-    private String searchInfo = "";
     private final int mScreenWidth;
 
     public StockListAdapter(Activity activity, OnItemClickListener listener){
@@ -51,30 +51,14 @@ public class StockListAdapter extends RecyclerView.Adapter<StockListAdapter.Item
 
     @Override
     public void onBindViewHolder(@NonNull ItemView holder, int position) {
-        holder.getBinding().setData(mData.get(position));
+        holder.getBinding().setData(filterData.get(position));
         holder.getBinding().setClickObject(holder);
-        holder.getPicAdapter().setPicUrl(mData.get(position).getPicUrl());
+        holder.getPicAdapter().setPicUrl(filterData.get(position).getPicUrl());
     }
 
     @Override
     public int getItemCount() {
-        List<IStockInfo> tempData = new ArrayList<>();
-        List<Integer> indexData = new ArrayList<>();
-        int i = 0;
-        for (IStockInfo datum : mData) {
-            if (!datum.getSearchInfo().contains(searchInfo)) {
-                indexData.add(i);
-            }
-            i++;
-        }
-        i = 0;
-        for (Integer indexDatum : indexData) {
-            tempData.add(mData.remove((int)indexDatum - i));
-            i++;
-        }
-        mData.addAll(tempData);
-        int filter = mData.size() - indexData.size();
-        return filter;
+        return filterData(mData);
     }
 
     @Override
@@ -92,10 +76,6 @@ public class StockListAdapter extends RecyclerView.Adapter<StockListAdapter.Item
             mData.addAll(data);
         }
         notifyDataSetChanged();
-    }
-
-    public void search(String info) {
-
     }
 
     public class ItemView extends RecyclerView.ViewHolder {

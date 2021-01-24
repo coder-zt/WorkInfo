@@ -12,10 +12,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.working.R;
-import com.working.databinding.RecyclerRepinDetailLayoutBinding;
 import com.working.databinding.RecyclerRepoutDetailLayoutBinding;
-import com.working.domain.RepInInfoData;
-import com.working.domain.RepOutInfoBean;
+import com.working.domain.OutStockDetail;
 import com.working.view.CounterView;
 
 import java.util.ArrayList;
@@ -25,7 +23,7 @@ import java.util.List;
  * 出库清单的详情内容适配器
  */
 public class RepOutDetailAdapter extends RecyclerView.Adapter {
-    private List<RepOutInfoBean.DataBean.OutStockItemListBean> mData = new ArrayList<>();
+    private List<OutStockDetail.DataBean.OutStockItemListBean> mData = new ArrayList<>();
     private final int TYPE_DATA = 0;
     private final int TYPE_PIC = 2;
     private boolean mIsCommitted = false;
@@ -63,7 +61,7 @@ public class RepOutDetailAdapter extends RecyclerView.Adapter {
             ((MaterialDataView) holder).getBinding().counterView.setNumChangeListener(new CounterView.OnNumberChangedListener() {
                 @Override
                 public void onNumChanged(float num) {
-                    RepOutInfoBean.DataBean.OutStockItemListBean orderItemListBean = mData.get(position);
+                    OutStockDetail.DataBean.OutStockItemListBean orderItemListBean = mData.get(position);
                     orderItemListBean.setProductQuantity(String.valueOf(num));
                     if (mCallback != null) {
                         mCallback.onDataContainerChanged(mData, mPicAdapter.getImageCollect());
@@ -105,7 +103,7 @@ public class RepOutDetailAdapter extends RecyclerView.Adapter {
      * 设置详情的物料数据
      * @param data
      */
-    public void setData(List<RepOutInfoBean.DataBean.OutStockItemListBean> data){
+    public void setData(List<OutStockDetail.DataBean.OutStockItemListBean> data){
         mData.clear();
         if (data != null) {
             mData.addAll(data);
@@ -121,7 +119,7 @@ public class RepOutDetailAdapter extends RecyclerView.Adapter {
      * 添加详情的物料数据
      * @param data
      */
-    public void addData(RepOutInfoBean.DataBean.OutStockItemListBean data){
+    public void addData(OutStockDetail.DataBean.OutStockItemListBean data){
         if (data != null) {
             mData.add(data);
             if (mCallback != null) {
@@ -137,17 +135,8 @@ public class RepOutDetailAdapter extends RecyclerView.Adapter {
      * @param url
      */
     public void setPicUrls(String url){
-        List<String> urls = new ArrayList<>();
-        if (url.contains(",")) {
-            String[] urlArray = url.split(",");
-            for (String s : urlArray) {
-                urls.add(s);
-            }
-        }else if(url.length() != 0){
-            urls.add(url);
-        }
         if (mPicAdapter != null) {
-            mPicAdapter.setImageCollect(urls);
+            mPicAdapter.setImageCollect(url);
         }
     }
 
@@ -205,7 +194,7 @@ public class RepOutDetailAdapter extends RecyclerView.Adapter {
 
     public interface OnDataContainerListener{
 
-        void onDataContainerChanged(List<RepOutInfoBean.DataBean.OutStockItemListBean> data, String urls) ;
+        void onDataContainerChanged(List<OutStockDetail.DataBean.OutStockItemListBean> data, String urls) ;
 
         void onDataCountChange(int oldSize, int newSize) ;
     }

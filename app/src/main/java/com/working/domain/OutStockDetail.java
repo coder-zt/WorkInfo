@@ -1,5 +1,8 @@
 package com.working.domain;
 
+import com.working.interfaces.IRecyclerDetail;
+import com.working.utils.AppConfig;
+
 import java.util.List;
 
 import lombok.Data;
@@ -10,7 +13,7 @@ import lombok.NoArgsConstructor;
  */
 @NoArgsConstructor
 @Data
-public class RepOutInfoBean {
+public class OutStockDetail {
 
     /**
      * code : 200
@@ -63,7 +66,7 @@ public class RepOutInfoBean {
 
         @NoArgsConstructor
         @Data
-        public static class OutStockItemListBean {
+        public static class OutStockItemListBean implements IRecyclerDetail {
             /**
              * id : 1345248306380521473
              * createUser : 1341292276263723010
@@ -99,6 +102,51 @@ public class RepOutInfoBean {
             private String productQuantity;
             private int owned;
             private int remainingQuantity;
+
+            @Override
+            public int getType() {
+                return AppConfig.TYPE_MATERIAL;
+            }
+
+            @Override
+            public String getApprovalGrade() {
+                return null;
+            }
+
+            @Override
+            public String getApprovalInfo() {
+                return null;
+            }
+
+            @Override
+            public String getPriceMarket() {
+                return null;
+            }
+
+            @Override
+            public String getCount() {
+                return productQuantity;
+            }
+
+            @Override
+            public void setCount(String count) {
+                productQuantity = count;
+            }
+
+            @Override
+            public String getMax() {
+                return null;
+            }
+
+            @Override
+            public String getMin() {
+                return null;
+            }
+
+            @Override
+            public String getImageCollect() {
+                return null;
+            }
         }
     }
 }

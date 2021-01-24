@@ -16,7 +16,7 @@ import com.working.models.AppModels;
 import java.util.Comparator;
 import java.util.List;
 
-public class RepOutPresenterImpl  extends BasePresenterImpl implements ZTIListPresenter {
+public class OutStockPresenterImpl extends BasePresenterImpl<OutStockList.DataBean.RecordsBean> implements ZTIListPresenter {
 
     @Override
     public void loadListData(final boolean isCommit, String startTime, String endTime) {
@@ -34,6 +34,7 @@ public class RepOutPresenterImpl  extends BasePresenterImpl implements ZTIListPr
                             }
                         }
                         if (mCallback != null) {
+                            setPageOnError(isCommit);
                             ((ZTIListCallback<OutStockList.DataBean.RecordsBean>) mCallback).onListLoadedFail(isCommit);
                         }
                         return true;
@@ -57,26 +58,12 @@ public class RepOutPresenterImpl  extends BasePresenterImpl implements ZTIListPr
                             }
                         }
                         if (mCallback != null) {
+                            setPageOnError(isCommit);
                             ((ZTIListCallback<OutStockList.DataBean.RecordsBean>) mCallback).onListLoadedMoreFail(isCommit);
                         }
                         return true;
                     }
                 });
     }
-
-    @RequiresApi(api = Build.VERSION_CODES.N)
-    private List<OutStockList.DataBean.RecordsBean> reversData(List<OutStockList.DataBean.RecordsBean> records) {
-        records.sort(new Comparator<OutStockList.DataBean.RecordsBean>() {
-            @Override
-            public int compare(OutStockList.DataBean.RecordsBean o1, OutStockList.DataBean.RecordsBean o2) {
-                String updateTime1 = o1.getUpdateTime();
-                String updateTime2 = o2.getUpdateTime();
-                return updateTime1.compareTo(updateTime2) * -1;
-            }
-        });
-        return records;
-    }
-
-
 
 }

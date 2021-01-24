@@ -10,6 +10,7 @@ import androidx.annotation.RequiresApi;
 import com.google.gson.Gson;
 import com.working.domain.ApprovalBean;
 import com.working.domain.ApprovalOutBean;
+import com.working.domain.ApprovalRecord;
 import com.working.domain.ClientResponse;
 import com.working.domain.InStockList;
 import com.working.domain.IndexNotice;
@@ -21,14 +22,14 @@ import com.working.domain.MaterialList;
 import com.working.domain.MaterialListData;
 import com.working.domain.Order;
 import com.working.domain.OrderDetail;
+import com.working.domain.OutStockDetail;
 import com.working.domain.PostedFileBean;
 import com.working.domain.Purchase;
 import com.working.domain.PurchaseDetail;
 import com.working.domain.RepBalData;
 import com.working.domain.RepBalInfoData;
-import com.working.domain.RepInInfoData;
+import com.working.domain.InStockDetail;
 import com.working.domain.OutStockList;
-import com.working.domain.RepOutInfoBean;
 import com.working.domain.UserInfo;
 import com.working.other.MessageEvent;
 import com.working.utils.AppConfig;
@@ -666,10 +667,10 @@ public class AppModels {
      */
     public void getRepertoryInDetail(String id, final Handler.Callback callback){
         AppApi api = getAppApi();
-        Call<RepInInfoData> purchaseDetail = api.getRepertoryInDetail(id);
-        purchaseDetail.enqueue(new Callback<RepInInfoData>() {
+        Call<InStockDetail> purchaseDetail = api.getRepertoryInDetail(id);
+        purchaseDetail.enqueue(new Callback<InStockDetail>() {
             @Override
-            public void onResponse(Call<RepInInfoData> call, Response<RepInInfoData> response) {
+            public void onResponse(Call<InStockDetail> call, Response<InStockDetail> response) {
                 if (response.code()!=200) {
                     printErrorLog(response);
                     requestFail("获取入库清单详情信息失败！", callback);
@@ -679,7 +680,7 @@ public class AppModels {
             }
 
             @Override
-            public void onFailure(Call<RepInInfoData> call, Throwable t) {
+            public void onFailure(Call<InStockDetail> call, Throwable t) {
                 requestFail("获取入库清单详情信息失败！", callback);
             }
         });
@@ -690,7 +691,7 @@ public class AppModels {
      * @param information
      * @param callback
      */
-    public void uploadRepertoryIn(RepInInfoData.DataBean information, final Handler.Callback callback) {
+    public void uploadRepertoryIn(InStockDetail.DataBean information, final Handler.Callback callback) {
         AppApi appApi = getAppApi();
         final String dataJson = new Gson().toJson(information);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json;charset=UTF-8"), dataJson);
@@ -751,10 +752,10 @@ public class AppModels {
      */
     public void getRepOutInfo(String id, final Handler.Callback callback){
         AppApi api = getAppApi();
-        Call<RepOutInfoBean> purchaseDetail = api.getRepOutDetail(id);
-        purchaseDetail.enqueue(new Callback<RepOutInfoBean>() {
+        Call<OutStockDetail> purchaseDetail = api.getRepOutDetail(id);
+        purchaseDetail.enqueue(new Callback<OutStockDetail>() {
             @Override
-            public void onResponse(Call<RepOutInfoBean> call, Response<RepOutInfoBean> response) {
+            public void onResponse(Call<OutStockDetail> call, Response<OutStockDetail> response) {
                 if (response.code()!=200) {
                     printErrorLog(response);
                     requestFail("获取入库清单详情信息失败！", callback);
@@ -764,7 +765,7 @@ public class AppModels {
             }
 
             @Override
-            public void onFailure(Call<RepOutInfoBean> call, Throwable t) {
+            public void onFailure(Call<OutStockDetail> call, Throwable t) {
                 requestFail("获取入库清单详情信息失败！", callback);
             }
         });
@@ -775,7 +776,7 @@ public class AppModels {
      * @param information
      * @param callback
      */
-    public void uploadRepOut(RepOutInfoBean.DataBean information, final Handler.Callback callback) {
+    public void uploadRepOut(OutStockDetail.DataBean information, final Handler.Callback callback) {
         AppApi appApi = getAppApi();
         final String dataJson = new Gson().toJson(information);
         RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json;charset=UTF-8"), dataJson);
@@ -847,11 +848,11 @@ public class AppModels {
     }
 
     /***************
-     * 结余清单相关 *
+     * 库存清单相关 *
      ***************/
 
     /**
-     * 结余清单列表
+     * 库存清单列表
      * @param page
      * @param pageSize
      * @param callback
@@ -865,7 +866,7 @@ public class AppModels {
             public void onResponse(Call<RepBalData> call, Response<RepBalData> response) {
                 printErrorLog(response);
                 if (response.code() != 200) {
-                    requestFail("获取结结余清单列表失败！", callback);
+                    requestFail("获取结库存清单列表失败！", callback);
                     return;
                 }
                 requestSuccess(response.body(), callback);
@@ -873,13 +874,13 @@ public class AppModels {
 
             @Override
             public void onFailure(Call<RepBalData> call, Throwable t) {
-                requestFail("获取库存结余清单失败！", callback);
+                requestFail("获取库存库存清单失败！", callback);
             }
         });
     }
 
     /**
-     * 获取结余清单的详情
+     * 获取库存清单的详情
      * @param id
      * @param callback
      */
@@ -891,7 +892,7 @@ public class AppModels {
             public void onResponse(Call<RepBalInfoData> call, Response<RepBalInfoData> response) {
                 printErrorLog(response);
                 if (response.code() != 200) {
-                    requestFail("获取结余清单的详情", callback);
+                    requestFail("获取库存清单的详情", callback);
                     return;
                 }
                 requestSuccess(response.body(), callback);
@@ -905,7 +906,7 @@ public class AppModels {
     }
 
     /**
-     * 提交结余清单(数据响应)
+     * 提交库存清单(数据响应)
      * @param information
      * @param callback
      */
@@ -949,6 +950,39 @@ public class AppModels {
             @Override
             public void onFailure(Call<MaterialList> call, Throwable t){
                 requestFail("获取物料列表失败!", callback);
+            }
+        });
+    }
+
+    /***************
+     * 审批记录相关 *
+     ***************/
+
+    /**
+     * 库存清单列表
+     * @param page
+     * @param pageSize
+     * @param callback
+     */
+    public void getApprovalRecord(int page, int pageSize, String startTime, String endTime, final Handler.Callback callback){
+        AppApi api = getAppApi();
+        String user_id = UserDataMan.getInstance().getLoginInfo().getUser_id();
+        Call<ApprovalRecord> call = api.getApprovalRecord(user_id, page, pageSize, startTime, endTime);;
+        call.enqueue(new Callback<ApprovalRecord>() {
+
+            @Override
+            public void onResponse(Call<ApprovalRecord> call, Response<ApprovalRecord> response) {
+                printErrorLog(response);
+                if (response.code() != 200) {
+                    requestFail("获取审批记录列表失败！", callback);
+                    return;
+                }
+                requestSuccess(response.body(), callback);
+            }
+
+            @Override
+            public void onFailure(Call<ApprovalRecord> call, Throwable t) {
+                requestFail("获取审批记录列表失败！", callback);
             }
         });
     }

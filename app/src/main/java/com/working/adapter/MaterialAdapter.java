@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.working.R;
+import com.working.base.SearchAdapter;
 import com.working.databinding.RecyclerBalanceLayoutBinding;
 import com.working.domain.RepBalData;
 import com.working.utils.UserDataMan;
@@ -17,7 +18,7 @@ import com.working.view.CounterView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MaterialAdapter extends RecyclerView.Adapter<MaterialAdapter.ItemView>
+public class MaterialAdapter extends SearchAdapter<MaterialAdapter.ItemView, RepBalData.DataBean.RecordsBean>
         implements IAddData<RepBalData.DataBean.RecordsBean>{
 
     List<RepBalData.DataBean.RecordsBean> mData = new ArrayList<>();
@@ -42,33 +43,33 @@ public class MaterialAdapter extends RecyclerView.Adapter<MaterialAdapter.ItemVi
         holder.mBinding.counterView.setNumChangeListener(new CounterView.OnNumberChangedListener() {
             @Override
             public void onNumChanged(float num) {
-                float quantity = Float.parseFloat(mData.get(position).getQuantity());
+                float quantity = Float.parseFloat(filterData.get(position).getQuantity());
                 if(num == quantity ){
                     return;
                 }
-                mData.get(position).setQuantity(String.valueOf(num));
-                String freezeQuantity = mData.get(position).getFreezeQuantity();
+                filterData.get(position).setQuantity(String.valueOf(num));
+                String freezeQuantity = filterData.get(position).getFreezeQuantity();
                 if(freezeQuantity != null && freezeQuantity.length() > 0){
                     float freezeNum = Float.parseFloat(freezeQuantity);
-                    mData.get(position).setAvailableQuantity(String.valueOf(num - freezeNum));
+                    filterData.get(position).setAvailableQuantity(String.valueOf(num - freezeNum));
                 }
-                mData.get(position).setStatus(-1);
+                filterData.get(position).setStatus(-1);
                 holder.mBinding.setData(mData.get(position));
             }
         });
-        String freezeQuantity = mData.get(position).getFreezeQuantity();
+        String freezeQuantity = filterData.get(position).getFreezeQuantity();
         if(freezeQuantity != null && freezeQuantity.length() > 0){
             holder.mBinding.counterView.setScopeValue(freezeQuantity, "9999.0");
         }
-        holder.mBinding.setData(mData.get(position));
+        holder.mBinding.setData(filterData.get(position));
         holder.mBinding.setClickObject(holder);
-        holder.mBinding.counterView.setNum(Float.parseFloat(mData.get(position).getQuantity()));
+        holder.mBinding.counterView.setNum(Float.parseFloat(filterData.get(position).getQuantity()));
         holder.mBinding.counterView.setCanEdit(UserDataMan.getInstance().checkMaterialGrant());
     }
 
     @Override
     public int getItemCount() {
-        return mData.size();
+        return filterData(mData);
     }
 
     @Override
@@ -127,9 +128,6 @@ public class MaterialAdapter extends RecyclerView.Adapter<MaterialAdapter.ItemVi
         }
     }
 
-    public void search() {
-
-    }
 
     public class ItemView extends RecyclerView.ViewHolder {
 

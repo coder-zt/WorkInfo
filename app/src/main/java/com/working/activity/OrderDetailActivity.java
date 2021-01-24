@@ -15,6 +15,7 @@ import com.working.R;
 import com.working.adapter.OrderDetailAdapter;
 import com.working.base.BaseCommitActivity;
 import com.working.databinding.ActivityOrderDetailBinding;
+import com.working.domain.MaterialList;
 import com.working.domain.MaterialListData;
 import com.working.domain.Order;
 import com.working.domain.OrderDetail;
@@ -171,13 +172,13 @@ public class OrderDetailActivity extends BaseCommitActivity<OrderDetail.DataBean
                     ToastUtil.showMessage("选择新增用品失败！");
                     return false;
                 }
-                MaterialListData.DataBean dataBean = new Gson().fromJson(result, MaterialListData.DataBean.class);
+                MaterialList.DataBean dataBean = new Gson().fromJson(result, MaterialList.DataBean.class);
                 OrderDetail.DataBean.OrderItemListBean  datum1 = new OrderDetail.DataBean.OrderItemListBean();
                 datum1.setOrderId("");
                 datum1.setMaterialId(String.valueOf(dataBean.getId()));
                 datum1.setMaterialName(dataBean.getMaterialName());
                 datum1.setOwned(dataBean.getOwned());
-                datum1.setPrice(String.valueOf(dataBean.getCommonPrice()));
+                datum1.setPrice(dataBean.getPrice());
                 datum1.setUnit(dataBean.getUnit());
                 if (mCommitData != null) {
                     datum1.setOrderId(mCommitData.getId());

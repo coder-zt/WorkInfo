@@ -6,8 +6,6 @@ import android.view.WindowManager;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.Gson;
 import com.working.R;
@@ -15,7 +13,7 @@ import com.working.adapter.ApprovalOutAdapter;
 import com.working.base.BaseCommitActivity;
 import com.working.databinding.ActivityOutApprovealLayoutBinding;
 import com.working.domain.ApprovalOutBean;
-import com.working.domain.RepOutInfoBean;
+import com.working.domain.OutStockDetail;
 import com.working.interfaces.IDetailCallback;
 import com.working.presenter.ICommitPresenter;
 import com.working.presenter.IDetailPresenter;
@@ -30,11 +28,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ApprovalOutActivity extends BaseCommitActivity<ApprovalOutBean>
-        implements IDetailCallback<RepOutInfoBean.DataBean> {
+        implements IDetailCallback<OutStockDetail.DataBean> {
 
 
     private ActivityOutApprovealLayoutBinding mBinding;
-    private RepOutInfoBean.DataBean mDetailData;
+    private OutStockDetail.DataBean mDetailData;
     private ApprovalOutAdapter mAdapter;
     private IDetailPresenter mIDetailPresenter = new RepOutDetailPresenterImpl();
     private String mId;
@@ -129,7 +127,7 @@ public class ApprovalOutActivity extends BaseCommitActivity<ApprovalOutBean>
 
 
     @Override
-    public void onDetailDataLoaded(RepOutInfoBean.DataBean data) {
+    public void onDetailDataLoaded(OutStockDetail.DataBean data) {
         mDetailData = data;
         if (data.getApprovalStatus() == 0) {
             mBinding.setTitle("出库清单(一级审核)");
@@ -142,7 +140,7 @@ public class ApprovalOutActivity extends BaseCommitActivity<ApprovalOutBean>
         }
         String picUrl = data.getPicUrl();
         List<ApprovalOutAdapter.ItemData> adapterData = new ArrayList<>();
-        for (RepOutInfoBean.DataBean.OutStockItemListBean outStockItemListBean : data.getOutStockItemList()) {
+        for (OutStockDetail.DataBean.OutStockItemListBean outStockItemListBean : data.getOutStockItemList()) {
             ApprovalOutAdapter.ItemData itemData = new ApprovalOutAdapter.ItemData();
             FileUtils.copyValue(itemData, outStockItemListBean);
             itemData.setPic(false);

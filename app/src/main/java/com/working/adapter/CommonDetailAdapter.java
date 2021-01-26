@@ -189,6 +189,9 @@ public class CommonDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public void addPic(String picUrl){
         mPicAdapter.addImage(picUrl);
+        if (mCallback != null) {
+            mCallback.onMaterialNumChanged(mData, mPicAdapter.getImageCollect());
+        }
     }
 
     public String getImageCollect(){

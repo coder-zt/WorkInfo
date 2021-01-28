@@ -8,10 +8,11 @@ import androidx.fragment.app.FragmentActivity;
 import com.google.gson.Gson;
 import com.working.MainActivity;
 import com.working.activity.AddMaterialActivity;
-import com.working.activity.AddInspectionActivity;
+import com.working.activity.InspectionDetailActivity;
 import com.working.activity.ApprovalActivity;
 import com.working.activity.ApprovalOutActivity;
 import com.working.activity.BrowseActivity;
+import com.working.activity.ChangePsdActivity;
 import com.working.activity.InStockDetailActivity;
 import com.working.activity.LoginActivity;
 import com.working.activity.NoticeActivity;
@@ -36,7 +37,7 @@ public class AppRouter {
 
 
     public static void toAddInspectionActivity(Activity activity, InspectionList.DataBean.RecordsBean recordsBean){
-        Intent intent = new Intent(activity, AddInspectionActivity.class);
+        Intent intent = new Intent(activity, InspectionDetailActivity.class);
         if (recordsBean != null) {
             intent.putExtra("data", new Gson().toJson(recordsBean));
         }
@@ -72,12 +73,13 @@ public class AppRouter {
     }
 
 
-    public static void toPurchaseDetailActivity(FragmentActivity activity, String id, int approval) {
+    public static void toPurchaseDetailActivity(FragmentActivity activity, String id,String inspectionId, int approval) {
         boolean isGrant = UserDataMan.getInstance().checkFirstApprovalGrant() ||
                 UserDataMan.getInstance().checkSecondApprovalGrant();
         if (isGrant) {//进行审批（具有审批职能)
                 Intent intent = new Intent(activity, ApprovalActivity.class);
                 intent.putExtra("data", id);
+                intent.putExtra("data_inspection", inspectionId);
                 activity.startActivity(intent);
             }else{//重新上报\生成购买记录\查看审核中（普通用户）
                 Intent intent = new Intent(activity, PurchaseDetailActivity.class);
@@ -150,4 +152,8 @@ public class AppRouter {
         activity.startActivity(intent);
     }
 
+    public static void toChangePsdActivity(FragmentActivity activity) {
+        Intent intent = new Intent(activity, ChangePsdActivity.class);
+        activity.startActivity(intent);
+    }
 }

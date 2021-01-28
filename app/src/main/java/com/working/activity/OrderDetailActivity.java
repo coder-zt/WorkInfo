@@ -45,7 +45,7 @@ import java.util.List;
 /**
  * 购买清单的详情页（普通人员）
  */
-public class OrderDetailActivity extends BaseCommitActivity<OrderDetail.DataBean> implements IDetailCallback<OrderDetail.DataBean> {
+public class OrderDetailActivity extends BaseCommitActivity implements IDetailCallback<OrderDetail.DataBean> {
 
     private final int REQUEST_CODE = 1;
     private List<OrderDetail.DataBean.OrderItemListBean> mDetailInfo = new ArrayList<>();
@@ -218,7 +218,6 @@ public class OrderDetailActivity extends BaseCommitActivity<OrderDetail.DataBean
                 return;
             }
         }
-        mCommitData.setStatus(isDraft?0:1);
         commitData(mCommitData);
     }
 

@@ -33,9 +33,23 @@ public class AppConfig {
     //审批清单
     public static final int ACTIVITY_APPROVAL = 7;
 
+    /**
+     * 详情数据中item的数据类型
+     */
+    //物料
     public static final int TYPE_MATERIAL = 0;
+    //图片
     public static final int TYPE_PICTURE = 1;
+    //审批信息
     public static final int TYPE_APPROVAL = 2;
 
-
+    /**
+     * 检查数据合法性的情况
+     */
+    //巡检记录详情
+    public static final int COMMIT_INSPECTION_DETAIL = 0;
+    //其他包含物料的详情
+    public static final int COMMIT_MATERIAL_DETAIL = 0;
+    //审批信息
+    public static final int COMMIT_APPROVAL_DETAIL = 0;
 }

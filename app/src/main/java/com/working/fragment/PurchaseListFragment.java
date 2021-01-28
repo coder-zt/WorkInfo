@@ -43,7 +43,8 @@ public class PurchaseListFragment  extends
                 new BaseDataAdapter.OnItemClickedListener<Purchase.DataBean.RecordsBean>() {
                     @Override
                     public void onItemClicked(Purchase.DataBean.RecordsBean data, int position) {
-                        AppRouter.toPurchaseDetailActivity(getActivity(), data.getId(), data.getApprovalStatus());
+                        AppRouter.toPurchaseDetailActivity(getActivity(), data.getId(),
+                                data.getInspectionRecordId(), data.getApprovalStatus());
                     }
                 }) ;
         return mAdapter;

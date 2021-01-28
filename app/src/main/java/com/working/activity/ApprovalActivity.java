@@ -26,9 +26,10 @@ import com.working.utils.UserDataMan;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ApprovalActivity extends BaseCommitActivity<ApprovalBean>{
+public class ApprovalActivity extends BaseCommitActivity{
 
     private String mIdData;
+    private String mInspectionId;
     private ApprovalBean mBean;
 
     @Override
@@ -91,18 +92,19 @@ public class ApprovalActivity extends BaseCommitActivity<ApprovalBean>{
         bundle.putSerializable("data", mIdData);
         mPurchaseFragment.setArguments(bundle);
         Bundle bundle1 = new Bundle();
-        bundle1.putString("data", mIdData);
+        bundle1.putString("data", mInspectionId);
         mInspectionFragment.setArguments(bundle1);
-        mVpFragmentContainer.setCurrentItem(1);
-        mBinding.setIndex(1);
     }
 
 
     protected void initData() {
         mIdData = getIntent().getStringExtra("data");
-        if (mIdData == null) {
+        mInspectionId = getIntent().getStringExtra("data_inspection");
+        if (mIdData == null){
             finish();
         }
+        mVpFragmentContainer.setCurrentItem(1);
+        mBinding.setIndex(1);
     }
 
 
@@ -112,6 +114,7 @@ public class ApprovalActivity extends BaseCommitActivity<ApprovalBean>{
             return;
         }
         //检查权限
+        int appStatus = mBean.getApprovalStatus();
         if (mBean.getApprovalStatus() == 0) {
             if (!UserDataMan.getInstance().checkFirstApprovalGrant()) {
                 ToastUtil.showMessage("权限不足,无法审批");
@@ -128,7 +131,12 @@ public class ApprovalActivity extends BaseCommitActivity<ApprovalBean>{
             ToastUtil.showMessage("已审核");
             return;
         }
-        if(!pass && approvalInfo == null){
+        if (approvalInfo == null) {
+            approvalInfo = "";
+        }
+        if(!pass && approvalInfo.length() == 0){
+
+            mBean.setApprovalStatus(appStatus - 1);
             ToastUtil.showMessage("如果拒绝需要填写相关意见!");
             return;
         }
@@ -136,7 +144,6 @@ public class ApprovalActivity extends BaseCommitActivity<ApprovalBean>{
             approvalInfo = "同意";
         }
         mBean.setAuditOpinion(approvalInfo);
-        Log.d(TAG, "approvalPurchase: " + new Gson().toJson(mBean));
         commitData(mBean);
     }
 

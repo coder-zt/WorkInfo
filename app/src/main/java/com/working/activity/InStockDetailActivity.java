@@ -44,7 +44,8 @@ import java.util.List;
 /**
  * 入库清单的详情页面
  */
-public class InStockDetailActivity extends BaseCommitActivity<InStockDetail.DataBean> implements IDetailCallback<InStockDetail.DataBean> {
+public class InStockDetailActivity extends BaseCommitActivity
+        implements IDetailCallback<InStockDetail.DataBean> {
     private static final String TAG = "RepertoryInDetailActivi";
     private InStockDetail.DataBean mDataBean = new InStockDetail.DataBean();
     private CommonDetailAdapter mAdapter;
@@ -173,7 +174,6 @@ public class InStockDetailActivity extends BaseCommitActivity<InStockDetail.Data
                 return;
             }
         }
-        mDataBean.setStatus(isCommit?0:1);
         commitData(mDataBean);
     }
 
@@ -258,9 +258,9 @@ public class InStockDetailActivity extends BaseCommitActivity<InStockDetail.Data
         mLoadUtilLayout.setStatus(StatusData.LOADED);
         ArrayList<IRecyclerDetail> iRecyclerDetails = new ArrayList<>(data.getInStockItemList());
         iRecyclerDetails.add(new ImageCollectBean(data.getPicUrl()));
-        mAdapter.setData(iRecyclerDetails);
         boolean grant = UserDataMan.getInstance().checkMaterialGrant();
         mAdapter.setCommitted(data.getStatus() == 1 || !grant);
+        mAdapter.setData(iRecyclerDetails);
         if (data.getStatus() == 1) {
             mBinding.setTitle("入库清单详情(已提交)");
             mBinding.setCommit(true);

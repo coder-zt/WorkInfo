@@ -51,7 +51,7 @@ public class OrderDetail {
         this.msg = msg;
     }
 
-    public static class DataBean {
+    public static class DataBean implements ICommitData{
         /**
          * id : 1343096207504953346
          * createUser : 1123598821738675201

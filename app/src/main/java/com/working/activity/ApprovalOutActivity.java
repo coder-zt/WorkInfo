@@ -27,7 +27,7 @@ import com.working.view.DataLoadUtilLayout;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ApprovalOutActivity extends BaseCommitActivity<ApprovalOutBean>
+public class ApprovalOutActivity extends BaseCommitActivity
         implements IDetailCallback<OutStockDetail.DataBean> {
 
 
@@ -106,17 +106,20 @@ public class ApprovalOutActivity extends BaseCommitActivity<ApprovalOutBean>
                 return;
             }
             bean.setApprovalStatus(pass?2:3);
+        }else if(mDetailData.getApprovalStatus() == 2 || mDetailData.getApprovalStatus() == 3){
+            ToastUtil.showMessage("已审核");
+            return;
         }
         if (approval == null) {
-            if(!pass){
-                ToastUtil.showMessage("拒绝请填写相关意见！");
-                return;
-            }else{
-                approval = "同意";
-            }
+          approval = "";
+        }
+        if(!pass && approval.length() == 0 ){
+            ToastUtil.showMessage("拒绝请填写相关意见！");
+            return;
+        }else{
+            approval = "同意";
         }
         bean.setAuditOpinion(approval);
-        bean.setStatus(1);
         bean.setId(mDetailData.getId());
         bean.setOutStockNo(mDetailData.getOutStockNo());
         Log.d(TAG, "approvalPurchase: " + new Gson().toJson(bean));

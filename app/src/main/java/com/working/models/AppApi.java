@@ -21,11 +21,14 @@ import com.working.domain.LoginInfo;
 import com.working.domain.ClientResponse;
 import com.working.domain.UserInfo;
 
+import java.util.Map;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
+import retrofit2.http.FieldMap;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.Headers;
@@ -163,4 +166,8 @@ public interface AppApi {
     @GET("blade-road/approvalrecord/list")
     Call<ApprovalRecord> getApprovalRecord(@Query("approvalUser")String id, @Query("current") int page, @Query("size")int pageSize, @Query("startTime")String startTime, @Query("endTime")String endTime);
 
+    //修改密码
+    @FormUrlEncoded
+    @POST("blade-user/update-password")
+    Call<ClientResponse> changePassword(@FieldMap Map<String, String> map);
 }

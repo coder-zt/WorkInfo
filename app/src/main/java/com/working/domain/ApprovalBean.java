@@ -5,7 +5,7 @@ import com.working.interfaces.IPurchaseOrderData;
 /**
  * 采购清单的审批数据
  */
-public class ApprovalBean implements IPurchaseOrderData {
+public class ApprovalBean implements IPurchaseOrderData, ICommitData {
 
     /**
      * approvalStatus : 0

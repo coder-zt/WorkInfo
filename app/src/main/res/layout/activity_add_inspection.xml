@@ -9,7 +9,7 @@
             alias="html"/>
         <variable
             name="activity"
-            type="com.working.activity.AddInspectionActivity" />
+            type="com.working.activity.InspectionDetailActivity" />
             </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -5,15 +5,19 @@ import android.view.View;
 
 import com.working.R;
 import com.working.activity.ApprovalActivity;
+import com.working.adapter.CommonDetailAdapter;
 import com.working.adapter.PurchaseApprovalAdapter;
 import com.working.base.BaseFragment;
 import com.working.databinding.FragmentPurchaseBinding;
 import com.working.domain.PurchaseDetail;
 import com.working.interfaces.IDetailCallback;
+import com.working.interfaces.IRecyclerDetail;
 import com.working.presenter.IDetailPresenter;
 import com.working.presenter.impl.DetailPurchasePresenterImpl;
 import com.working.setting.StatusData;
 import com.working.view.DataLoadUtilLayout;
+
+import java.util.ArrayList;
 
 /**
  * 采购订单的审核页面的采购fragment
@@ -21,7 +25,7 @@ import com.working.view.DataLoadUtilLayout;
 public class PurchaseFragment extends BaseFragment<FragmentPurchaseBinding>
         implements IDetailCallback<PurchaseDetail.DataBean> {
 
-    private PurchaseApprovalAdapter mAdapter;
+    private CommonDetailAdapter mAdapter;
     private IDetailPresenter mDetailPresenter = new DetailPurchasePresenterImpl();
     private String mId;
     private DataLoadUtilLayout mLoadUtilLayout;
@@ -29,7 +33,7 @@ public class PurchaseFragment extends BaseFragment<FragmentPurchaseBinding>
     @Override
     protected void initView(View view) {
         getDataBinding().setActivity((ApprovalActivity) getActivity());
-        mAdapter = new PurchaseApprovalAdapter(null, null);
+        mAdapter = new CommonDetailAdapter(null, null);
         mAdapter.setCommitted(true);
         getDataBinding().recyclerView.setAdapter(mAdapter);
         mDetailPresenter.registerCallback(this);
@@ -55,7 +59,7 @@ public class PurchaseFragment extends BaseFragment<FragmentPurchaseBinding>
     @Override
     public void onDetailDataLoaded(PurchaseDetail.DataBean data) {
         mLoadUtilLayout.setStatus(StatusData.LOADED);
-        mAdapter.setData(data.getPurchaseItemList());
+        mAdapter.setData(new ArrayList<>(data.getPurchaseItemList()));
         ((ApprovalActivity)getActivity()).onDetailDataLoaded(data);
     }
 

@@ -93,35 +93,6 @@ public class FileUtils {
        return null;
     }
 
-
-    public static void getCommitMethod(final Context context, final Handler.Callback callback) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder.setTitle("请选这提交方式");
-        final String[] items = new String[]{
-                "草稿","提交"
-        };
-        //-1表示没有默认选择
-        //点击侦听的导包要注意别导错
-        builder.setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
-
-            //which表示点击的是哪一个选项
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                Message message = Message.obtain();
-                message.what = which;
-                if(which == 0){//草稿
-                    callback.handleMessage(message);
-                }else{//提交
-                    callback.handleMessage(message);
-                }
-                //对话框消失
-                dialog.dismiss();
-            }
-        });
-
-        builder.show();
-    }
-
     public static void copyValue(Object target, Object source) {
         Class<?> targetClass = target.getClass();
         Class<?> sourceClass = source.getClass();

@@ -13,7 +13,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.FragmentActivity;
 
 import com.huantansheng.easyphotos.EasyPhotos;
@@ -22,21 +21,20 @@ import com.working.R;
 import com.working.adapter.ImageCollectAdapter;
 import com.working.domain.ApprovalBean;
 import com.working.domain.ApprovalOutBean;
+import com.working.domain.ICommitData;
 import com.working.domain.PostedFileBean;
 import com.working.interfaces.ICommitCallback;
 import com.working.interfaces.IUploadFileCallback;
-import com.working.other.MessageEvent;
 import com.working.presenter.IApprovalPresenter;
 import com.working.presenter.ICommitPresenter;
 import com.working.presenter.IUploadFilePresenter;
 import com.working.presenter.impl.UploadFilePresenterImpl;
+import com.working.utils.AppConfig;
 import com.working.utils.AppRouter;
 import com.working.utils.Glide4Engine;
 import com.working.utils.GlideEngine;
+import com.working.utils.ToastUtil;
 import com.working.view.CommonDialog;
-
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -54,9 +52,8 @@ import top.zibin.luban.OnRenameListener;
  * 选择图片和视频
  * 支持录制和拍照
  *
- * @param <T> 上传的数据类
  */
-public abstract class BaseCommitActivity<T> extends BaseActivity
+public abstract class BaseCommitActivity extends BaseActivity
         implements ICommitCallback, IUploadFileCallback {
 
     private static final String TAG = "BaseCommitActivity";
@@ -108,7 +105,35 @@ public abstract class BaseCommitActivity<T> extends BaseActivity
      * 提交数据
      * @param data
      */
-    protected void commitData(T data){//审批数据和提交数据
+    protected void commitData(ICommitData data){//审批数据和提交数据
+        boolean alreadyCommitted = data.getStatus() == 1;
+        //询问是否提交数据
+        final CommonDialog dialog = new CommonDialog(this);
+        dialog.setMessage("是否上传？")
+                .setImageResId(R.mipmap.question_icon)
+                .setTitle("提交数据")
+                .setSingle(false).setOnClickBottomListener(new CommonDialog.OnClickBottomListener() {
+            @Override
+            public void onPositiveClick() {
+                dialog.dismiss();
+                if (alreadyCommitted) {
+                    ToastUtil.showMessage("数据不可重复提交！");
+                }else{
+                    data.setStatus(1);
+                }
+                postData(data);
+            }
+
+            @Override
+            public void onNegtiveClick() {
+                dialog.dismiss();
+            }
+        }).show();
+
+    }
+
+
+    private void postData(ICommitData data){
         if (mPresenter instanceof IApprovalPresenter){
             if( data instanceof  ApprovalBean){
                 ((IApprovalPresenter)mPresenter).approvalData((ApprovalBean)data);
@@ -120,7 +145,6 @@ public abstract class BaseCommitActivity<T> extends BaseActivity
         }
         showWaitingDialog("上传数据中");
     }
-
 
     /**
      * 上传文件

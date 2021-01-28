@@ -29,7 +29,7 @@ public class OutStockDetail {
 
     @NoArgsConstructor
     @Data
-    public static class DataBean {
+    public static class DataBean implements ICommitData{
         /**
          * id : 1345248306363744258
          * createUser : 1341292276263723010
@@ -61,7 +61,7 @@ public class OutStockDetail {
         private String approvalUser;
         private String approvalTime;
         private String auditOpinion;
-        private int approvalUser2;
+        private String approvalUser2;
         private String approvalTime2;
         private String auditOpinion2;
         private int approvalStatus;

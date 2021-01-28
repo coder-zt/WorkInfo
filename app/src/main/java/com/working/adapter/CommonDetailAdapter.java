@@ -185,6 +185,7 @@ public class CommonDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
     public void setCommitted(boolean isCommitted){
         this.mIsCommitted = isCommitted;
+        mPicAdapter.setIsCommit(isCommitted);
     }
 
     public void addPic(String picUrl){

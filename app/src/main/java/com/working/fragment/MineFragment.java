@@ -42,7 +42,13 @@ public class MineFragment extends BaseFragment<FragmentMineBinding> {
                 }
             }
         }));
-
+        mDatas.add(new MineMenuItem(getResources().getDrawable(R.mipmap.chang_psd_icon),
+                "修改密码", new MineMenuItem.OnItemClickedListener() {
+            @Override
+            public void onItemClick() {
+                AppRouter.toChangePsdActivity(getActivity());
+            }
+        }));
         mDatas.add(new MineMenuItem(getResources().getDrawable(R.mipmap.inspection_icon),
                 "巡检记录", new MineMenuItem.OnItemClickedListener() {
             @Override
@@ -74,7 +80,7 @@ public class MineFragment extends BaseFragment<FragmentMineBinding> {
             }
         }));
         if(UserDataMan.getInstance().checkFirstApprovalGrant() || UserDataMan.getInstance().checkSecondApprovalGrant()){
-            mDatas.add(new MineMenuItem(getResources().getDrawable(R.mipmap.inspection_icon),
+            mDatas.add(new MineMenuItem(getResources().getDrawable(R.mipmap.approval_icon),
                     "审批记录", new MineMenuItem.OnItemClickedListener() {
                 @Override
                 public void onItemClick() {

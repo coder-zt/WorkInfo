@@ -65,7 +65,9 @@ private static final String TAG="InsingAdap";
        return  mAdapter.getImageCollect();
     }
 
-
+    public void setCommit(boolean isCommit){
+        mAdapter.setIsCommit(isCommit);
+    }
     public class ItemView extends BaseItemView<InspectionFiledInfo> {
        TextView mTvTitle;
        EditText mEtInput;

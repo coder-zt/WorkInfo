@@ -45,7 +45,7 @@ import java.util.List;
 /**
  * 出库的详情页面
  */
-public class OutStockDetailActivity extends BaseCommitActivity<OutStockDetail.DataBean> implements IDetailCallback<OutStockDetail.DataBean> {
+public class OutStockDetailActivity extends BaseCommitActivity implements IDetailCallback<OutStockDetail.DataBean> {
     private static final String TAG = "RepertoryInDetailActivi";
     private OutStockDetail.DataBean mDataBean = new OutStockDetail.DataBean();
     private CommonDetailAdapter mAdapter;
@@ -161,7 +161,6 @@ public class OutStockDetailActivity extends BaseCommitActivity<OutStockDetail.Da
                 return;
             }
         }
-        mDataBean.setStatus(isCommit?0:1);
         commitData(mDataBean);
     }
 
@@ -265,8 +264,12 @@ public class OutStockDetailActivity extends BaseCommitActivity<OutStockDetail.Da
         iRecyclerDetails.add(new ImageCollectBean(data.getPicUrl()));
         //设置审核信息
         if(mDataBean.getApprovalStatus()>0){
-            iRecyclerDetails.add(new ApprovalContentBean("一级审核", mDataBean.getAuditOpinion().isEmpty()?"无":mDataBean.getAuditOpinion()));
-            iRecyclerDetails.add(new ApprovalContentBean("二级审核", mDataBean.getAuditOpinion2().isEmpty()?"无":mDataBean.getAuditOpinion2()));
+            if (mDataBean.getAuditOpinion() != null) {
+                iRecyclerDetails.add(new ApprovalContentBean("一级审核", mDataBean.getAuditOpinion().isEmpty()?"无":mDataBean.getAuditOpinion()));
+            }
+            if (mDataBean.getAuditOpinion2() != null) {
+                iRecyclerDetails.add(new ApprovalContentBean("二级审核", mDataBean.getAuditOpinion2().isEmpty()?"无":mDataBean.getAuditOpinion2()));
+            }
         }
         mAdapter.setData(iRecyclerDetails);
         boolean grant = UserDataMan.getInstance().checkMaterialGrant();

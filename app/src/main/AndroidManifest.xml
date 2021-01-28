@@ -28,7 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.AddInspectionActivity" />
+        <activity android:name=".activity.InspectionDetailActivity" />
         <activity android:name=".activity.UserInfoActivity" />
         <activity android:name=".activity.RepertoryManageActivity" />
         <activity android:name=".activity.ListActivity" />
@@ -42,6 +42,7 @@
         <activity android:name=".activity.ApprovalOutActivity"
             android:windowSoftInputMode="adjustResize|adjustUnspecified|stateHidden"/>
         <activity android:name=".activity.BrowseActivity" />
+        <activity android:name=".activity.ChangePsdActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

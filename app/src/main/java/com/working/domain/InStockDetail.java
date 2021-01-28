@@ -25,7 +25,7 @@ public class InStockDetail {
 
     @NoArgsConstructor
     @Data
-    public static class DataBean {
+    public static class DataBean implements ICommitData {
         /**
          * id : 1344206599311142913
          * createUser : 1123598821738675201

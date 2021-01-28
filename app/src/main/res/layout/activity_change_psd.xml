@@ -4,23 +4,23 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
-        <import type="android.view.View"
-                alias="View"/>
-        <variable
-            name="isPwd"
-            type="Boolean" />
+
 
         <variable
-            name="userInfo"
+            name="oldPsd"
             type="String" />
 
         <variable
-            name="password"
+            name="newPsd"
             type="String" />
-        
+
+        <variable
+            name="surePsd"
+            type="String" />
+
         <variable
             name="clickEvent"
-            type="com.working.activity.LoginActivity.OnClickedListener" />
+            type="com.working.activity.ChangePsdActivity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -33,24 +33,24 @@
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="物料管理系统"
+            android:layout_marginStart="40dp"
+            android:layout_marginBottom="29dp"
+            android:text="@string/title_change_psd"
             android:textColor="@color/text_black_color"
             android:textSize="22sp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="140dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintBottom_toTopOf="@+id/textView44"
+            app:layout_constraintStart_toStartOf="parent"/>
 
         <TextView
+            android:id="@+id/textView44"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="40dp"
-            android:text="赶快登录属于你的账号吧"
-            android:layout_marginTop="14dp"
+            android:text="@string/change_psd_tips"
             android:textColor="@color/text_color_gray"
             android:textSize="14sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+            app:layout_constraintBottom_toTopOf="@+id/relativeLayout"
+            app:layout_constraintStart_toStartOf="parent" />
 
 
         <RelativeLayout
@@ -74,8 +74,8 @@
                 android:layout_toRightOf="@+id/info_icon"
                 android:layout_marginTop="32dp"
                 android:background="@null"
-                android:hint="@{isPwd?`手机号/用户名/邮箱`:`请输入手机号`, default=`手机号/用户名/邮箱`}"
-                android:text="@={userInfo}"
+                android:hint="@string/hint_old_psd"
+                android:text="@={oldPsd}"
                 android:textColorHint="@color/gary_text_color"
                 android:textSize="14sp" />
 
@@ -107,8 +107,10 @@
                 android:layout_marginTop="24dp"
                 android:layout_toRightOf="@+id/info_icon"
                 android:background="@null"
-                android:hint="ault=`手机号/用户名/邮箱`}"
-                android:text="@={userInfo}"
+                android:hint="@string/hint_new_psd"
+
+                android:inputType="textPassword"
+                android:text="@={newPsd}"
                 android:textColorHint="@color/gary_text_color"
                 android:textSize="14sp" />
 
@@ -134,13 +136,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
                 android:layout_marginTop="24dp"
+                android:inputType="textPassword"
                 android:layout_marginLeft="12dp"
                 android:layout_below="@+id/new_psd"
                 android:layout_marginRight="20dp"
                 android:layout_toRightOf="@+id/info_icon"
                 android:background="@null"
-                android:hint="ault=`手机号/用户名/邮箱`}"
-                android:text="@={userInfo}"
+                android:hint="@string/hint_sure_psd"
+                android:text="@={surePsd}"
                 android:textColorHint="@color/gary_text_color"
                 android:textSize="14sp" />
 
@@ -171,8 +174,8 @@
                 android:layout_marginLeft="42dp"
                 android:layout_marginTop="54dp"
                 android:background="@drawable/btn_bg"
-                android:onClick="@{()->clickEvent.onLogin(userInfo, password,true)}"
-                android:text="登录"
+                android:onClick="@{()->clickEvent.submit(oldPsd, newPsd,surePsd)}"
+                android:text="@string/sure"
                 android:textSize="16sp" />
         </RelativeLayout>
 

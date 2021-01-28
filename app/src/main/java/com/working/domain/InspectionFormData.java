@@ -3,7 +3,7 @@ package com.working.domain;
 /**
  * 巡检记录数据的添加数据
  */
-public class InspectionFormData {
+public class InspectionFormData implements ICommitData {
 
     /**
      * defectQuality :

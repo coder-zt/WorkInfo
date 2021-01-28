@@ -66,7 +66,7 @@ public class PurchaseDetail{
         private String approvalUser;
         private String approvalTime;
         private String auditOpinion;
-        private int approvalUser2;
+        private String approvalUser2;
         private String approvalTime2;
         private String auditOpinion2;
         private int approvalStatus;

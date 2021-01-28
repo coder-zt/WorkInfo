@@ -47,8 +47,8 @@ import java.util.List;
 /**
  * 采购订单的详细数据
  */
-public class PurchaseDetailActivity extends BaseCommitActivity<IPurchaseOrderData>
-implements IDetailCallback<PurchaseDetail.DataBean> {
+public class PurchaseDetailActivity extends BaseCommitActivity
+        implements IDetailCallback<PurchaseDetail.DataBean> {
 
     private final int REQUEST_CODE = 1;
     private ActivityPurcahseDetailBinding mBinding;
@@ -219,10 +219,6 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
             ToastUtil.showMessage("提交数据为空，请退出重试！");
             return;
         }
-        if (mDataBean.getStatus() == 1) {
-            ToastUtil.showMessage("数据不可重复提交！");
-            return;
-        }
         if (mDataBean.getPurchaseItemList() != null) {
             if (mDataBean.getPurchaseItemList().size() == 0) {
                 ToastUtil.showMessage("请添加物料！");
@@ -238,7 +234,6 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
                 return;
             }
         }
-        mDataBean.setStatus(isDraft?0:1);
         //提交
         commitData(mDataBean);
     }
@@ -252,8 +247,12 @@ implements IDetailCallback<PurchaseDetail.DataBean> {
         ArrayList<IRecyclerDetail> recyclerDetails = new ArrayList<>(purchaseItemList);
         //设置审核信息
         if(mDataBean.getApprovalStatus()>0){
-            recyclerDetails.add(new ApprovalContentBean("一级审核", mDataBean.getAuditOpinion().isEmpty()?"无":mDataBean.getAuditOpinion()));
-            recyclerDetails.add(new ApprovalContentBean("二级审核", mDataBean.getAuditOpinion2().isEmpty()?"无":mDataBean.getAuditOpinion2()));
+            if (mDataBean.getAuditOpinion() != null) {
+                recyclerDetails.add(new ApprovalContentBean("一级审核", mDataBean.getAuditOpinion().isEmpty()?"无":mDataBean.getAuditOpinion()));
+            }
+            if (mDataBean.getAuditOpinion2() != null) {
+                recyclerDetails.add(new ApprovalContentBean("二级审核", mDataBean.getAuditOpinion2().isEmpty()?"无":mDataBean.getAuditOpinion2()));
+            }
         }
 
         mAdapter.setData(recyclerDetails);

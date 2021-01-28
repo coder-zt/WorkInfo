@@ -1,6 +1,6 @@
 package com.working.domain;
 
-public class ApprovalOutBean {
+public class ApprovalOutBean implements ICommitData {
 
     /**
      * approvalStatus : 0

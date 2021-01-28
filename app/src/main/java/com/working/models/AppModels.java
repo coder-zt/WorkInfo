@@ -11,6 +11,7 @@ import com.google.gson.Gson;
 import com.working.domain.ApprovalBean;
 import com.working.domain.ApprovalOutBean;
 import com.working.domain.ApprovalRecord;
+import com.working.domain.ChangePsdBean;
 import com.working.domain.ClientResponse;
 import com.working.domain.InStockList;
 import com.working.domain.IndexNotice;
@@ -43,6 +44,8 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -203,6 +206,41 @@ public class AppModels {
                 if (listener != null) {
                     listener.onLoadedFail(t.getMessage());
                 }
+            }
+        });
+    }
+
+    /**
+     * 库存清单列表
+     * @param data
+     * @param callback
+     */
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void changePassword(ChangePsdBean data, final Handler.Callback callback){
+        AppApi appApi = getAppApi();
+//        StringBuilder sbJson = new StringBuilder("{\"oldPassword\":\"")
+//                    .append(FileUtils.md5Encryption(data.getOldPassword()))
+//                    .append("\",\"newPassword\":\"")
+//                    .append(FileUtils.md5Encryption(data.getNewPassword()))
+//                    .append("\",\"newPassword1\":\"")
+//                    .append(FileUtils.md5Encryption(data.getNewPassword1()))
+//                    .append("\"}");
+//        Log.d(TAG, "updateInspection: " + sbJson);
+//        RequestBody body = RequestBody.create(okhttp3.MediaType.parse("application/json;charset=UTF-8"), sbJson.toString());
+        Map<String, String> dataMap = new HashMap<>();
+        dataMap.put("oldPassword", FileUtils.md5Encryption(data.getOldPassword()));
+        dataMap.put("newPassword", FileUtils.md5Encryption(data.getNewPassword()));
+        dataMap.put("newPassword1", FileUtils.md5Encryption(data.getNewPassword1()));
+        Call<ClientResponse> inspectionListCall = appApi.changePassword(dataMap);
+        inspectionListCall.enqueue(new Callback<ClientResponse>() {
+            @Override
+            public void onResponse(Call<ClientResponse> call, Response<ClientResponse> response) {
+                handleClientResponse(response, callback);
+            }
+
+            @Override
+            public void onFailure(Call<ClientResponse> call, Throwable t) {
+                requestFail("网络错误！", callback);
             }
         });
     }

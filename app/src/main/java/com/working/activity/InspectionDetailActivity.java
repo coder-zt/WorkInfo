@@ -2,7 +2,6 @@ package com.working.activity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -33,13 +32,12 @@ import java.util.List;
 /**
  * 添加巡检记录的activity
  */
-public class AddInspectionActivity extends BaseCommitActivity<InspectionFormData> {
+public class InspectionDetailActivity extends BaseCommitActivity {
 
     private static final String TAG = "AddInspectionActivity";
 
     private List<InspectionFiledInfo> mInspectFiled;
     private ActivityAddInspectionBinding mDataBinding;
-    private List<InspectionFiledInfo> mFiledInfos;
     private List<InspectionFiledInfo> mShowFiledInfos;
     private boolean isUpdate;
     private InspectionFormData mInformation;
@@ -67,6 +65,7 @@ public class AddInspectionActivity extends BaseCommitActivity<InspectionFormData
     protected void initData() {
         String data = getIntent().getStringExtra("data");
         if (data == null) {
+            mAdapter.setCommit(false);
             isUpdate = false;
             return;
         }
@@ -74,6 +73,7 @@ public class AddInspectionActivity extends BaseCommitActivity<InspectionFormData
         mRecordsBean = new Gson().fromJson(data, InspectionList.DataBean.RecordsBean.class);
         mInformation = new InspectionFormData();
         FileUtils.copyValue(mInformation, mRecordsBean);
+        mAdapter.setCommit(mRecordsBean.getStatus() == 1);
     }
 
 
@@ -157,12 +157,6 @@ public class AddInspectionActivity extends BaseCommitActivity<InspectionFormData
         if (mInformation == null) {
             mInformation = new InspectionFormData();
         }
-
-        //已经提交的记录无法更新/或保存为草稿
-        if(mInformation.getStatus() == 1){
-            ToastUtil.showMessage("已提交的记录无法更新！");
-            return;
-        }
         for (InspectionFiledInfo filedInfo : mShowFiledInfos) {
             //缺损质量->用户输入
             if(TextUtils.equals(filedInfo.getAlias(),"缺损质量")){
@@ -240,8 +234,6 @@ public class AddInspectionActivity extends BaseCommitActivity<InspectionFormData
                 mInformation.setTitle(filedInfo.getValue());
             }
         }
-        //业务状态->0（草稿）->1(提交)
-        mInformation.setStatus(isDraft?0:1);
         //设置图片数据
         mInformation.setPicUrl(mAdapter.getImageCollect());
         if (isUpdate) {

@@ -70,7 +70,9 @@ public class OrderListFragment  extends ListFragment<Order.DataBean.RecordsBean>
 
     @Override
     public void search(String info) {
-        mAdapter.search(info);
+        if(mAdapter != null){
+            mAdapter.search(info);
+        }
     }
 
 }

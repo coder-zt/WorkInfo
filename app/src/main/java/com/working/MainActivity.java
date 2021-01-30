@@ -60,7 +60,7 @@ public class MainActivity extends BaseActivity {
         List<Fragment> fragments = new ArrayList<>();
         fragments.add(new IndexFragment());
         fragments.add(new StatFragment());
-        fragments.add(new MessageFragment());
+//        fragments.add(new MessageFragment());
         fragments.add(new MineFragment());
         mAdapter = new IndexPagerAdapter(fragments, getSupportFragmentManager());
         mVpContainer.setAdapter(mAdapter);
@@ -76,12 +76,12 @@ public class MainActivity extends BaseActivity {
                 mVpContainer.setCurrentItem(1);
                 getWindow().setStatusBarColor(Color.WHITE);
                 break;
-            case R.id.action_message://消息
-                mVpContainer.setCurrentItem(2);
-                getWindow().setStatusBarColor(Color.WHITE);
-                break;
+//            case R.id.action_message://消息
+//                mVpContainer.setCurrentItem(2);
+//                getWindow().setStatusBarColor(Color.WHITE);
+//                break;
             case R.id.action_mine://我的
-                mVpContainer.setCurrentItem(3);
+                mVpContainer.setCurrentItem(2);
 
                 getWindow().setStatusBarColor(Color.parseColor("#2C81FE"));
                 break;

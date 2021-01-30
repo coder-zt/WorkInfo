@@ -137,7 +137,7 @@ public class OutStockDetailActivity extends BaseCommitActivity implements IDetai
         }
     }
 
-    public void submitData(boolean isCommit){
+    public void submitData(boolean isDraft){
         if (!UserDataMan.getInstance().checkMaterialGrant()) {
             ToastUtil.showMessage("权限不足，无法操作");
             return;
@@ -161,7 +161,7 @@ public class OutStockDetailActivity extends BaseCommitActivity implements IDetai
                 return;
             }
         }
-        commitData(mDataBean);
+        commitData(mDataBean, isDraft);
     }
 
 

@@ -43,7 +43,7 @@ public class RetrofitManager {
      */
     private Interceptor getInterceptor() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor(message -> {
-            Log.i("HTTP日志", message);
+//            Log.i("HTTP日志", message);
             if (message.startsWith("{") && message.endsWith("}")) {//json信息
                 printJson("", message, 0, false);
             }else{

@@ -239,7 +239,7 @@ public class InspectionDetailActivity extends BaseCommitActivity {
         if (isUpdate) {
             mInformation.setId(mRecordsBean.getId());
         }
-        commitData(mInformation);
+        commitData(mInformation, isDraft);
     }
 
 

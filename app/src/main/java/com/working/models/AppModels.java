@@ -31,6 +31,7 @@ import com.working.domain.RepBalData;
 import com.working.domain.RepBalInfoData;
 import com.working.domain.InStockDetail;
 import com.working.domain.OutStockList;
+import com.working.domain.StatBean;
 import com.working.domain.UserInfo;
 import com.working.other.MessageEvent;
 import com.working.utils.AppConfig;
@@ -1020,6 +1021,39 @@ public class AppModels {
 
             @Override
             public void onFailure(Call<ApprovalRecord> call, Throwable t) {
+                requestFail("获取审批记录列表失败！", callback);
+            }
+        });
+    }
+
+    /***************
+     * 统计数据     *
+     ***************/
+    /**
+     * 获取统计数据
+     *
+     * @param deptId
+     * @param startTime
+     * @param endTime
+     * @param callback
+     */
+    public void getStatInfo(String deptId, String startTime, String endTime, Handler.Callback callback) {
+        AppApi api = getAppApi();
+        Call<StatBean> call = api.getStatInfo(startTime, endTime);;
+        call.enqueue(new Callback<StatBean>() {
+
+            @Override
+            public void onResponse(Call<StatBean> call, Response<StatBean> response) {
+                printErrorLog(response);
+                if (response.code() != 200) {
+                    requestFail("获取审批记录列表失败！", callback);
+                    return;
+                }
+                requestSuccess(response.body(), callback);
+            }
+
+            @Override
+            public void onFailure(Call<StatBean> call, Throwable t) {
                 requestFail("获取审批记录列表失败！", callback);
             }
         });

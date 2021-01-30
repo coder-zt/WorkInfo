@@ -149,7 +149,7 @@ public class InStockDetailActivity extends BaseCommitActivity
         }
     }
 
-    public void submitData(boolean isCommit){
+    public void submitData(boolean isDraft){
         if (!UserDataMan.getInstance().checkMaterialGrant()) {
             ToastUtil.showMessage("权限不足，无法操作");
             return;
@@ -174,7 +174,7 @@ public class InStockDetailActivity extends BaseCommitActivity
                 return;
             }
         }
-        commitData(mDataBean);
+        commitData(mDataBean, isDraft);
     }
 
     @Override

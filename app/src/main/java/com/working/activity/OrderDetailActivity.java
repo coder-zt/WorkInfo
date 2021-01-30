@@ -12,15 +12,18 @@ import androidx.databinding.DataBindingUtil;
 
 import com.google.gson.Gson;
 import com.working.R;
+import com.working.adapter.CommonDetailAdapter;
 import com.working.adapter.OrderDetailAdapter;
 import com.working.base.BaseCommitActivity;
 import com.working.databinding.ActivityOrderDetailBinding;
+import com.working.domain.ImageCollectBean;
 import com.working.domain.MaterialList;
 import com.working.domain.MaterialListData;
 import com.working.domain.Order;
 import com.working.domain.OrderDetail;
 import com.working.domain.PurchaseDetail;
 import com.working.interfaces.IDetailCallback;
+import com.working.interfaces.IRecyclerDetail;
 import com.working.presenter.ICommitPresenter;
 import com.working.presenter.IDetailPresenter;
 import com.working.presenter.impl.OrderDetailPresenterImpl;
@@ -50,7 +53,7 @@ public class OrderDetailActivity extends BaseCommitActivity implements IDetailCa
     private final int REQUEST_CODE = 1;
     private List<OrderDetail.DataBean.OrderItemListBean> mDetailInfo = new ArrayList<>();
     private ActivityOrderDetailBinding mDataBinding;
-    private OrderDetailAdapter mAdapter;
+    private CommonDetailAdapter mAdapter;
     private List<String> mSelectedStr = new ArrayList<>();
     private boolean isCommit;
     private IDetailPresenter mIDetailPresenter = new OrderDetailPresenterImpl();
@@ -71,25 +74,28 @@ public class OrderDetailActivity extends BaseCommitActivity implements IDetailCa
     private static final String TAG = "OrderDetailActivity";
 
     protected void initView() {
-        mAdapter = new OrderDetailAdapter(this, new OrderDetailAdapter.OnDataContainerListener() {
+        mAdapter = new CommonDetailAdapter(new CommonDetailAdapter.OnAddViewClickedListener() {
+
             @Override
-            public void onDataContainerChanged(List<OrderDetail.DataBean.OrderItemListBean> data, String urls) {
-                mDetailInfo.clear();
-                mDetailInfo.addAll(data);
-                if (mCommitData == null) {
-                    mCommitData = new OrderDetail.DataBean();
-                    mCommitData.setStatus(0);
+            public void onMaterialNumChanged(List<IRecyclerDetail> data, String picUrls) {
+                List<OrderDetail.DataBean.OrderItemListBean> tempData = new ArrayList<>();
+                for (IRecyclerDetail datum : data) {
+                    if (datum instanceof OrderDetail.DataBean.OrderItemListBean) {
+                        tempData.add((OrderDetail.DataBean.OrderItemListBean)datum);
+                    }
                 }
-                mCommitData.setOrderItemList(mDetailInfo);
-                mCommitData.setPicUrl(urls);
+                if (mCommitData.getOrderItemList() == null) {
+                    mCommitData.setOrderItemList(new ArrayList<>(tempData));
+                }else{
+                    mCommitData.setOrderItemList(tempData);
+                }
                 countAccount();
             }
 
             @Override
-            public void onDataCountChange(int oldSize, int newSize) {
-                Log.d(TAG, "onDataCountChange: " + oldSize + "===" + newSize);
-                mDataBinding.recyclerView.setSwipeItemMenuEnabled(oldSize, true);
-                mDataBinding.recyclerView.setSwipeItemMenuEnabled(newSize, false);
+            public void onDataContainerCountChange(int oldCount, int newCount) {
+                mDataBinding.recyclerView.setSwipeItemMenuEnabled(oldCount - 1, true);
+                mDataBinding.recyclerView.setSwipeItemMenuEnabled(newCount - 1, false);
             }
         }, mImageListener);
         mLoadUtilLayout = new DataLoadUtilLayout(this, mDataBinding.statusLayout, () -> {
@@ -111,8 +117,11 @@ public class OrderDetailActivity extends BaseCommitActivity implements IDetailCa
         }else{
             mDataBinding.setAccount(0.0f);
             mDataBinding.setTitle("购买清单详情(草稿)");
-            mAdapter.setPicUrls("");
+            ArrayList<IRecyclerDetail> iRecyclerDetails = new ArrayList<>();
+            iRecyclerDetails.add(new ImageCollectBean(""));
+            mAdapter.setData(iRecyclerDetails);
             createSlideMenu();
+            mCommitData = new OrderDetail.DataBean();
         }
     }
 
@@ -126,6 +135,9 @@ public class OrderDetailActivity extends BaseCommitActivity implements IDetailCa
             for (OrderDetail.DataBean.OrderItemListBean orderItemListBean : mCommitData.getOrderItemList()) {
                 String priceStr = orderItemListBean.getPrice();
                 String productQuantity = orderItemListBean.getProductQuantity();
+                if(priceStr.length() == 0 || productQuantity.length() == 0){
+                    continue;
+                }
                 BigDecimal bigPrice = new BigDecimal(priceStr);
                 BigDecimal bigCount = new BigDecimal(productQuantity);
                 BigDecimal multiply = bigCount.multiply(bigPrice);
@@ -218,30 +230,35 @@ public class OrderDetailActivity extends BaseCommitActivity implements IDetailCa
                 return;
             }
         }
-        commitData(mCommitData);
+        commitData(mCommitData, isDraft);
     }
 
     @Override
     protected void addImageUrl(String link) {
-        mAdapter.addPicUrl(link);
+        mAdapter.addPic(link);
+    }
+
+    private void setRecyclerAdapter() {
+        mDataBinding.recyclerView.setAdapter(mAdapter);
     }
 
     @Override
     public void onDetailDataLoaded(OrderDetail.DataBean data) {
-        mCommitData = data;
         mLoadUtilLayout.setStatus(StatusData.LOADED);
+        mCommitData = data;
         mAdapter.setCommitted(data.getStatus() == 1);
         if (data.getStatus() == 1) {
             mDataBinding.setCommit(true);
             mDataBinding.setTitle("购买清单详情(已提交)");
-            mDataBinding.recyclerView.setAdapter(mAdapter);
+            setRecyclerAdapter();
         }else{
             mDataBinding.setTitle("购买清单详情(草稿)");
             createSlideMenu();
             mDataBinding.setCommit(false);
         }
-        mAdapter.setPicUrls(data.getPicUrl());
-        mAdapter.setData(data.getOrderItemList());
+        ArrayList<IRecyclerDetail> recyclerDetails = new ArrayList<>(data.getOrderItemList());
+        recyclerDetails.add(new ImageCollectBean(mCommitData.getPicUrl()));
+        mAdapter.setData(recyclerDetails);
         countAccount();
     }
 

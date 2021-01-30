@@ -113,17 +113,17 @@ public class ApprovalOutActivity extends BaseCommitActivity
         if (approval == null) {
           approval = "";
         }
-        if(!pass && approval.length() == 0 ){
+        if(!pass && approval.length() == 0){
             ToastUtil.showMessage("拒绝请填写相关意见！");
             return;
-        }else{
+        }else if(pass && approval.length() == 0){
             approval = "同意";
         }
         bean.setAuditOpinion(approval);
         bean.setId(mDetailData.getId());
         bean.setOutStockNo(mDetailData.getOutStockNo());
         Log.d(TAG, "approvalPurchase: " + new Gson().toJson(bean));
-        commitData(bean);
+        commitData(bean, false);
     }
 
     private static final String TAG = "ApprovalOutActivity";

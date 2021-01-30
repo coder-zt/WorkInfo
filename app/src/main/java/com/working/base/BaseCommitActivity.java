@@ -105,21 +105,26 @@ public abstract class BaseCommitActivity extends BaseActivity
      * 提交数据
      * @param data
      */
-    protected void commitData(ICommitData data){//审批数据和提交数据
+    protected void commitData(ICommitData data, boolean isDraft){//审批数据和提交数据
         boolean alreadyCommitted = data.getStatus() == 1;
+        if (mPresenter instanceof IApprovalPresenter){
+            alreadyCommitted = false;
+        }
         //询问是否提交数据
         final CommonDialog dialog = new CommonDialog(this);
-        dialog.setMessage("是否上传？")
+        boolean finalAlreadyCommitted = alreadyCommitted;
+        dialog.setMessage(isDraft?"是否保存为草稿?":"是否提交该数据？")
                 .setImageResId(R.mipmap.question_icon)
-                .setTitle("提交数据")
+                .setTitle(isDraft?"保存草稿":"提交数据")
                 .setSingle(false).setOnClickBottomListener(new CommonDialog.OnClickBottomListener() {
             @Override
             public void onPositiveClick() {
                 dialog.dismiss();
-                if (alreadyCommitted) {
+                if (finalAlreadyCommitted) {
                     ToastUtil.showMessage("数据不可重复提交！");
+                    return;
                 }else{
-                    data.setStatus(1);
+                    data.setStatus(isDraft?0:1);
                 }
                 postData(data);
             }

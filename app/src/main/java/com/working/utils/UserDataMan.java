@@ -113,4 +113,8 @@ public class UserDataMan {
         }
         return false;
     }
+
+    public boolean checkApprovalGrant() {
+        return checkFirstApprovalGrant() || checkSecondApprovalGrant();
+    }
 }

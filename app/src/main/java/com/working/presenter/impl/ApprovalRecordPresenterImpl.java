@@ -34,14 +34,14 @@ public class ApprovalRecordPresenterImpl extends BasePresenterImpl<ApprovalRecor
                         if (mCallback != null) {
                             ((ZTIListCallback<ApprovalRecord.DataBean.RecordsBean>) mCallback).onListLoaded(reversData(recordsBeans), true);
                         }
-                        return false;
+                        return true;
                     }
                 }
                 if (mCallback != null) {
                     setPageOnError(true);
                     ((ZTIListCallback<ApprovalRecord.DataBean.RecordsBean>) mCallback).onListLoadedFail(true);
                 }
-                return false;
+                return true;
             }
         });
     }

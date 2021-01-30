@@ -70,7 +70,9 @@ public class OutStockListFragment extends
     @Override
     public void search(String info) {
         if (mAdapter != null) {
+            if(mAdapter != null){
             mAdapter.search(info);
+        }
         }
     }
 

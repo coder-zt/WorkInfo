@@ -135,16 +135,13 @@ public class ApprovalActivity extends BaseCommitActivity{
             approvalInfo = "";
         }
         if(!pass && approvalInfo.length() == 0){
-
-            mBean.setApprovalStatus(appStatus - 1);
-            ToastUtil.showMessage("如果拒绝需要填写相关意见!");
+            ToastUtil.showMessage("拒绝请填写相关意见！");
             return;
-        }
-        if (approvalInfo == null) {
+        }else if(pass && approvalInfo.length() == 0){
             approvalInfo = "同意";
         }
         mBean.setAuditOpinion(approvalInfo);
-        commitData(mBean);
+        commitData(mBean, false);
     }
 
     private static final String TAG = "ApprovalActivity";

@@ -19,12 +19,14 @@ import com.working.domain.OutStockDetail;
 import com.working.domain.InStockDetail;
 import com.working.domain.LoginInfo;
 import com.working.domain.ClientResponse;
+import com.working.domain.StatBean;
 import com.working.domain.UserInfo;
 
 import java.util.Map;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.Response;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -170,4 +172,9 @@ public interface AppApi {
     @FormUrlEncoded
     @POST("blade-user/update-password")
     Call<ClientResponse> changePassword(@FieldMap Map<String, String> map);
+
+    //获取库存管理清单列表
+    @GET("blade-road/inspectionrecord/chart")
+    Call<StatBean> getStatInfo(@Query("startTime")String startTime, @Query("endTime")String endTime);
+
 }

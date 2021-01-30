@@ -65,7 +65,7 @@ public class ChangePsdActivity extends BaseCommitActivity {
             ToastUtil.showMessage("两次输入新密码不同！");
             return;
         }
-        commitData(new ChangePsdBean(oldPsd, newPsd, surePsd));
+        commitData(new ChangePsdBean(oldPsd, newPsd, surePsd), true);
     }
 
     @Override

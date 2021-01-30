@@ -2,6 +2,7 @@ package com.working.adapter;
 
 import android.content.Context;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -96,22 +97,35 @@ public class CommonDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mData.get(position).setPrice(s.toString());
+                String priceStr = s.toString();
+                if (TextUtils.equals(".", priceStr)) {
+                    priceStr = "0.0";
+                }
+                if(priceStr.contains(".")){
+                    String[] split = priceStr.split("\\.");
+                    if (split.length == 2 && split[1].length()>4) {
+                        String newDecl = split[1].substring(0,4);
+                        String newValue = priceStr.replace(split[1], newDecl);
+                        holder.mBinding.editText.setText(newValue);
+                        return;
+                    }
+                }
+                mData.get(position).setPrice(priceStr);
                 if (mCallback != null) {
                     mCallback.onMaterialNumChanged(mData,mPicAdapter.getImageCollect());
                 }
                 String marketPrice = mData.get(position).getPriceMarket();
                 if(s.length()> 0 &&  marketPrice != null){
-                    float price = Float.parseFloat(s.toString());
+                    float price = Float.parseFloat(priceStr);
                     float market = Float.parseFloat(marketPrice);
-                    if(price == market){
+                    if(price >= market * 0.95 && price <= market * 1.05){
                         holder.mBinding.tvShow.setVisibility(View.GONE);
-                    }else if(price < market){
+                    }else if(price < market * 0.95){
                         holder.mBinding.tvShow.setVisibility(View.VISIBLE);
-                        holder.mBinding.tvShow.setText("低于于市场价");
-                    }else{
+                        holder.mBinding.tvShow.setText("低于市场价-5%");
+                    }else if(price > market * 1.05){
                         holder.mBinding.tvShow.setVisibility(View.VISIBLE);
-                        holder.mBinding.tvShow.setText("高于市场价");
+                        holder.mBinding.tvShow.setText("高于市场价+5%");
                     }
                 }
             }

@@ -6,9 +6,9 @@
     <item android:id="@+id/action_stat"
         android:title="@string/bnv_stat"
         android:icon="@mipmap/item_stat_icon" />
-    <item android:id="@+id/action_message"
-        android:title="@string/bnv_message"
-        android:icon="@mipmap/item_message_icon" />
+<!--    <item android:id="@+id/action_message"-->
+<!--        android:title="@string/bnv_message"-->
+<!--        android:icon="@mipmap/item_message_icon" />-->
     <item android:id="@+id/action_mine"
         android:title="@string/bnv_mine"
         android:icon="@mipmap/item_mine_icon" />

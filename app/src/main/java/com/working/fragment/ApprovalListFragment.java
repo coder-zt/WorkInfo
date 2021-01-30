@@ -62,7 +62,9 @@ public class ApprovalListFragment extends ListFragment<ApprovalRecord.DataBean.R
 
     @Override
     public void search(String info) {
-        mAdapter.search(info);
+        if(mAdapter != null){
+            mAdapter.search(info);
+        }
     }
 
     @Override

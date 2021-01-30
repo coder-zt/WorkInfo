@@ -86,7 +86,9 @@ public class MaterialListFragment extends ListFragment<RepBalData.DataBean.Recor
 
     @Override
     public void search(String info) {
-        mAdapter.search(info);
+        if(mAdapter != null){
+            mAdapter.search(info);
+        }
     }
 
 

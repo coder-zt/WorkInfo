@@ -77,7 +77,8 @@
                 android:layout_height="30dp"
                 android:layout_marginRight="12dp"
                 android:padding="5dp"
-                android:src="@mipmap/more_icon"
+                android:rotation="180"
+                android:src="@mipmap/back_icon"
                 app:layout_constraintBottom_toTopOf="@+id/view8"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

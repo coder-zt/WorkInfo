@@ -69,7 +69,9 @@ public class InStockListFragment extends ListFragment<InStockList.DataBean.Recor
 
     @Override
     public void search(String info) {
-        mAdapter.search(info);
+        if(mAdapter != null){
+            mAdapter.search(info);
+        }
     }
 
     @Override

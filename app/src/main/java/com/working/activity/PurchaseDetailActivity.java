@@ -198,13 +198,14 @@ public class PurchaseDetailActivity extends BaseCommitActivity
         mApprovalStatus = getIntent().getIntExtra("data_approval", -1);
         mDetailPresenter.getDetailData(mId);
         mLoadUtilLayout.setStatus(StatusData.LOADING);
+        mDataBean = new PurchaseDetail.DataBean();
     }
 
 
 
     public void submitData(boolean isDraft){
         if (mApprovalStatus == 2) {//提交生成创建订单
-            commitData(mApprovalBean);
+            commitData(mApprovalBean, isDraft);
             return;
         }
         if(mApprovalStatus == 0 || mApprovalStatus == 3){//提交上报订单
@@ -235,7 +236,7 @@ public class PurchaseDetailActivity extends BaseCommitActivity
             }
         }
         //提交
-        commitData(mDataBean);
+        commitData(mDataBean, isDraft);
     }
 
     @Override

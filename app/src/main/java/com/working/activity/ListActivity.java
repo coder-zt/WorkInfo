@@ -41,12 +41,15 @@ public class ListActivity extends ZTBaseListActivity implements IAddMaterialCall
     @Override
     protected Boolean getIsCreate() {
         switch (mActivityCode){
+            //审批没有创建权限
             case AppConfig.ACTIVITY_INSPECTION:
             case AppConfig.ACTIVITY_ORDER:
-                return true;
+                return !UserDataMan.getInstance().checkApprovalGrant();
+            //该页面无需创建
             case AppConfig.ACTIVITY_PURCHASE:
             case AppConfig.ACTIVITY_APPROVAL:
                 return false;
+            //材料员才有创建权限
             case AppConfig.ACTIVITY_STOCK_IN:
             case AppConfig.ACTIVITY_STOCK_OUT:
             case AppConfig.ACTIVITY_MATERIAL:

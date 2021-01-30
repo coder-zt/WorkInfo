@@ -11,4 +11,6 @@
     <string name="hint_new_psd">请输入新密码</string>
     <string name="hint_sure_psd">请再次确认密码</string>
     <string name="sure">确认</string>
+    <string name="stat_title">数据统计</string>
+    <string name="stat_hint">注:所有记录为已审批通过和实际发生的。</string>
 </resources>

@@ -200,6 +200,7 @@ public class InStockDetailActivity extends BaseCommitActivity
                     datum.setId("");
                     datum.setPrice(dataBean.getPrice());
                     datum.setProductQuantity("0.0");
+                    datum.setPrange(dataBean.getPrange());
                     datum.setMaterialId(String.valueOf(dataBean.getId()));
                     datum.setInStockId(mDataBean.getId());
                     mSelectedStr.add(datum.getMaterialName());

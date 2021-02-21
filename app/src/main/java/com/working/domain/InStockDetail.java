@@ -90,6 +90,7 @@ public class InStockDetail {
             private String productQuantity;
             private int owned;
             private int remainingQuantity;
+            private float prange;
 
             @Override
             public int getType() {
@@ -135,6 +136,7 @@ public class InStockDetail {
             public String getImageCollect() {
                 return null;
             }
+
         }
     }
 }

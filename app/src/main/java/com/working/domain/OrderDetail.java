@@ -101,6 +101,7 @@ public class OrderDetail {
             private String productQuantity;
             private String remainingQuantity;
             private int owned;
+            private float prange;
 
 
             @Override

@@ -1,6 +1,7 @@
 package com.working.adapter;
 
 import android.content.Context;
+import android.service.autofill.FieldClassification;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -118,14 +119,17 @@ public class CommonDetailAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
                 if(s.length()> 0 &&  marketPrice != null){
                     float price = Float.parseFloat(priceStr);
                     float market = Float.parseFloat(marketPrice);
-                    if(price >= market * 0.95 && price <= market * 1.05){
+                    float prange =  Math.abs(mData.get(position).getPrange());
+                    float min = 1.0f - (prange/100.0f);
+                    float max = 1.0f + (prange/100.0f);
+                    if(price >= market * min && price <= market * max){
                         holder.mBinding.tvShow.setVisibility(View.GONE);
-                    }else if(price < market * 0.95){
+                    }else if(price < market * min){
                         holder.mBinding.tvShow.setVisibility(View.VISIBLE);
-                        holder.mBinding.tvShow.setText("低于市场价-5%");
-                    }else if(price > market * 1.05){
+                        holder.mBinding.tvShow.setText("低于市场价-" + prange + "%");
+                    }else if(price > market * max){
                         holder.mBinding.tvShow.setVisibility(View.VISIBLE);
-                        holder.mBinding.tvShow.setText("高于市场价+5%");
+                        holder.mBinding.tvShow.setText("高于市场价+" + prange + "%");
                     }
                 }
             }

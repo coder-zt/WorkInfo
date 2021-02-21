@@ -74,4 +74,9 @@ public class ApprovalContentBean implements IRecyclerDetail {
     public String getImageCollect() {
         return null;
     }
+
+    @Override
+    public float getPrange() {
+        return 0;
+    }
 }

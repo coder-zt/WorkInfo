@@ -115,6 +115,7 @@ public class PurchaseDetail{
             private String min;
             private String max;
             private int owned;
+            private float prange;
 
             @Override
             public String getSearchInfo() {

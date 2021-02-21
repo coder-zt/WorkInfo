@@ -38,6 +38,7 @@ public class UserDataMan {
         if (userInfo == null) {
             return false;
         }
+        Log.d(TAG, "initUserWithSp: " + userInfo);
         mLoginInfo = gson.fromJson(userInfo, LoginInfo.class);
 
         return mLoginInfo != null;
@@ -83,7 +84,9 @@ public class UserDataMan {
     public boolean checkFirstApprovalGrant(){
         if (mLoginInfo != null) {
             String role_id = mLoginInfo.getRole_id();
-            return role_id.contains(AppConfig.DADUI_ID);
+            if (role_id != null) {
+                return role_id.contains(AppConfig.DADUI_ID);
+            }
         }
         return false;
     }
@@ -95,7 +98,9 @@ public class UserDataMan {
     public boolean checkSecondApprovalGrant(){
         if (mLoginInfo != null) {
             String role_id = mLoginInfo.getRole_id();
-            return role_id.contains(AppConfig.ZHIDUI_ID);
+            if (role_id != null) {
+                return role_id.contains(AppConfig.ZHIDUI_ID);
+            }
         }
         return false;
     }
@@ -109,7 +114,9 @@ public class UserDataMan {
         if (mLoginInfo != null) {
             String role_id = mLoginInfo.getRole_id();
             Log.d(TAG, "checkMaterialGrant: " + role_id);
-            return role_id.contains(AppConfig.MATERIAL_ID);
+            if (role_id != null) {
+                return role_id.contains(AppConfig.MATERIAL_ID);
+            }
         }
         return false;
     }

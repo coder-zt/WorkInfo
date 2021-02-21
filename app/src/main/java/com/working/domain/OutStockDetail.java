@@ -105,6 +105,7 @@ public class OutStockDetail {
             private String productQuantity;
             private int owned;
             private int remainingQuantity;
+            private float prange;
 
             @Override
             public int getType() {

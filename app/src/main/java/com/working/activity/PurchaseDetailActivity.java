@@ -112,6 +112,7 @@ public class PurchaseDetailActivity extends BaseCommitActivity
             datum.setPriceMarket(datum.getPrice());
             datum.setMaterialId(String.valueOf(dataBean.getId()));
             datum.setPurchaseId(mDataBean.getId());
+            datum.setPrange(dataBean.getPrange());
             mSelectedItem.add(datum.getMaterialName());
             mAdapter.addData(datum);
         }

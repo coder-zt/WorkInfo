@@ -52,7 +52,7 @@
             android:layout_marginLeft="12dp"
             android:layout_marginRight="12dp"
             android:background="@drawable/search_et_bg"
-            android:hint="请输入搜索内容"
+            android:hint="请输入标题关键字"
             android:textSize="14sp"
             android:gravity="center"
             android:singleLine="true"

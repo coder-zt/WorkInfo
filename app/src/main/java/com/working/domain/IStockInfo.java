@@ -16,4 +16,10 @@ public interface IStockInfo extends ISearchInfo {
     String getStockNo();
 
     int getStatus();
+
+    int getApprovalStatus();
+
+    String getAuditOpinion(boolean isShow);
+
+    String getAuditOpinion2(boolean isShow);
 }

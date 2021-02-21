@@ -19,6 +19,8 @@ import com.working.domain.OutStockDetail;
 import com.working.domain.InStockDetail;
 import com.working.domain.LoginInfo;
 import com.working.domain.ClientResponse;
+import com.working.domain.RepairContent;
+import com.working.domain.RepairMethod;
 import com.working.domain.StatBean;
 import com.working.domain.UserInfo;
 
@@ -79,6 +81,13 @@ public interface AppApi {
     @POST("blade-road/inspectionrecord/submit")
     Call<ClientResponse> uploadInspection( @Body RequestBody route);
 
+    //获取维修方法
+    @GET("/blade-road/damagerepair/selectRepairMethod?")
+    Call<RepairMethod> getRepairMethod(@Query("damageType") int damageType);
+
+    //获取维修内容
+    @GET("/blade-road/damagerepair/selectRepairContent?")
+    Call<RepairContent> getRepairContent(@Query("damageType") int damageType, @Query("repairMethodId") int methodId);
 
     //获取首页公告信息
     @GET("blade-desk/notice/list?")

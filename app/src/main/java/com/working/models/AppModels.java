@@ -31,6 +31,8 @@ import com.working.domain.RepBalData;
 import com.working.domain.RepBalInfoData;
 import com.working.domain.InStockDetail;
 import com.working.domain.OutStockList;
+import com.working.domain.RepairContent;
+import com.working.domain.RepairMethod;
 import com.working.domain.StatBean;
 import com.working.domain.UserInfo;
 import com.working.other.MessageEvent;
@@ -101,9 +103,12 @@ public class AppModels {
                 String token = "";
                 if (UserDataMan.getInstance().getLoginInfo() == null) {
                     Log.d(TAG, "printErrorLog: " + "初始化用户信息！");
-                    UserDataMan.getInstance().init( new LoginInfo(),false);
+
+                    if (UserDataMan.getInstance().init( new LoginInfo(),false)) {
+                        token = UserDataMan.getInstance().getLoginInfo().getRefresh_token();
+                    }
                 }
-                token = UserDataMan.getInstance().getLoginInfo().getRefresh_token();
+
                 refreshUserAuth(token, new OnUserAuthListener() {
                     @Override
                     public void onUserAuthLoaded(LoginInfo loginInfo) {
@@ -393,6 +398,56 @@ public class AppModels {
         });
     }
 
+    /**
+     * 获取维修方法
+     * @param damageType
+     * @param callback
+     */
+    public void getRepairMethod(int damageType, final Handler.Callback callback){
+        AppApi appApi = getAppApi();
+        Call<RepairMethod> repairMethod = appApi.getRepairMethod(damageType);
+        repairMethod.enqueue(new Callback<RepairMethod>() {
+            @Override
+            public void onResponse(Call<RepairMethod> call, Response<RepairMethod> response) {
+                if (response.code()!=200) {
+                    printErrorLog(response);
+                    requestFail("获取维修方法失败！", callback);
+                    return;
+                }
+                requestSuccess(response.body(), callback);
+            }
+
+            @Override
+            public void onFailure(Call<RepairMethod> call, Throwable t) {
+                requestFail("网络错误！", callback);
+            }
+        });
+
+    }
+
+    /**
+     *获取维修内容
+     */
+    public void getRepairContent(int damageType, int methodId, final Handler.Callback callback){
+        AppApi appApi = getAppApi();
+        Call<RepairContent> repairContent = appApi.getRepairContent(damageType, methodId);
+        repairContent.enqueue(new Callback<RepairContent>() {
+            @Override
+            public void onResponse(Call<RepairContent> call, Response<RepairContent> response) {
+                if (response.code()!=200) {
+                    printErrorLog(response);
+                    requestFail("获取维修内容失败！", callback);
+                    return;
+                }
+                requestSuccess(response.body(), callback);
+            }
+
+            @Override
+            public void onFailure(Call<RepairContent> call, Throwable t) {
+                requestFail("网络错误！", callback);
+            }
+        });
+    }
 
     /***************
      * 首页相关信息 *

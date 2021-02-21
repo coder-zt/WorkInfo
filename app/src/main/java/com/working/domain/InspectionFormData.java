@@ -18,6 +18,8 @@ public class InspectionFormData implements ICommitData {
      * structureName : _app_测试
      * title : _app_测试
      * picUrl:
+     *   "repairContentId": "",
+     *   "repairMethodId": "",
      */
 
     private String defectQuality;
@@ -27,6 +29,25 @@ public class InspectionFormData implements ICommitData {
     private String maintenanceMeasures;
     private String nature;
     private String pileNo;
+
+        public String getRepairContentId() {
+        return repairContentId;
+    }
+
+    public void setRepairContentId(String repairContentId) {
+        this.repairContentId = repairContentId;
+    }
+
+    public String getRepairMethodId() {
+        return repairMethodId;
+    }
+
+    public void setRepairMethodId(String repairMethodId) {
+        this.repairMethodId = repairMethodId;
+    }
+
+    private String repairContentId;
+    private String repairMethodId;
     private String scale;
     private int status;
     private String structureName;

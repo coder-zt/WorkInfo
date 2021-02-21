@@ -23,12 +23,13 @@
         <TextView
             android:id="@+id/tv_item"
             android:layout_width="match_parent"
-            android:layout_height="42dp"
+            android:layout_height="wrap_content"
+            android:minHeight="42dp"
             android:text="@{item}"
             android:onClick="@{()->onClick.onItemClicked(index, item)}"
             android:textColor="@color/black"
             android:background="@drawable/select_list_bg"
-            android:textSize="22sp"
+            android:textSize="16sp"
             android:gravity="center" />
 
 

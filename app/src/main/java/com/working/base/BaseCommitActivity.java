@@ -113,7 +113,7 @@ public abstract class BaseCommitActivity extends BaseActivity
         //询问是否提交数据
         final CommonDialog dialog = new CommonDialog(this);
         boolean finalAlreadyCommitted = alreadyCommitted;
-        dialog.setMessage(isDraft?"是否保存为草稿?":"是否提交该数据？")
+        dialog.setMessage(isDraft?"是否保存为草稿?":"提交无法修改，是否提交数据？")
                 .setImageResId(R.mipmap.question_icon)
                 .setTitle(isDraft?"保存草稿":"提交数据")
                 .setSingle(false).setOnClickBottomListener(new CommonDialog.OnClickBottomListener() {

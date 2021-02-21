@@ -205,6 +205,7 @@ public class OutStockDetailActivity extends BaseCommitActivity implements IDetai
             datum.setProductQuantity("0.0");
             datum.setMaterialId(dataBean.getId());
             datum.setId("");
+            datum.setPrange(dataBean.getPrange());
             datum.setOutStockId(mDataBean.getId());
             mSelectedStr.add(datum.getMaterialName());
             mAdapter.addData(datum);

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
@@ -21,6 +22,7 @@ import com.working.base.BaseRecyclerAdapter;
 import com.working.databinding.RecyclerInspectionRecyclerLayoutBinding;
 import com.working.setting.InspectionFiledInfo;
 import com.working.utils.FileUtils;
+import com.working.utils.ToastUtil;
 import com.working.view.TypePopWindow;
 
 import java.util.ArrayList;
@@ -32,14 +34,20 @@ import java.util.List;
 public class InspectionRecordingAdapter extends BaseRecyclerAdapter<InspectionRecordingAdapter.ItemView,
         InspectionFiledInfo, RecyclerInspectionRecyclerLayoutBinding> {
 
-private static final String TAG="InsingAdap";
-        private Activity mActivity;
+    private static final String TAG="InsingAdap";
+    private Activity mActivity;
     private ImageCollectAdapter mAdapter;
+    private OnGetRepairInfoListener mRepairListener;
+    private int repairMethodCode =  -1;
+    private int damageCode = -1;
 
-    public InspectionRecordingAdapter(Activity activity, ImageCollectAdapter.OnImageClickListener listener){
+    public InspectionRecordingAdapter(Activity activity,
+                                      ImageCollectAdapter.OnImageClickListener listener,
+                                      OnGetRepairInfoListener repairListener){
         super(null);
         mActivity = activity;
         mAdapter = new ImageCollectAdapter(listener);
+        mRepairListener = repairListener;
     }
 
     @Override
@@ -100,12 +108,57 @@ private static final String TAG="InsingAdap";
             mEtInput.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    String showInfo = "";
+                    if (item.getRange() == null) {
+                        showInfo = "失败！";
+                    } else if (item.getRange().size() == 0) {
+                        showInfo = "为空!";
+                    }
+                    if (item.getRange() == null || item.getRange().size() == 0) {
+                        if (TextUtils.equals(item.getAlias(),"病害类型")) {
+                            ToastUtil.showMessage("获取病害类型" + showInfo);
+                        }else if (TextUtils.equals(item.getAlias(),"维修方法")) {
+                            if(damageCode == -1){
+                                ToastUtil.showMessage("请先选择病害类型！");
+                            }else{
+                                ToastUtil.showMessage("获取维修方法" + showInfo);
+                            }
+                        }else if (TextUtils.equals(item.getAlias(),"维修内容")) {
+                            if(repairMethodCode == -1){
+                                ToastUtil.showMessage("请先选择维修方法");
+                            }else{
+                                ToastUtil.showMessage("获取维修内容" + showInfo);
+                            }
+                        }
+                        return;
+                    }
+
                     final TypePopWindow window = new TypePopWindow(v.getContext(),item.getRange(), new RVListAdapter.OnItemClickedListener() {
                         @Override
                         public void onItemClicked(int select, String typeName) {
+                            Log.d(TAG, "onItemClicked: " + item.getField());
+                            if (TextUtils.equals(item.getAlias(),"病害类型")) {
+                                damageCode = select;
+                                repairMethodCode = -1;
+                                if (mRepairListener != null) {
+                                    mRepairListener.selectDamageAfter(select);
+                                }
+                                item.setRangeIndex(select);
+                            }
+                            if (TextUtils.equals(item.getAlias(),"维修方法")) {
+                                repairMethodCode = select;
+                                if (mRepairListener != null) {
+                                    mRepairListener.selectRepairMethodAfter(damageCode, select);
+                                }
+                            }
+                            if (TextUtils.equals(item.getAlias(),"维修内容")) {
+                                if (mRepairListener != null) {
+                                    mRepairListener.selectRepairContentAfter(select);
+                                }
+                            }
                             item.setValue(typeName);
-                            item.setRangeIndex(select);
                             mEtInput.setText(item.getValue());
+                            notifyDataSetChanged();
                         }
                     });
                     window.showAsDropDown(v);
@@ -144,7 +197,14 @@ private static final String TAG="InsingAdap";
                 }
             });
         }
+    }
 
+    public interface OnGetRepairInfoListener{
 
+        void selectDamageAfter(int damageType);
+
+        void selectRepairMethodAfter(int damageType, int index);
+
+        void selectRepairContentAfter(int index);
     }
 }

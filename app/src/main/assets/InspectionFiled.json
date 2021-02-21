@@ -1,14 +1,16 @@
 [
-    {"field":"title","alias":"巡检记录标题","show":1,"type":"string","input_type":2,"value":"","range":[]},
-    {"field":"diseaseType","alias":"病害类型","show":1,"type":"integer","input_type":1,"value":"","range":["局部修理挡土墙","局部修理路肩墙","局部修理护面墙","局部修理护坡","局部修理泄水槽","局部修理排水系统","维修圬工构造物变形缝","维修圬工构造物泄水孔","修补路基缺口","处理翻浆","龟裂","裂缝","坑槽","松散","沉陷","车辙","波浪","拥包","泛油","破损","修理桥头、涵顶轻微跳车","修补桥面裂缝","修理泄水孔","修理伸缩缝","修补桥面","修补墩台","修补河床铺底","修补防护圬工","修理涵洞和进出口损坏","修补隧道路面","修理隧道排水系统","隧道内设备或配件更换","修理隧道圬工接缝","油漆粉刷交通安全设施","修理交通安全设施","维修波形护栏","更换波形护栏","增设道路标志牌","维修拦雪网","维修主动防护网","维修被动防护网","更换柱式护栏","更换警示桩","更换百米桩","更换界碑","更换路缘石","更换钢管警示柱","补划路面标线","其他"]},
-    {"field":"defectQuality","alias":"缺损质量","show":1,"type":"string","input_type":2,"value":"","range":[]},
-    {"field":"extent","alias":"程度","show":1,"type":"string","input_type":2,"value":"","range":[]},
-    {"field":"structureName","alias":"结构名称","show":1,"type":"string","input_type":2,"value":"","range":[]},
-    {"field":"maintenanceMeasures","alias":"养护措施","show":1,"type":"string","input_type":2,"value":"","range":[]},
-    {"field":"nature","alias":"性质","show":1,"type":"string","input_type":2,"value":"","range":[]},
-    {"field":"pileNo","alias":"缺损位置","show":1,"type":"string","input_type":2,"value":"","range":[]},
-    {"field":"scale","alias":"标度","show":1,"type":"string","input_type":2,"value":"","range":[]},
-    {"field":"status","alias":"业务状态","show":0,"type":"integer","input_type":0,"value":"","range":[]},
-    {"field":"extension","alias":"巡检记录描述","show":1,"type":"string","input_type":2,"value":"","range":[]},
-    {"field":"picUrl","alias":"上传图片","show":1,"type":"string","input_type":3,"value":"","range":[]}
+    {"field":"title","alias":"巡检记录标题","show":1,"type":"string","input_type":2,"value":"","prange":[]},
+    {"field":"diseaseType","alias":"病害类型","show":1,"type":"integer","input_type":1,"value":"点击选择病害类型","prange":["局部修理挡土墙","局部修理路肩墙","局部修理护面墙","局部修理护坡","局部修理泄水槽","局部修理排水系统","维修圬工构造物变形缝","维修圬工构造物泄水孔","修补路基缺口","处理翻浆","龟裂","裂缝","坑槽","松散","沉陷","车辙","波浪","拥包","泛油","破损","修理桥头、涵顶轻微跳车","修补桥面裂缝","修理泄水孔","修理伸缩缝","修补桥面","修补墩台","修补河床铺底","修补防护圬工","修理涵洞和进出口损坏","修补隧道路面","修理隧道排水系统","隧道内设备或配件更换","修理隧道圬工接缝","油漆粉刷交通安全设施","修理交通安全设施","维修波形护栏","更换波形护栏","增设道路标志牌","维修拦雪网","维修主动防护网","维修被动防护网","更换柱式护栏","更换警示桩","更换百米桩","更换界碑","更换路缘石","更换钢管警示柱","补划路面标线","其他"]},
+    {"field":"repairMethod","alias":"维修方法","show":1,"type":"integer","input_type":1,"value":"点击选择维修方法","prange":[]},
+    {"field":"repairContent","alias":"维修内容","show":1,"type":"integer","input_type":1,"value":"点击选择维修内容","prange":[]},
+    {"field":"defectQuality","alias":"缺损质量","show":1,"type":"string","input_type":2,"value":"","prange":[]},
+    {"field":"extent","alias":"程度","show":1,"type":"string","input_type":2,"value":"","prange":[]},
+    {"field":"structureName","alias":"结构名称","show":1,"type":"string","input_type":2,"value":"","prange":[]},
+    {"field":"maintenanceMeasures","alias":"养护措施","show":1,"type":"string","input_type":2,"value":"","prange":[]},
+    {"field":"nature","alias":"性质","show":1,"type":"string","input_type":2,"value":"","prange":[]},
+    {"field":"pileNo","alias":"缺损位置","show":1,"type":"string","input_type":2,"value":"","prange":[]},
+    {"field":"scale","alias":"标度","show":1,"type":"string","input_type":2,"value":"","prange":[]},
+    {"field":"status","alias":"业务状态","show":0,"type":"integer","input_type":0,"value":"","prange":[]},
+    {"field":"extension","alias":"巡检记录描述","show":1,"type":"string","input_type":2,"value":"","prange":[]},
+    {"field":"picUrl","alias":"上传图片","show":1,"type":"string","input_type":3,"value":"","prange":[]}
 ]

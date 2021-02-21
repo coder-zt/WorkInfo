@@ -142,6 +142,31 @@ public class Purchase {
             public String getOrderInfo() {
                 return updateTime;
             }
+
+
+            public String getAuditOpinion(boolean isShow) {
+                if (auditOpinion.isEmpty()) {
+                    auditOpinion = "暂无";
+                }
+                if(approvalStatus == 3 && auditOpinion2.isEmpty()){
+                    return "一级审批：<font color=\"#ff0000\">" + auditOpinion + "</font>";
+                }else{
+                    return "一级审批：" + auditOpinion;
+                }
+            }
+
+
+            public String getAuditOpinion2(boolean isShow) {
+                if(approvalStatus == 3 && !auditOpinion2.isEmpty()){
+                    return "二级审批：<font color=\"#ff0000\">" + auditOpinion2 + "</font>";
+                }else{
+                    if (auditOpinion2.isEmpty()) {
+                        return "二级审批：暂无";
+                    }
+                    return "二级审批：" + auditOpinion2;
+                }
+            }
+
         }
     }
 }

@@ -98,6 +98,21 @@ public class InStockList {
             }
 
             @Override
+            public int getApprovalStatus() {
+                return 0;
+            }
+
+            @Override
+            public String getAuditOpinion(boolean isShow) {
+                return "";
+            }
+
+            @Override
+            public String getAuditOpinion2(boolean isShow) {
+                return "";
+            }
+
+            @Override
             public String getStatusShow() {
                 if(status == 0){
                     return "<font color=\"#ff9696\">草稿</font>";

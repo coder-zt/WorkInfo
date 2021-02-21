@@ -12,7 +12,7 @@ public class InspectionFiledInfo {
      * type : integer
      * input_type : 1
      * value :
-     * range : ["局部修理挡土墙","局部修理路肩墙"]
+     * prange : ["局部修理挡土墙","局部修理路肩墙"]
      */
 
     private String field;
@@ -21,7 +21,7 @@ public class InspectionFiledInfo {
     private String type;
     private int input_type;
     private String value;
-    private List<String> range;
+    private List<String> prange;
     private int rangeIndex;
 
 
@@ -74,11 +74,11 @@ public class InspectionFiledInfo {
     }
 
     public List<String> getRange() {
-        return range;
+        return prange;
     }
 
-    public void setRange(List<String> range) {
-        this.range = range;
+    public void setRange(List<String> prange) {
+        this.prange = prange;
     }
 
     public int getRangeIndex() {

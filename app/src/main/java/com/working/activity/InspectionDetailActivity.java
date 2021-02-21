@@ -2,6 +2,7 @@ package com.working.activity;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -15,8 +16,13 @@ import com.working.base.BaseCommitActivity;
 import com.working.databinding.ActivityAddInspectionBinding;
 import com.working.domain.InspectionFormData;
 import com.working.domain.InspectionList;
+import com.working.domain.RepairContent;
+import com.working.domain.RepairMethod;
+import com.working.interfaces.IRepairInfoCallback;
 import com.working.other.MessageEvent;
 import com.working.presenter.ICommitPresenter;
+import com.working.presenter.IRepairInfo;
+import com.working.presenter.impl.RepairInfoImpl;
 import com.working.presenter.impl.UpLoadInspectPresenterImpl;
 import com.working.setting.InspectionFiledInfo;
 import com.working.utils.DevelopConfig;
@@ -32,7 +38,7 @@ import java.util.List;
 /**
  * 添加巡检记录的activity
  */
-public class InspectionDetailActivity extends BaseCommitActivity {
+public class InspectionDetailActivity extends BaseCommitActivity implements IRepairInfoCallback {
 
     private static final String TAG = "AddInspectionActivity";
 
@@ -44,12 +50,20 @@ public class InspectionDetailActivity extends BaseCommitActivity {
     private InspectionList.DataBean.RecordsBean mRecordsBean;
     private RecyclerView mRecycler;
     private InspectionRecordingAdapter mAdapter;
+    //病害类型、维修方法、维修内容的进程code
+    private int progressCode = 0;
+    private IRepairInfo mRepairInfo = new RepairInfoImpl();
+    private InspectionFiledInfo mMethodInfo;
+    private InspectionFiledInfo mContentInfo;
+    private List<RepairContent.DataBean> mContentData;
+    private List<RepairMethod.DataBean> mMMethodData;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mDataBinding = DataBindingUtil.setContentView(this, R.layout.activity_add_inspection);
         mDataBinding.setActivity(this);
+        mRepairInfo.registerCallback(this);
         initView();
         initData();
         loadInspectionFileds();
@@ -58,7 +72,45 @@ public class InspectionDetailActivity extends BaseCommitActivity {
     private void initView() {
         mRecycler = findViewById(R.id.recycler_view);
         mRecycler.setLayoutManager(new LinearLayoutManager(this));
-        mAdapter = new InspectionRecordingAdapter(this, mImageListener);
+        mAdapter = new InspectionRecordingAdapter(this, mImageListener, new InspectionRecordingAdapter.OnGetRepairInfoListener() {
+            @Override
+            public void selectDamageAfter(int damageType) {
+                progressCode = 1;
+                if (mRepairInfo != null) {
+                    mRepairInfo.getRepairMethod(damageType);
+                }
+                mMethodInfo.setRange(null);
+                mMethodInfo.setValue("点击选择维修方法");
+                mContentInfo.setRange(null);
+                mContentInfo.setValue("点击选择维修内容");
+            }
+
+            @Override
+            public void selectRepairMethodAfter(int damageType, int index) {
+                progressCode = 2;
+                int methodId = -1;
+                if (mMMethodData != null && index <= mMMethodData.size()) {
+                    methodId = mMMethodData.get(index-1).getRepairMethodId();
+                    mMethodInfo.setValue(mMMethodData.get(index-1).getRepairMethodName());
+                }
+                mMethodInfo.setRangeIndex(methodId);
+                if (mRepairInfo != null) {
+                    mRepairInfo.getRepairContent(damageType, methodId);
+                }
+                mContentInfo.setRange(null);
+                mContentInfo.setValue("点击选择维修内容");
+            }
+
+            @Override
+            public void selectRepairContentAfter(int index) {
+                progressCode = 3;
+                if (mContentData != null && index <= mContentData.size()) {
+                    mContentInfo.setRangeIndex(mContentData.get(index-1).getRepairContentId());
+                    mContentInfo.setValue(mContentData.get(index-1).getRepairContentName());
+
+                }
+            }
+        });
         mRecycler.setAdapter(mAdapter);
     }
 
@@ -96,8 +148,18 @@ public class InspectionDetailActivity extends BaseCommitActivity {
             if (filedInfo.getShow() == 1) {
                 mShowFiledInfos.add(filedInfo);
             }
+            if(TextUtils.equals(filedInfo.getAlias(),"维修方法")){
+                mMethodInfo = filedInfo;
+            }else if(TextUtils.equals(filedInfo.getAlias(),"维修内容")){
+                mContentInfo = filedInfo;
+            }
         }
         if (mInformation != null) {
+            if (mRepairInfo != null) {
+                mRepairInfo.getRepairMethod(mInformation.getDiseaseType());
+                mRepairInfo.getRepairContent(mInformation.getDiseaseType(), Integer.parseInt(mInformation.getRepairMethodId()));
+
+            }
             for (InspectionFiledInfo filedInfo : mShowFiledInfos) {
                 //缺损质量
                 if(TextUtils.equals(filedInfo.getAlias(),"缺损质量")){
@@ -113,6 +175,20 @@ public class InspectionDetailActivity extends BaseCommitActivity {
                         filedInfo.setValue("点击选择病害类型");
                     }else{
                         filedInfo.setValue(filedInfo.getRange().get(rangeIndex - 1));
+                    }
+                }else if(TextUtils.equals(filedInfo.getAlias(),"维修方法")){
+                    filedInfo.setRangeIndex(Integer.parseInt(mRecordsBean.getRepairMethodId()));
+                    if(mInformation.getRepairMethodId().isEmpty()){
+                        filedInfo.setValue("点击选择维修方法");
+                    }else{
+                        filedInfo.setValue(mRecordsBean.getRepairMethod());
+                    }
+                }else if(TextUtils.equals(filedInfo.getAlias(),"维修内容")){
+                    filedInfo.setRangeIndex(Integer.parseInt(mRecordsBean.getRepairContentId()));
+                    if(mInformation.getRepairContentId().isEmpty()){
+                        filedInfo.setValue("点击选择维修内容");
+                    }else{
+                        filedInfo.setValue(mRecordsBean.getRepairContent());
                     }
                 //巡检记录描述
                 }else if(TextUtils.equals(filedInfo.getAlias(),"巡检记录描述")){
@@ -172,11 +248,24 @@ public class InspectionDetailActivity extends BaseCommitActivity {
                     ToastUtil.showMessage("未选择病害类型！");
                     return;
                 }
-                if(DevelopConfig.DEBUG){
-                    rangeIndex = 13;
-                }
                 mInformation.setDiseaseType(rangeIndex);
-            //巡检记录描述->用户输入
+            //维修方法->用户选择
+            }else if(TextUtils.equals(filedInfo.getAlias(),"维修方法")){
+                int rangeIndex = filedInfo.getRangeIndex();
+                if (rangeIndex == 0) {
+                    ToastUtil.showMessage("未选择维修方法！");
+                    return;
+                }
+                mInformation.setRepairMethodId(String.valueOf(rangeIndex));
+                //维修内容->用户输入
+            }else if(TextUtils.equals(filedInfo.getAlias(),"维修内容")){
+                int rangeIndex = filedInfo.getRangeIndex();
+                if (rangeIndex == 0) {
+                    ToastUtil.showMessage("未选择维修内容！");
+                    return;
+                }
+                mInformation.setRepairContentId(String.valueOf(rangeIndex));
+                //巡检记录描述->用户输入
             }else if(TextUtils.equals(filedInfo.getAlias(),"巡检记录描述")){
                 if (filedInfo.getValue().isEmpty()) {
                     ToastUtil.showMessage("巡检记录描述为空！");
@@ -239,6 +328,8 @@ public class InspectionDetailActivity extends BaseCommitActivity {
         if (isUpdate) {
             mInformation.setId(mRecordsBean.getId());
         }
+
+//        Log.d(TAG, "addInspection: 提交信息：" +  new Gson().toJson(mInformation));
         commitData(mInformation, isDraft);
     }
 
@@ -261,5 +352,53 @@ public class InspectionDetailActivity extends BaseCommitActivity {
     @Override
     protected void addImageUrl(String link) {
         mAdapter.addImageUrl(link);
+    }
+
+
+    /**********************
+     *选择维修方法和维修内容 *
+     **********************/
+
+
+    /**
+     *
+     * @param data
+     */
+    @Override
+    public void onRepairMethodLoaded(List<RepairMethod.DataBean> data) {
+        Log.d(TAG, "onRepairContentLoaded: " + "修复方法" + data.size());
+        List<String> strs = new ArrayList<>();
+        for (RepairMethod.DataBean datum : data) {
+            strs.add(datum.getRepairMethodName());
+        }
+        mMMethodData = data;
+        mMethodInfo.setRange(strs);
+    }
+
+    @Override
+    public void onRepairMethodLoadedFail(String msg) {
+        Log.d(TAG, "onRepairMethodLoadedFail: " + msg);
+    }
+
+    @Override
+    public void onRepairContentLoaded(List<RepairContent.DataBean> data) {
+        Log.d(TAG, "onRepairContentLoaded: " + "修复内容" + data.size());
+        List<String> strs = new ArrayList<>();
+        for (RepairContent.DataBean datum : data) {
+            strs.add(datum.getRepairContentName());
+        }
+        mContentData = data;
+        mContentInfo.setRange(strs);
+    }
+
+    @Override
+    public void onRepairContentLoadedFail(String msg) {
+        Log.d(TAG, "onRepairContentLoadedFail: " + msg);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mRepairInfo.unregisterCallback();
     }
 }

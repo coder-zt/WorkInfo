@@ -53,6 +53,7 @@ public class StockListAdapter extends SearchAdapter<StockListAdapter.ItemView, I
     public void onBindViewHolder(@NonNull ItemView holder, int position) {
         holder.getBinding().setData(filterData.get(position));
         holder.getBinding().setClickObject(holder);
+        holder.getBinding().recyclerView.setVisibility(filterData.get(position).getPicUrl().isEmpty()?View.GONE:View.VISIBLE);
         holder.getPicAdapter().setPicUrl(filterData.get(position).getPicUrl());
     }
 

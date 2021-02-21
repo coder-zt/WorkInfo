@@ -190,6 +190,7 @@ public class OrderDetailActivity extends BaseCommitActivity implements IDetailCa
                 datum1.setMaterialId(String.valueOf(dataBean.getId()));
                 datum1.setMaterialName(dataBean.getMaterialName());
                 datum1.setOwned(dataBean.getOwned());
+                datum1.setPrange(dataBean.getPrange());
                 datum1.setPrice(dataBean.getPrice());
                 datum1.setUnit(dataBean.getUnit());
                 if (mCommitData != null) {

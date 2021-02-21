@@ -30,4 +30,6 @@ public interface IRecyclerDetail {
 
     //图片集合
     String getImageCollect();
+
+    float getPrange();
 }

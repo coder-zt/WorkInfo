@@ -55,7 +55,7 @@ public class InspectionFragment extends BaseFragment<FragmentInspectionBinding> 
             public void onVideoClicked(String url) {
                 AppRouter.toBrowseActivity(getActivity(), url);
             }
-        });
+        }, null);
         getDataBinding().recyclerView.setAdapter(mAdapter);
     }
 

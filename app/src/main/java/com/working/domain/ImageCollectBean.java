@@ -73,4 +73,9 @@ public class ImageCollectBean implements IRecyclerDetail {
     public String getImageCollect() {
         return picUrls;
     }
+
+    @Override
+    public float getPrange() {
+        return 0;
+    }
 }

@@ -23,7 +23,6 @@ import cn.jzvd.JzvdStd;
 public class NoticeActivity extends BaseActivity {
 
     private ActivityNoticeBinding mViewDataBinding;
-    private VideoView mVideoView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

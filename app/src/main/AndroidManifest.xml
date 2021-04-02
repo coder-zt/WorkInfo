@@ -44,6 +44,7 @@
             android:windowSoftInputMode="adjustResize|adjustUnspecified|stateHidden"/>
         <activity android:name=".activity.BrowseActivity" />
         <activity android:name=".activity.ChangePsdActivity" />
+        <activity android:name=".activity.NoticeListActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

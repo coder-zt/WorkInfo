@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -49,6 +50,7 @@ public class IndexFragment extends BaseFragment implements IIndexInfoCallback {
     private TwinklingRefreshLayout mRefreshLayout;
     private FrameLayout mFlStatusContainer;
     private DataLoadUtilLayout mDataLoadUtilLayout;
+    private TextView tvMore;
 
     @Override
     protected void initView(View view) {
@@ -62,6 +64,13 @@ public class IndexFragment extends BaseFragment implements IIndexInfoCallback {
         initFunctionView();
         //公告信息
         mRvInfoContianer = (RecyclerView)view.findViewById(R.id.rv_info_container);
+        tvMore = (TextView) view.findViewById(R.id.tv_more);
+        tvMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AppRouter.toNoticeListActivity(getActivity());
+            }
+        });
         mRefreshLayout = (TwinklingRefreshLayout)view.findViewById(R.id.refresh_layout);
         mFlStatusContainer = (FrameLayout)view.findViewById(R.id.fl_status);
         mDataLoadUtilLayout = new DataLoadUtilLayout(getContext(), mFlStatusContainer, new DataLoadUtilLayout.OnErrorOnTry() {

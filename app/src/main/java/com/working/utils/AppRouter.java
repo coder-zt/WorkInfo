@@ -16,6 +16,7 @@ import com.working.activity.ChangePsdActivity;
 import com.working.activity.InStockDetailActivity;
 import com.working.activity.LoginActivity;
 import com.working.activity.NoticeActivity;
+import com.working.activity.NoticeListActivity;
 import com.working.activity.OrderDetailActivity;
 import com.working.activity.PurchaseDetailActivity;
 import com.working.activity.OutStockDetailActivity;
@@ -125,6 +126,11 @@ public class AppRouter {
         if (detailData != null) {
             intent.putExtra("data", new Gson().toJson(detailData));
         }
+        activity.startActivity(intent);
+    }
+
+    public static void toNoticeListActivity(Activity activity) {
+        Intent intent = new Intent(activity, NoticeListActivity.class);
         activity.startActivity(intent);
     }
 
